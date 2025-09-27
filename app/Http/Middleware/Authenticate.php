@@ -9,9 +9,13 @@ class Authenticate extends Middleware
     /**
      * Get the path the user should be redirected to when they are not authenticated.
      */
-    protected function redirectTo($request): ?string
+    protected function redirectTo($request)
     {
-        // API backend → kembalikan null agar respons JSON error, bukan redirect
-        return $request->expectsJson() ? null : route('login');
+        if (! $request->expectsJson()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthenticated.'
+            ], 401);
+        }
     }
 }

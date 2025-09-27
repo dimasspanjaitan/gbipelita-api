@@ -17,4 +17,4 @@ Route::prefix('auth')->group(function () {
             return response()->json(['message' => 'Hello Super Admin']);
         });
     });
-});
+}); 
