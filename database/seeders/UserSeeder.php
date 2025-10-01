@@ -19,8 +19,10 @@ class UserSeeder extends Seeder
             ->withRole('developer')
             ->create([
                 'name' => 'Developer',
+                'username' => 'developer',
                 'email' => 'developer@developer.com',
                 'password' => bcrypt('asdfasdf'),
+                'status' => 'active'
             ]);
 
         // Leader
