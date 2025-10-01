@@ -16,8 +16,8 @@ class UserUpdateRequest extends FormRequest
 
     public function rules(): array
     {
-        // Ambil user ID dari route parameter (misal: users/{user})
-        $userId = $this->route('user');
+        $user = $this->route('user');
+        $userId = $user instanceof \App\Models\User ? $user->getKey() : $user;
 
         return [
             'name' => 'sometimes|string|max:255',

@@ -21,10 +21,10 @@ class UserUpdateController extends Controller
         }
 
         $user->update($data);
-
+        
         return response()->json([
             'message' => 'User updated successfully',
-            'data' => $user->load('roles'),
+            'data' => $user->fresh()->load('roles'),
         ]);
     }
 }
