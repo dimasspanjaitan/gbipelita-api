@@ -1,3 +1,4 @@
 <?php
 
-require base_path('app/Modules/Auth/Routes/api.php');
+require __DIR__ . '/auth.php';
+require __DIR__ . '/user.php';
