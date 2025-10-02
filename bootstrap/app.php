@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -42,10 +43,17 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Render: respon error ke user
         $exceptions->render(function (Throwable $e, $request) {
-            if ($request->is('api/*')) {
+            if($request->is('api/*')) {
+                if($e instanceof AuthenticationException) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Unauthenticated.'
+                    ], 401);
+                }
+
                 return response()->json([
                     'success' => false,
-                    'message' => $e->getMessage(),
+                    'message' => $e->getMessage()
                 ], 500);
             }
         });
