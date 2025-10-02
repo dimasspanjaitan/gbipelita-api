@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // User Developer
+        // 1. User Sistem (Developer)
         User::factory()
             ->withRole('developer')
             ->create([
@@ -25,22 +25,46 @@ class UserSeeder extends Seeder
                 'status' => 'active'
             ]);
 
+        // 2. User MULTI-ROLE
+        // Jaya (Pastor Youth + Department Head)
+        User::factory()
+            ->create([
+                'name' => 'Jaya',
+                'username' => 'jaya',
+                'email' => 'jaya@church.com',
+                'password' => bcrypt('asdfasdf'),
+                'status' => 'active'
+            ])
+            ->assignRole(['pastor_youth', 'department_head']);
+            
+        // Mahenja (Division Leader + Core Team)
+        User::factory()
+            ->create([
+                'name' => 'Mahenja',
+                'username' => 'mahenja',
+                'email' => 'mahenja@church.com',
+                'password' => bcrypt('asdfasdf'),
+                'status' => 'active'
+            ])
+            ->assignRole(['division_leader', 'core_team']);
+
+        // 3. User Single Role Lainnya
         // Leader
         User::factory()
-            ->withRole('leader')
-            ->count(5)
+            ->withRole('division_leader')
+            ->count(3)
             ->create();
 
         // Coreteam
         User::factory()
-            ->withRole('coreteam')
-            ->count(10)
+            ->withRole('core_team')
+            ->count(5)
             ->create();
 
         // Volunteer
         User::factory()
             ->withRole('volunteer')
-            ->count(20)
+            ->count(10)
             ->create();
     }
 }

@@ -76,3 +76,13 @@
         - lat_long: string|nullable
         - photo: json|nullable
         - banner: string|nullable
+
+- PermissionMeta
+        - id: uuid|primary
+        - module: string|index
+        - parent_menu: string|nullable
+        - menu: string|nullable
+        - route_name: string|unique
+        - permission_name: string|unique
+        - action: string
+        - description: text|nullable

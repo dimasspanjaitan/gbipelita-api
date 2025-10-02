@@ -11,7 +11,7 @@ use App\Http\Controllers\User\{
     UserForceDeleteController
 };
 
-Route::prefix('users')->group(function () {
+Route::middleware('auth:sanctum')->prefix('users')->group(function () {
     Route::get('/', UserIndexController::class);
     Route::get('/{user}', UserShowController::class);
     Route::post('/', UserStoreController::class);

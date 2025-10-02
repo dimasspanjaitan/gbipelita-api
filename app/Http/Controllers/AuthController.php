@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -40,20 +41,23 @@ class AuthController extends Controller
 
         $identifier = $request->identifier;
 
-        $user = User::where('username', $identifier)
-            ->orWhere('email', $identifier)
-            ->first();
-
-        if (! $user || ! Hash::check($request->password, $user->password)) {
+        // Otentikasi user dengan username atau email
+        if (!Auth::attempt(['username' => $identifier, 'password' => $request->password]) && !Auth::attempt(['email' => $identifier, 'password' => $request->password])) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
+        $user = Auth::user();
+
+        // Hapus semua token lama untuk user ini
+        $user->tokens()->delete();
+
+        // Buat token baru
         $token = $user->createToken('api_token')->plainTextToken;
 
         return response()->json([
-            'token' => $token,
             'user' => $user->load('roles'),
-        ]);
+            'message' => 'Login berhasil!'
+        ])->cookie('token', $token, 60 * 24 * 7, null, null, true, true);
     }
 
     // Get authenticated user
@@ -65,8 +69,21 @@ class AuthController extends Controller
     // Logout
     public function logout(Request $request)
     {
-        $request->user()->tokens()->delete();
+        // Cek apakah pengguna terotentikasi dan memiliki sesi aktif.
+        if (Auth::check()) {
+            // Hapus sesi pengguna saat ini.
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
 
-        return response()->json(['message' => 'Logged out successfully']);
+            // Hapus cookie dari browser.
+            return response()->json([
+                'message' => 'Logout berhasil.'
+            ])->withoutCookie('token');
+        }
+
+        // Jika tidak ada sesi atau pengguna, kirim respons 401.
+        return response()->json([
+            'message' => 'Tidak terotentikasi.'
+        ], 401)->withoutCookie('token');
     }
 }
