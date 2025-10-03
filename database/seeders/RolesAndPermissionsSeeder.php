@@ -33,6 +33,11 @@ class RolesAndPermissionsSeeder extends Seeder
             ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Role', 'route_name' => 'master.roles.edit', 'action' => 'edit', 'permission_name' => 'master_roles_edit'],
             ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Role', 'route_name' => 'master.roles.delete', 'action' => 'delete', 'permission_name' => 'master_roles_delete'],
 
+            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Department', 'route_name' => 'master.departments.view', 'action' => 'view', 'permission_name' => 'master_departments_view'],
+            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Department', 'route_name' => 'master.departments.add', 'action' => 'add', 'permission_name' => 'master_departments_add'],
+            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Department', 'route_name' => 'master.departments.edit', 'action' => 'edit', 'permission_name' => 'master_departments_edit'],
+            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Department', 'route_name' => 'master.departments.delete', 'action' => 'delete', 'permission_name' => 'master_departments_delete'],
+
             // Penjadwalan
             ['module' => 'schedule', 'parent_menu' => 'Penjadwalan', 'menu' => 'Lihat Jadwal', 'route_name' => 'schedule.view', 'action' => 'view', 'permission_name' => 'schedule_view'],
             ['module' => 'schedule', 'parent_menu' => 'Penjadwalan', 'menu' => 'Isi Ketersediaan', 'route_name' => 'schedule.availability', 'action' => 'add', 'permission_name' => 'schedule_availability_add'],
@@ -77,10 +82,12 @@ class RolesAndPermissionsSeeder extends Seeder
         $departmentHeadRole->givePermissionTo([
             'master_users_view',
             'master_roles_view',
+            'master_roles_add',
+            'master_roles_edit',
             'schedule_view',
             'schedule_assign_manual',
         ]);
-        
+
         $divisionLeaderRole->givePermissionTo([
             'master_users_view',
             'schedule_view',

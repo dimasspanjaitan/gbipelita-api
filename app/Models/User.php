@@ -70,4 +70,17 @@ class User extends Authenticatable
             }
         });
     }
+
+    // Relasi ke Department
+    public function departments()
+    {
+        return $this->belongsToMany(Department::class, 'user_department', 'user_id', 'department_id');
+    }
+
+    // Relasi ke Division
+    public function divisions()
+    {
+        return $this->belongsToMany(Division::class, 'user_division', 'user_id', 'division_id')
+            ->withPivot('priority');
+    }
 }
