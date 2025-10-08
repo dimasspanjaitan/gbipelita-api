@@ -4,11 +4,11 @@ namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserStoreRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // Bisa diatur ke policy jika perlu
+        return true;
     }
 
     public function rules(): array
@@ -18,7 +18,7 @@ class UserStoreRequest extends FormRequest
             'username' => 'required|string|max:50|unique:users,username',
             'email' => 'nullable|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
-            'role' => 'sometimes|string|exists:roles,name',
+            'role' => 'nullable|array',
             'status' => 'nullable|in:active,inactive',
             'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ];

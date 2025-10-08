@@ -5,47 +5,20 @@ namespace App\Http\Controllers\Department;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Department\UpdateRequest;
 use App\Models\Department;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class UpdateController extends Controller
 {
-    /**
-     * Konstruktor untuk menerapkan middleware permission.
-     */
-    public function __construct()
-    {
-        // Permission untuk memperbarui department
-        $this->middleware('permission:master_departments_edit');
-    }
-
-    /**
-     * Memperbarui Department berdasarkan ID (PUT/PATCH /departments/{id})
-     */
-    public function __invoke(UpdateRequest $request, string $id)
+    public function __invoke(UpdateRequest $request, Department $department)
     {
         $data = $request->validated();
 
-        $department = Department::find($id);
-
-        if (!$department) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Department tidak ditemukan.'
-            ], 404);
-        }
-
         try {
             $department->update($data);
-            $department->refresh();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Department berhasil diperbarui.',
-                'data' => $department
-            ]);
+            return new JsonResource($department);
         } catch (\Exception $e) {
             return response()->json([
-                'success' => false,
-                'message' => 'Gagal memperbarui department: ' . $e->getMessage()
+                'message' => $e->getMessage()
             ], 500);
         }
     }

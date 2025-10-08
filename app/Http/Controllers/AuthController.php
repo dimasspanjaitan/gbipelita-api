@@ -63,8 +63,23 @@ class AuthController extends Controller
     // Get authenticated user
     public function me(Request $request)
     {
-        return response()->json($request->user()->load('roles'));
+        $user = $request->user();
+
+        // Ambil roles dan permissions dari Spatie Permission
+        $roles = $user->getRoleNames(); // array of role names
+        $permissions = $user->getAllPermissions()->pluck('name'); // collection of permission names
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Authenticated user retrieved successfully',
+            'data' => [
+                'user' => $user,
+                'roles' => $roles,
+                'permissions' => $permissions,
+            ],
+        ]);
     }
+
 
     // Logout
     public function logout(Request $request)

@@ -1,5 +1,5 @@
 - User:
-        - id: uuid|primary     // uuid: 096fdb04-53b2-30b7-9df9-7f8a444b6a0f   || id: 1, 2, 3, dst
+        - id: uuid|primary
         - name: string|required
         - username: string|required
         - email: string|nullable
@@ -86,6 +86,3 @@
         - permission_name: string|unique
         - action: string
         - description: text|nullable
-
-
-testing branch baru

@@ -6,12 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 
-class UserShowController extends Controller
+class RestoreController extends Controller
 {
-    public function __invoke(User $user): JsonResponse
+    public function __invoke(string $id): JsonResponse
     {
+        $user = User::onlyTrashed()->findOrFail($id);
+        $user->restore();
+
         return response()->json([
-            'message' => 'User retrieved successfully',
+            'message' => 'User restored successfully',
             'data' => $user->load('roles'),
         ]);
     }

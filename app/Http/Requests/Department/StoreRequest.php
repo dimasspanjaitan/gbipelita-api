@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Department;
 
+use App\Models\Department;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -21,33 +22,10 @@ class StoreRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                // Harus unik saat membuat baru
-                Rule::unique('departments', 'name'),
-            ],
-            'content' => ['nullable', 'string'],
-        ];
+        return Department::rules();
     }
 
-    /**
-     * Siapkan data untuk validasi.
-     *
-     * Ini memastikan bahwa jika 'content' tidak ada dalam request,
-     * secara eksplisit diatur ke null agar tidak memicu error 'Undefined array key'.
-     */
-    protected function prepareForValidation()
-    {
-        // Mengatasi 'Undefined array key' jika 'content' tidak disertakan dalam payload
-        if (!$this->has('content')) {
-            $this->merge([
-                'content' => null,
-            ]);
-        }
-    }
+   
 
     /**
      * Tentukan pesan error kustom untuk validasi.

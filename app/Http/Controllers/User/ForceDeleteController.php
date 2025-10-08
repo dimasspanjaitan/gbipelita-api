@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 
-class UserForceDeleteController extends Controller
+class ForceDeleteController extends Controller
 {
     public function __invoke(string $id): JsonResponse
     {
