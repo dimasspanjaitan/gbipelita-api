@@ -12,7 +12,7 @@ use App\Http\Controllers\Department\{
 };
 
 Route::middleware('auth:sanctum')->prefix('departments')->group(function () {
-    Route::get('/', DepartmentIndex::class);
+    Route::get('/', DepartmentIndex::class)->middleware('can:master_departments_view');
     Route::get('/{department}', DepartmentShow::class);
     Route::post('/', DepartmentStore::class);
     Route::put('/{department}', DepartmentUpdate::class);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Department;
 
+use App\Models\Department;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -15,7 +16,6 @@ class UpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // Autorisasi ditangani oleh middleware 'permission' di controller.
         return true;
     }
 
@@ -24,21 +24,8 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        // Dapatkan ID department dari parameter route (misal: departments/{id})
-        $department = $this->route('id');
-        // $departmentId = $department instanceof \App\Models\Department ? $department->getKey() : $department;
-
-        return [
-            'name' => [
-                'sometimes',
-                'required',
-                'string',
-                'max:255',
-                // Harus unik, tetapi abaikan ID department saat ini.
-                Rule::unique('departments', 'name')->ignore($department, 'id'),
-            ],
-            'content' => ['sometimes', 'nullable', 'string'],
-        ];
+        return Department::rules($this->route('department')->id);
+        
     }
     
     /**
@@ -46,6 +33,7 @@ class UpdateRequest extends FormRequest
      */
     public function messages(): array
     {
+        return Department::MESSAGES;
         return [
             'name.required' => 'Nama department wajib diisi.',
             'name.unique' => 'Nama department sudah digunakan.',

@@ -23,20 +23,20 @@ class RolesAndPermissionsSeeder extends Seeder
         // 1. Seed Permissions Metadata (semua izin yang ada di sistem)
         $permissions = [
             // Master Data
-            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Pengguna', 'route_name' => 'master.users.view', 'action' => 'view', 'permission_name' => 'master_users_view'],
-            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Pengguna', 'route_name' => 'master.users.add', 'action' => 'add', 'permission_name' => 'master_users_add'],
-            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Pengguna', 'route_name' => 'master.users.edit', 'action' => 'edit', 'permission_name' => 'master_users_edit'],
-            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Pengguna', 'route_name' => 'master.users.delete', 'action' => 'delete', 'permission_name' => 'master_users_delete'],
+            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Pengguna', 'route_name' => 'users.view', 'action' => 'view', 'permission_name' => 'users_view'],
+            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Pengguna', 'route_name' => 'users.add', 'action' => 'add', 'permission_name' => 'users_add'],
+            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Pengguna', 'route_name' => 'users.edit', 'action' => 'edit', 'permission_name' => 'users_edit'],
+            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Pengguna', 'route_name' => 'users.delete', 'action' => 'delete', 'permission_name' => 'users_delete'],
 
-            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Role', 'route_name' => 'master.roles.view', 'action' => 'view', 'permission_name' => 'master_roles_view'],
-            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Role', 'route_name' => 'master.roles.add', 'action' => 'add', 'permission_name' => 'master_roles_add'],
-            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Role', 'route_name' => 'master.roles.edit', 'action' => 'edit', 'permission_name' => 'master_roles_edit'],
-            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Role', 'route_name' => 'master.roles.delete', 'action' => 'delete', 'permission_name' => 'master_roles_delete'],
+            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Role', 'route_name' => 'roles.view', 'action' => 'view', 'permission_name' => 'roles_view'],
+            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Role', 'route_name' => 'roles.add', 'action' => 'add', 'permission_name' => 'roles_add'],
+            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Role', 'route_name' => 'roles.edit', 'action' => 'edit', 'permission_name' => 'roles_edit'],
+            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Role', 'route_name' => 'roles.delete', 'action' => 'delete', 'permission_name' => 'roles_delete'],
 
-            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Department', 'route_name' => 'master.departments.view', 'action' => 'view', 'permission_name' => 'master_departments_view'],
-            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Department', 'route_name' => 'master.departments.add', 'action' => 'add', 'permission_name' => 'master_departments_add'],
-            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Department', 'route_name' => 'master.departments.edit', 'action' => 'edit', 'permission_name' => 'master_departments_edit'],
-            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Department', 'route_name' => 'master.departments.delete', 'action' => 'delete', 'permission_name' => 'master_departments_delete'],
+            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Department', 'route_name' => 'departments.view', 'action' => 'view', 'permission_name' => 'departments_view'],
+            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Department', 'route_name' => 'departments.add', 'action' => 'add', 'permission_name' => 'departments_add'],
+            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Department', 'route_name' => 'departments.edit', 'action' => 'edit', 'permission_name' => 'departments_edit'],
+            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Department', 'route_name' => 'departments.delete', 'action' => 'delete', 'permission_name' => 'departments_delete'],
 
             // Penjadwalan
             ['module' => 'schedule', 'parent_menu' => 'Penjadwalan', 'menu' => 'Lihat Jadwal', 'route_name' => 'schedule.view', 'action' => 'view', 'permission_name' => 'schedule_view'],
@@ -70,26 +70,27 @@ class RolesAndPermissionsSeeder extends Seeder
         // C. Role Tingkat Keterlibatan
         $coreTeamRole = Role::firstOrCreate(['name' => 'core_team']);
         $volunteerRole = Role::firstOrCreate(['name' => 'volunteer']);
-        $newcomerRole = Role::firstOrCreate(['name' => 'newcomer']);
+        $congregationRole = Role::firstOrCreate(['name' => 'congregation']);
+        $guestRole = Role::firstOrCreate(['name' => 'guest']);
 
         // Assign permissions ke role-role dasar
         
         $pastorYouthRole->givePermissionto([
-            'master_users_view',
+            'users_view',
             'schedule_view',
         ]);
         
         $departmentHeadRole->givePermissionTo([
-            'master_users_view',
-            'master_roles_view',
-            'master_roles_add',
-            'master_roles_edit',
+            'users_view',
+            'roles_view',
+            'roles_add',
+            'roles_edit',
             'schedule_view',
             'schedule_assign_manual',
         ]);
 
         $divisionLeaderRole->givePermissionTo([
-            'master_users_view',
+            'users_view',
             'schedule_view',
             'schedule_assign_manual',
         ]);

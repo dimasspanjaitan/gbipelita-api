@@ -5,42 +5,30 @@ namespace App\Http\Controllers\Department;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Department\StoreRequest;
 use App\Models\Department;
-use Illuminate\Support\Str;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class StoreController extends Controller
 {
-    /**
-     * Konstruktor untuk menerapkan middleware permission.
-     */
-    public function __construct()
+    public function __invoke(StoreRequest $request): JsonResponse
     {
-        // Permission untuk menambah department
-        $this->middleware('permission:master_departments_add');
-    }
-
-    /**
-     * Menyimpan Department baru (POST /departments)
-     */
-    public function __invoke(StoreRequest $request)
-    {
+        DB::beginTransaction();
         try {
-            $data = $request->validated();
-
-            $department = Department::create([
-                'id' => Str::uuid(),
-                'name' => $data["name"],
-                'content' => $data["content"],
-            ]);
+            $department = Department::create($request->validated());
+            DB::commit();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Department berhasil ditambahkan.',
-                'data' => $department
+                'message' => 'Department created successfully.',
+                'data' => $department,
             ], 201);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
+            DB::rollBack();
+
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal menambahkan department: ' . $e->getMessage()
+                'message' => 'Failed to create department.',
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

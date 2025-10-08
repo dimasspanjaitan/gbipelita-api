@@ -35,6 +35,7 @@ class UserSeeder extends Seeder
                 'password' => bcrypt('asdfasdf'),
                 'status' => 'active'
             ])
+            ->with('departments')
             ->assignRole(['pastor_youth', 'department_head']);
             
         // Mahenja (Division Leader + Core Team)
