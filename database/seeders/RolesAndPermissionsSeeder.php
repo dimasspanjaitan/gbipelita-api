@@ -6,103 +6,128 @@ use Illuminate\Database\Seeder;
 use App\Models\PermissionsMeta;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-use Illuminate\Support\Str;
 
 class RolesAndPermissionsSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
+    public function run(): void
     {
-        // Reset cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // 1. Seed Permissions Metadata (semua izin yang ada di sistem)
         $permissions = [
-            // Master Data
-            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Pengguna', 'route_name' => 'users.view', 'action' => 'view', 'permission_name' => 'users_view'],
-            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Pengguna', 'route_name' => 'users.add', 'action' => 'add', 'permission_name' => 'users_add'],
-            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Pengguna', 'route_name' => 'users.edit', 'action' => 'edit', 'permission_name' => 'users_edit'],
-            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Pengguna', 'route_name' => 'users.delete', 'action' => 'delete', 'permission_name' => 'users_delete'],
+            'master' => [
+                'Pengguna' => [
+                    ['route' => 'users.view',               'action' => 'view',         'permission' => 'view-users'],
+                    ['route' => 'users.create',             'action' => 'create',       'permission' => 'create-users'],
+                    ['route' => 'users.edit',               'action' => 'edit',         'permission' => 'update-users'],
+                    ['route' => 'users.delete',             'action' => 'delete',       'permission' => 'delete-users'],
+                    ['route' => 'users.restore',            'action' => 'restore',      'permission' => 'restore-users'],
+                    ['route' => 'users.force-delete',       'action' => 'force-delete', 'permission' => 'force-delete-users'],
+                ],
 
-            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Role', 'route_name' => 'roles.view', 'action' => 'view', 'permission_name' => 'roles_view'],
-            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Role', 'route_name' => 'roles.add', 'action' => 'add', 'permission_name' => 'roles_add'],
-            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Role', 'route_name' => 'roles.edit', 'action' => 'edit', 'permission_name' => 'roles_edit'],
-            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Role', 'route_name' => 'roles.delete', 'action' => 'delete', 'permission_name' => 'roles_delete'],
+                'Role' => [
+                    ['route' => 'roles.view',               'action' => 'view',         'permission' => 'view-roles'],
+                    ['route' => 'roles.create',             'action' => 'create',       'permission' => 'create-roles'],
+                    ['route' => 'roles.edit',               'action' => 'edit',         'permission' => 'update-roles'],
+                    ['route' => 'roles.delete',             'action' => 'delete',       'permission' => 'delete-roles'],
+                    ['route' => 'roles.restore',            'action' => 'restore',      'permission' => 'restore-roles'],
+                    ['route' => 'roles.force-delete',       'action' => 'force-delete', 'permission' => 'force-delete-roles'],
+                ],
 
-            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Department', 'route_name' => 'departments.view', 'action' => 'view', 'permission_name' => 'departments_view'],
-            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Department', 'route_name' => 'departments.add', 'action' => 'add', 'permission_name' => 'departments_add'],
-            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Department', 'route_name' => 'departments.edit', 'action' => 'edit', 'permission_name' => 'departments_edit'],
-            ['module' => 'master', 'parent_menu' => 'Master Data', 'menu' => 'Department', 'route_name' => 'departments.delete', 'action' => 'delete', 'permission_name' => 'departments_delete'],
-
-            // Penjadwalan
-            ['module' => 'schedule', 'parent_menu' => 'Penjadwalan', 'menu' => 'Lihat Jadwal', 'route_name' => 'schedule.view', 'action' => 'view', 'permission_name' => 'schedule_view'],
-            ['module' => 'schedule', 'parent_menu' => 'Penjadwalan', 'menu' => 'Isi Ketersediaan', 'route_name' => 'schedule.availability', 'action' => 'add', 'permission_name' => 'schedule_availability_add'],
-            ['module' => 'schedule', 'parent_menu' => 'Penjadwalan', 'menu' => 'Tugaskan Jadwal', 'route_name' => 'schedule.assign', 'action' => 'edit', 'permission_name' => 'schedule_assign_manual'],
+                'Departemen' => [
+                    ['route' => 'departments.view',         'action' => 'view',         'permission' => 'view-departments'],
+                    ['route' => 'departments.create',       'action' => 'create',       'permission' => 'create-departments'],
+                    ['route' => 'departments.edit',         'action' => 'edit',         'permission' => 'update-departments'],
+                    ['route' => 'departments.delete',       'action' => 'delete',       'permission' => 'delete-departments'],
+                    ['route' => 'departments.restore',      'action' => 'restore',      'permission' => 'restore-departments'],
+                    ['route' => 'departments.force-delete', 'action' => 'force-delete', 'permission' => 'force-delete-departments'],
+                ],
+            ],
+            'schedule' => [
+                'Lihat Jadwal' => [
+                    ['route' => 'schedules.view',           'action' => 'view',         'permission' => 'view-schedules'],
+                ],
+                'Isi Ketersediaan' => [
+                    ['route' => 'schedule.availability',    'action' => 'add',          'permission' => 'schedules-availability'],
+                ],
+                'Tugaskan Jadwal' => [
+                    ['route' => 'schedule.assign',          'action' => 'edit',         'permission' => 'schedules-assign-manual'],
+                ]
+            ]
         ];
 
-        foreach ($permissions as $permission) {
-            PermissionsMeta::firstOrCreate(
-                ['permission_name' => $permission['permission_name']],
-                array_merge($permission, ['id' => Str::uuid()])
-            );
+        // 1️. Buat permission & metadata
+        foreach ($permissions as $module => $menus) {
+            foreach ($menus as $menu => $items) {
+                foreach ($items as $perm) {
+                    Permission::firstOrCreate([
+                        'name' => $perm['permission'],
+                        'guard_name' => 'api',
+                    ]);
+
+                    PermissionsMeta::updateOrCreate(
+                        ['permission_name' => $perm['permission']],
+                        [
+                            'module' => $module,
+                            'menu' => $menu,
+                            'route_name' => $perm['route'],
+                            'action' => $perm['action'],
+                        ]
+                    );
+                }
+            }
         }
 
-        // 2. Sinkronisasi permissions dari meta ke tabel Spatie
-        foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission['permission_name']]);
+        // 2️. Buat role
+        $roles = [
+            'developer',
+            'pastor_youth',
+            'pastor_ic',
+            'department_head',
+            'division_leader',
+            'core_team',
+            'volunteer',
+            'congregation',
+            'guest',
+        ];
+
+        foreach ($roles as $roleName) {
+            Role::firstOrCreate([
+                'name' => $roleName,
+                'guard_name' => 'api',
+            ]);
         }
 
-        // 3. Buat Role dan Assign Permissions
-        // A. Role Sistem
-        $developerRole = Role::firstOrCreate(['name' => 'developer']);
-        $developerRole->givePermissionTo(Permission::all());
+        // 3️. Assign permission ke role
+        Role::findByName('developer', 'api')->givePermissionTo(Permission::all());
 
-        // B. Role Hierarki Pelayanan
-        $pastorYouthRole = Role::firstOrCreate(['name' => 'pastor_youth']);
-        $pastorIcRole = Role::firstOrCreate(['name' => 'pastor_ic']);
-        $departmentHeadRole = Role::firstOrCreate(['name' => 'department_head']);
-        $divisionLeaderRole = Role::firstOrCreate(['name' => 'division_leader']);
-
-        // C. Role Tingkat Keterlibatan
-        $coreTeamRole = Role::firstOrCreate(['name' => 'core_team']);
-        $volunteerRole = Role::firstOrCreate(['name' => 'volunteer']);
-        $congregationRole = Role::firstOrCreate(['name' => 'congregation']);
-        $guestRole = Role::firstOrCreate(['name' => 'guest']);
-
-        // Assign permissions ke role-role dasar
-        
-        $pastorYouthRole->givePermissionto([
-            'users_view',
-            'schedule_view',
-        ]);
-        
-        $departmentHeadRole->givePermissionTo([
-            'users_view',
-            'roles_view',
-            'roles_add',
-            'roles_edit',
-            'schedule_view',
-            'schedule_assign_manual',
+        Role::findByName('pastor_youth', 'api')->givePermissionTo([
+            'view-users',
+            'view-schedules',
         ]);
 
-        $divisionLeaderRole->givePermissionTo([
-            'users_view',
-            'schedule_view',
-            'schedule_assign_manual',
+        Role::findByName('department_head', 'api')->givePermissionTo([
+            'view-users',
+            'view-roles',
+            'create-roles',
+            'update-roles',
+            'view-schedules',
+            'schedules-assign-manual',
         ]);
-        
-        $coreTeamRole->givePermissionTo([
-            'schedule_view',
-            'schedule_availability_add',
+
+        Role::findByName('division_leader', 'api')->givePermissionTo([
+            'view-users',
+            'view-schedules',
+            'schedules-assign-manual',
         ]);
-        
-        $volunteerRole->givePermissionTo([
-            'schedule_view',
-            'schedule_availability_add',
+
+        Role::findByName('core_team', 'api')->givePermissionTo([
+            'view-schedules',
+            'schedules-availability',
+        ]);
+
+        Role::findByName('volunteer', 'api')->givePermissionTo([
+            'view-schedules',
+            'schedules-availability',
         ]);
     }
 }

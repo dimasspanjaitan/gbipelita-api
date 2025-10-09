@@ -2,22 +2,22 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Department\{
-    IndexController as DepartmentIndex,
-    ShowController as DepartmentShow,
-    StoreController as DepartmentStore,
-    UpdateController as DepartmentUpdate,
-    DestroyController as DepartmentDestroy,
-    RestoreController as DepartmentRestore,
-    ForceDeleteController as DepartmentForceDelete
+    IndexController,
+    ShowController,
+    StoreController,
+    UpdateController,
+    DestroyController,
+    RestoreController,
+    ForceDeleteController
 };
 
 Route::middleware('auth:sanctum')->prefix('departments')->group(function () {
-    Route::get('/', DepartmentIndex::class)->middleware('can:master_departments_view');
-    Route::get('/{department}', DepartmentShow::class);
-    Route::post('/', DepartmentStore::class);
-    Route::put('/{department}', DepartmentUpdate::class);
-    Route::patch('/{department}', DepartmentUpdate::class);
-    Route::delete('/{department}', DepartmentDestroy::class);
-    Route::post('/{department}/restore', DepartmentRestore::class);
-    Route::delete('/{department}/force', DepartmentForceDelete::class);
+    Route::get('/', IndexController::class)->middleware('can:view-department');
+    Route::get('/{department}', ShowController::class)->middleware('can:view-department');
+    Route::post('/', StoreController::class)->middleware('can:create-department');
+    Route::put('/{department}', UpdateController::class)->middleware('can:update-department');
+    Route::patch('/{department}', UpdateController::class)->middleware('can:update-department');
+    Route::delete('/{department}', DestroyController::class)->middleware('can:delete-department');
+    Route::post('/{department}/restore', RestoreController::class)->middleware('can:restore-department');
+    Route::delete('/{department}/force', ForceDeleteController::class)->middleware('can:force-delete-department');
 });

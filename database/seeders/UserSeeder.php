@@ -4,8 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
 
 class UserSeeder extends Seeder
 {
@@ -31,11 +29,10 @@ class UserSeeder extends Seeder
             ->create([
                 'name' => 'Jaya',
                 'username' => 'jaya',
-                'email' => 'jaya@church.com',
+                'email' => 'jaya@gbipelita4.com',
                 'password' => bcrypt('asdfasdf'),
                 'status' => 'active'
             ])
-            ->with('departments')
             ->assignRole(['pastor_youth', 'department_head']);
             
         // Mahenja (Division Leader + Core Team)
@@ -43,11 +40,22 @@ class UserSeeder extends Seeder
             ->create([
                 'name' => 'Mahenja',
                 'username' => 'mahenja',
-                'email' => 'mahenja@church.com',
+                'email' => 'mahenja@gbipelita4.com',
                 'password' => bcrypt('asdfasdf'),
                 'status' => 'active'
             ])
             ->assignRole(['division_leader', 'core_team']);
+
+        // Mahenja (Division Leader + Core Team)
+        User::factory()
+            ->create([
+                'name' => 'Laora',
+                'username' => 'laora',
+                'email' => 'laora@gbipelita4.com',
+                'password' => bcrypt('asdfasdf'),
+                'status' => 'active'
+            ])
+            ->assignRole(['volunteer', 'core_team']);
 
         // 3. User Single Role Lainnya
         // Leader
@@ -65,7 +73,7 @@ class UserSeeder extends Seeder
         // Volunteer
         User::factory()
             ->withRole('volunteer')
-            ->count(10)
+            ->count(20)
             ->create();
     }
 }
