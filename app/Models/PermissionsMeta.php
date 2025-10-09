@@ -11,6 +11,11 @@ class PermissionsMeta extends Model
     use HasFactory, HasUuids;
 
     protected $fillable = [
-        'module', 'parent_menu', 'menu', 'route_name', 'permission_name', 'action', 'description'
+        'module',
+        'menu',
+        'route_name',
+        'permission_name',
+        'action',
+        'description'
     ];
 }

@@ -4,7 +4,7 @@
         - username: string|required
         - email: string|nullable
         - password: string|required
-        - status: string|default:active|index|required
+        - status: string|default:active|index|required  // ['active', 'inactive']
         - photo: string|nullable
 
 - UserAvailability
@@ -17,6 +17,8 @@
 - Department
         - id: uuid|primary
         - name: string|unique|required
+        - shortname: string|unique|required
+        - status: string|default:active|index|required  // ['active', 'inactive']
         - content: text|nullable
 
 - UserDepartment
@@ -26,7 +28,9 @@
 - Division
         - id: uuid|primary
         - name: string|unique|required
+        - alias: string|unique|nullable
         - department_id: string|index|required
+        - status: string|default:active|index|required  // ['active', 'inactive']
         - content: text|nullable
 
 - UserDivision
