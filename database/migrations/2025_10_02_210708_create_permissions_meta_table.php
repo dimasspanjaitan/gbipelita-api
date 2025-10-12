@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('permissions_metas', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('module')->index();
-            // $table->string('parent_menu')->nullable();
             $table->string('menu')->nullable();
             $table->string('route_name')->unique();
             $table->string('permission_name')->unique();

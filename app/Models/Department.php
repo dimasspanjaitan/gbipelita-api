@@ -17,7 +17,7 @@ class Department extends Model
         'status',
         'content',
     ];
-    
+
     public function divisions()
     {
         return $this->hasMany(Division::class);
@@ -28,16 +28,31 @@ class Department extends Model
         return $this->belongsToMany(User::class, 'user_department', 'department_id', 'user_id');
     }
 
-    public static function rules($ignored = null){
+    public function getDivisionCountAttribute(): int
+    {
+        return $this->relationsLoaded('divisions')
+            ? $this->divisions->count()
+            : $this->divisions()->count();
+    }
+
+    public static function rules(?string $ignoreId = null): array
+    {
         return [
-            'name' => 'sometimes|unique:departments,name'.(is_string($ignored) ? ",$ignored,id" : ''),
-            'content' => 'sometimes|string'
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                "unique:departments,name,{$ignoreId},id",
+            ],
+            'alias' => ['nullable', 'string', 'max:50'],
+            'content' => ['nullable', 'string'],
+            'status' => ['required', 'in:active,inactive'],
         ];
     }
 
     public const MESSAGES = [
-        'name.required' => 'Nama tidak',
-        'name.unique' => 'Nama bla bla bla',
-        'content.string' => 'Kontent bla bla bla'
+        'name.required' => 'Nama department wajib diisi.',
+        'name.unique' => 'Nama department sudah digunakan.',
+        'name.string' => 'Nama department harus berupa teks.',
     ];
 }

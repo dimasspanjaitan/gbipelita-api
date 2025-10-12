@@ -26,11 +26,20 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $firstName = $this->faker->firstName();
+        $lastName = $this->faker->lastName();
+        $shortLast = substr($lastName, 0, 1);
+        $nickname = "{$firstName} {$shortLast}";
+        $username = strtolower($this->generateUsername($firstName, $lastName));
+        $email = strtolower($username . "@gbipelita4.com");
+
         return [
             'id' => $this->faker->uuid(),
-            'name' => $this->faker->name(),
-            'username' => $this->faker->unique()->username(),
-            'email' => $this->faker->unique()->safeEmail(),
+            'username' => $username,
+            'nickname' => $nickname,
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+            'email' => $email,
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('asdfasdf'), // default password
             'status' => 'active',
@@ -38,12 +47,27 @@ class UserFactory extends Factory
         ];
     }
 
+    private function generateUsername(string $firstName, string $lastName): string
+    {
+        // ambil 1–2 huruf dari last name, untuk variasi
+        $shortLast = substr($lastName, 0, 2);
+
+        // kadang tambahkan angka random biar unik
+        $username = strtolower($firstName . $shortLast);
+
+        if (rand(0, 1)) {
+            $username .= rand(10, 99);
+        }
+
+        return $username;
+    }
+
     /**
      * Indicate that the model's email address should be unverified.
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
     }

@@ -1,7 +1,9 @@
 - User:
         - id: uuid|primary
-        - name: string|required
         - username: string|required
+        - first_name: string|nullable
+        - last_name: string|nullable
+        - nickname: string|required
         - email: string|nullable
         - password: string|required
         - status: string|default:active|index|required  // ['active', 'inactive']
@@ -83,10 +85,18 @@
 
 - PermissionMeta
         - id: uuid|primary
+        - module_id: uuid|index|nullable
         - module: string|index
-        - parent_menu: string|nullable
         - menu: string|nullable
         - route_name: string|unique
         - permission_name: string|unique
         - action: string
         - description: text|nullable
+
+- Module
+        - id: uuid|primary
+        - name: string|unique
+        - slug: string|unique
+        - icon: string|nullable
+        - order: integer|default:0
+        - description: string|nullable

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\User;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -16,26 +17,11 @@ class UpdateRequest extends FormRequest
 
     public function rules(): array
     {
-        $user = $this->route('user');
-        $userId = $user instanceof \App\Models\User ? $user->getKey() : $user;
-
-        return [
-            'name' => 'sometimes|string|max:255',
-            'username' => 'sometimes|string|max:50|unique:users,username,' . $userId,
-            'email' => 'sometimes|email|unique:users,email,' . $userId,
-            'password' => 'nullable|string|min:8|confirmed',
-            'status' => 'sometimes|in:active,inactive',
-            'photo' => 'nullable|image|max:2048', // max 2MB
-        ];
+        return User::rules($this->route("user")->id);
     }
 
     public function messages(): array
     {
-        return [
-            'email.unique' => 'Email already exists.',
-            'username.unique' => 'Username already exists.',
-            'password.confirmed' => 'Password confirmation does not match.',
-            'photo.image' => 'Photo must be an image file.',
-        ];
+        return User::MESSAGES;
     }
 }
