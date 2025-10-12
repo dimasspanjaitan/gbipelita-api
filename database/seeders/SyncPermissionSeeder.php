@@ -15,7 +15,7 @@ class SyncPermissionSeeder extends Seeder
         foreach ($metas as $meta) {
             Permission::updateOrCreate(
                 ['name' => $meta->permission_name],
-                ['guard_name' => 'web']
+                ['guard_name' => 'api']
             );
         }
     }
