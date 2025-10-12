@@ -62,6 +62,13 @@ class User extends Authenticatable
         ];
     }
 
+    protected $appends = ["full_name"];
+
+    public function getFullNameAttribute(): string
+    {
+        return trim("{$this->first_name} {$this->last_name}");
+    }
+
     protected static function boot()
     {
         parent::boot();
@@ -73,16 +80,58 @@ class User extends Authenticatable
         });
     }
 
-    // Relasi ke Department
+    /** ────────────────────────────────
+     *  RELATIONSHIPS
+     *  ──────────────────────────────── */
     public function departments()
     {
         return $this->belongsToMany(Department::class, 'user_department', 'user_id', 'department_id');
     }
 
-    // Relasi ke Division
     public function divisions()
     {
         return $this->belongsToMany(Division::class, 'user_division', 'user_id', 'division_id')
             ->withPivot('priority');
     }
+
+    /** ────────────────────────────────
+     *  VALIDATION RULES
+     *  ──────────────────────────────── */
+    public static function rules(?string $ignoreId = null): array
+    {
+        return [
+            'username' => [
+                'required',
+                'string',
+                'max:50',
+                "unique:users,username,{$ignoreId},id",
+            ],
+            'first_name' => ['nullable', 'string', 'max:100'],
+            'last_name' => ['nullable', 'string', 'max:100'],
+            'nickname' => [
+                'required',
+                'string',
+                'max:50',
+                "unique:users,nickname,{$ignoreId},id",
+            ],
+            'email' => [
+                'nullable',
+                'email',
+                "unique:users,email,{$ignoreId},id",
+            ],
+            'password' => [$ignoreId ? 'sometimes' : 'required', 'string', 'min:8'],
+            'status' => ['required', 'in:active,inactive'],
+        ];
+    }
+
+    public const MESSAGES = [
+        'username.required' => 'Username wajib diisi.',
+        'username.unique' => 'Username sudah digunakan.',
+        'nickname.required' => 'Nama panggilan wajib diisi.',
+        'nickname.unique' => 'Nama panggilan sudah digunakan.',
+        'email.email' => 'Format email tidak valid.',
+        'email.unique' => 'Email sudah digunakan.',
+        'password.required' => 'Password wajib diisi.',
+        'password.min' => 'Password minimal 8 karakter.',
+    ];
 }

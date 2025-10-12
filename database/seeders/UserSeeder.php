@@ -16,9 +16,23 @@ class UserSeeder extends Seeder
         User::factory()
             ->withRole('developer')
             ->create([
-                'name' => 'Developer',
                 'username' => 'developer',
+                'nickname' => 'Developer',
+                'first_name' => 'Dewa',
+                'last_name' => 'Developer',
                 'email' => 'developer@developer.com',
+                'password' => bcrypt('asdfasdf'),
+                'status' => 'active'
+            ]);
+
+        User::factory()
+            ->withRole('admin')
+            ->create([
+                'username' => 'admin',
+                'nickname' => 'Admin',
+                'first_name' => 'Super',
+                'last_name' => 'Admin',
+                'email' => 'admin@gbipelita4.com',
                 'password' => bcrypt('asdfasdf'),
                 'status' => 'active'
             ]);
@@ -27,19 +41,23 @@ class UserSeeder extends Seeder
         // Jaya (Pastor Youth + Department Head)
         User::factory()
             ->create([
-                'name' => 'Jaya',
                 'username' => 'jaya',
+                'nickname' => 'Jaya',
+                'first_name' => 'Jayanta',
+                'last_name' => 'Bangun',
                 'email' => 'jaya@gbipelita4.com',
                 'password' => bcrypt('asdfasdf'),
                 'status' => 'active'
             ])
             ->assignRole(['pastor_youth', 'department_head']);
-            
+
         // Mahenja (Division Leader + Core Team)
         User::factory()
             ->create([
-                'name' => 'Mahenja',
                 'username' => 'mahenja',
+                'nickname' => 'Mahenja',
+                'first_name' => 'Dimas',
+                'last_name' => 'S Panjaitan',
                 'email' => 'mahenja@gbipelita4.com',
                 'password' => bcrypt('asdfasdf'),
                 'status' => 'active'
@@ -49,8 +67,10 @@ class UserSeeder extends Seeder
         // Mahenja (Division Leader + Core Team)
         User::factory()
             ->create([
-                'name' => 'Laora',
                 'username' => 'laora',
+                'nickname' => 'Laora',
+                'first_name' => 'Laora',
+                'last_name' => 'Simanjuntak',
                 'email' => 'laora@gbipelita4.com',
                 'password' => bcrypt('asdfasdf'),
                 'status' => 'active'
