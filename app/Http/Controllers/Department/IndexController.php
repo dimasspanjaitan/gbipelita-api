@@ -4,25 +4,34 @@ namespace App\Http\Controllers\Department;
 
 use App\Http\Controllers\Controller;
 use App\Models\Department;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class IndexController extends Controller
 {
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): JsonResponse
     {
-        $limit = (int) $request->query('limit', 10);
-        $limit = $limit > 0 ? min($limit, 100) : 10;
+        $users = Department::query()
+            ->when($request->search, function ($query, $search) {
+                $search = "%{$search}%";
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', $search)
+                        ->orWhere('alias', 'like', $search);
+                });
+            })
+            ->with(['divisions'])
+            ->when($request->status, function ($query) use ($request) {
+                $query->where('status', $request->status);
+            })
+            ->when($request->sort_column, function ($query) use ($request) {
+                $query->orderBy($request->sort_column, $request->sort_direction ?? 'asc');
+            })
+            ->when($request->trashed, fn($query) => $query->onlyTrashed())
+            ->paginate($request->limit ?? 10);
 
-        $data = Department::query();
-
-        if ($request->query('trashed') === 'only') {
-            $data->onlyTrashed();
-        } elseif ($request->query('trashed') === 'with') {
-            $data->withTrashed();
-        }
-
-        $datas = $data->paginate($limit);
-
-        return response()->json($datas);
+        return response()->json([
+            'message' => 'Users retrieved successfully.',
+            'data' => $users,
+        ]);
     }
 }

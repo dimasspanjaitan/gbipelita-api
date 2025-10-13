@@ -11,8 +11,8 @@ use App\Http\Controllers\Role\{
 Route::middleware(['auth:sanctum', 'role:developer|admin'])
     ->prefix('roles')
     ->group(function () {
-        Route::get('/', IndexController::class)->middleware('can:view-roles');
-        Route::post('/', StoreController::class)->middleware('can:create-roles');
-        Route::put('/{id}', UpdateController::class)->middleware('can:update-roles');
-        Route::delete('/{role}', DestroyController::class)->middleware('can:delete-roles');
+        Route::get('/', IndexController::class)->middleware('can:view-role');
+        Route::post('/', StoreController::class)->middleware('can:create-role');
+        Route::put('/{id}', UpdateController::class)->middleware('can:update-role');
+        Route::delete('/{role}', DestroyController::class)->middleware('can:delete-role');
     });

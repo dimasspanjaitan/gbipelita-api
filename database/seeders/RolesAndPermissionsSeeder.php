@@ -19,25 +19,25 @@ class RolesAndPermissionsSeeder extends Seeder
             $permissions = [
                 'master' => [
                     'Pengguna' => [
-                        ['route' => 'users.view', 'action' => 'view', 'permission' => 'view-users'],
-                        ['route' => 'users.create', 'action' => 'create', 'permission' => 'create-users'],
-                        ['route' => 'users.edit', 'action' => 'edit', 'permission' => 'update-users'],
-                        ['route' => 'users.delete', 'action' => 'delete', 'permission' => 'delete-users'],
-                        ['route' => 'users.restore', 'action' => 'restore', 'permission' => 'restore-users'],
-                        ['route' => 'users.force-delete', 'action' => 'force-delete', 'permission' => 'force-delete-users'],
+                        ['route' => 'users.view', 'action' => 'view', 'permission' => 'view-user'],
+                        ['route' => 'users.create', 'action' => 'create', 'permission' => 'create-user'],
+                        ['route' => 'users.edit', 'action' => 'edit', 'permission' => 'update-user'],
+                        ['route' => 'users.delete', 'action' => 'delete', 'permission' => 'delete-user'],
+                        ['route' => 'users.restore', 'action' => 'restore', 'permission' => 'restore-user'],
+                        ['route' => 'users.force-delete', 'action' => 'force-delete', 'permission' => 'force-delete-user'],
                     ],
                     'Departemen' => [
-                        ['route' => 'departments.view', 'action' => 'view', 'permission' => 'view-departments'],
-                        ['route' => 'departments.create', 'action' => 'create', 'permission' => 'create-departments'],
-                        ['route' => 'departments.edit', 'action' => 'edit', 'permission' => 'update-departments'],
-                        ['route' => 'departments.delete', 'action' => 'delete', 'permission' => 'delete-departments'],
-                        ['route' => 'departments.restore', 'action' => 'restore', 'permission' => 'restore-departments'],
-                        ['route' => 'departments.force-delete', 'action' => 'force-delete', 'permission' => 'force-delete-departments'],
+                        ['route' => 'departments.view', 'action' => 'view', 'permission' => 'view-department'],
+                        ['route' => 'departments.create', 'action' => 'create', 'permission' => 'create-department'],
+                        ['route' => 'departments.edit', 'action' => 'edit', 'permission' => 'update-department'],
+                        ['route' => 'departments.delete', 'action' => 'delete', 'permission' => 'delete-department'],
+                        ['route' => 'departments.restore', 'action' => 'restore', 'permission' => 'restore-department'],
+                        ['route' => 'departments.force-delete', 'action' => 'force-delete', 'permission' => 'force-delete-department'],
                     ],
                 ],
                 'schedule' => [
                     'Lihat Jadwal' => [
-                        ['route' => 'schedules.view', 'action' => 'view', 'permission' => 'view-schedules'],
+                        ['route' => 'schedules.view', 'action' => 'view', 'permission' => 'view-schedule'],
                     ],
                     'Isi Ketersediaan' => [
                         ['route' => 'schedule.availability', 'action' => 'add', 'permission' => 'schedules-availability'],
@@ -48,20 +48,20 @@ class RolesAndPermissionsSeeder extends Seeder
                 ],
                 'authorization' => [
                     'Menu' => [
-                        ['route' => 'menus.view', 'action' => 'view', 'permission' => 'view-menus'],
-                        ['route' => 'menus.create', 'action' => 'create', 'permission' => 'create-menus'],
-                        ['route' => 'menus.edit', 'action' => 'edit', 'permission' => 'update-menus'],
-                        ['route' => 'menus.delete', 'action' => 'delete', 'permission' => 'delete-menus'],
-                        ['route' => 'menus.restore', 'action' => 'restore', 'permission' => 'restore-menus'],
-                        ['route' => 'menus.force-delete', 'action' => 'force-delete', 'permission' => 'force-delete-menus'],
+                        ['route' => 'menus.view', 'action' => 'view', 'permission' => 'view-menu'],
+                        ['route' => 'menus.create', 'action' => 'create', 'permission' => 'create-menu'],
+                        ['route' => 'menus.edit', 'action' => 'edit', 'permission' => 'update-menu'],
+                        ['route' => 'menus.delete', 'action' => 'delete', 'permission' => 'delete-menu'],
+                        ['route' => 'menus.restore', 'action' => 'restore', 'permission' => 'restore-menu'],
+                        ['route' => 'menus.force-delete', 'action' => 'force-delete', 'permission' => 'force-delete-menu'],
                     ],
                     'Role' => [
-                        ['route' => 'roles.view', 'action' => 'view', 'permission' => 'view-roles'],
-                        ['route' => 'roles.create', 'action' => 'create', 'permission' => 'create-roles'],
-                        ['route' => 'roles.edit', 'action' => 'edit', 'permission' => 'update-roles'],
-                        ['route' => 'roles.delete', 'action' => 'delete', 'permission' => 'delete-roles'],
-                        ['route' => 'roles.restore', 'action' => 'restore', 'permission' => 'restore-roles'],
-                        ['route' => 'roles.force-delete', 'action' => 'force-delete', 'permission' => 'force-delete-roles'],
+                        ['route' => 'roles.view', 'action' => 'view', 'permission' => 'view-role'],
+                        ['route' => 'roles.create', 'action' => 'create', 'permission' => 'create-role'],
+                        ['route' => 'roles.edit', 'action' => 'edit', 'permission' => 'update-role'],
+                        ['route' => 'roles.delete', 'action' => 'delete', 'permission' => 'delete-role'],
+                        ['route' => 'roles.restore', 'action' => 'restore', 'permission' => 'restore-role'],
+                        ['route' => 'roles.force-delete', 'action' => 'force-delete', 'permission' => 'force-delete-role'],
                     ],
                     'Permission' => [
                         ['route' => 'permissions.view', 'action' => 'view', 'permission' => 'view-permissions'],
@@ -117,32 +117,32 @@ class RolesAndPermissionsSeeder extends Seeder
             Role::findByName('admin', 'api')->givePermissionTo(Permission::all());
 
             Role::findByName('pastor_youth', 'api')->syncPermissions([
-                'view-users',
-                'view-schedules',
+                'view-user',
+                'view-schedule',
             ]);
 
             Role::findByName('department_head', 'api')->syncPermissions([
-                'view-users',
-                'view-roles',
-                'create-roles',
-                'update-roles',
-                'view-schedules',
+                'view-user',
+                'view-role',
+                'create-role',
+                'update-role',
+                'view-schedule',
                 'schedules-assign-manual',
             ]);
 
             Role::findByName('division_leader', 'api')->syncPermissions([
-                'view-users',
-                'view-schedules',
+                'view-user',
+                'view-schedule',
                 'schedules-assign-manual',
             ]);
 
             Role::findByName('core_team', 'api')->syncPermissions([
-                'view-schedules',
+                'view-schedule',
                 'schedules-availability',
             ]);
 
             Role::findByName('volunteer', 'api')->syncPermissions([
-                'view-schedules',
+                'view-schedule',
                 'schedules-availability',
             ]);
         });
