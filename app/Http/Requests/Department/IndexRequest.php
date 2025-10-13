@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\User;
+namespace App\Http\Requests\Department;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -24,11 +24,8 @@ class IndexRequest extends FormRequest
                 'nullable',
                 'string',
                 Rule::in([
-                    'username',
-                    'first_name',
-                    'last_name',
-                    'nickname',
-                    'email',
+                    'name',
+                    'shortname',
                     'status',
                 ]),
             ],

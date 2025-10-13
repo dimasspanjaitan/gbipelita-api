@@ -17,11 +17,13 @@ class IndexController extends Controller
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', $search)
                         ->orWhere('username', 'like', $search)
-                        ->orWhere('email', 'like', $search)
-                        ->orWhere('status', 'like', $search);
+                        ->orWhere('email', 'like', $search);
                 });
             })
             ->with(['roles', 'departments', 'divisions'])
+            ->when($request->status, function ($query) use ($request) {
+                $query->where('status', $request->status);
+            })
             ->when($request->sort_column, function ($query) use ($request) {
                 $query->orderBy($request->sort_column, $request->sort_direction ?? 'asc');
             })

@@ -19,7 +19,7 @@
 - Department
         - id: uuid|primary
         - name: string|unique|required
-        - shortname: string|unique|required
+        - alias: string|unique|required
         - status: string|default:active|index|required  // ['active', 'inactive']
         - content: text|nullable
 
