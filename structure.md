@@ -100,3 +100,12 @@
         - icon: string|nullable
         - order: integer|default:0
         - description: string|nullable
+
+- ModuleAction
+        - id: uuid|primary
+        - module_id: uuid|index|required
+        - is_default_action: boolean|default:false
+        - name: string|unique|required
+        - label: string|unique|required
+        - permission_name: string|unique|required
+        - order: integer|default:0

@@ -11,16 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('permissions_metas', function (Blueprint $table) {
+        Schema::create('module_actions', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('module_id')->index()->nullable();
-            $table->string('module')->index();
-            $table->string('menu')->nullable();
-            $table->string('route_name')->unique();
+            $table->uuid('module_id')->index();
+            $table->boolean('is_default_action')->default(false);
+            $table->string('name');
+            $table->string('label');
             $table->string('permission_name')->unique();
-            $table->string('action');
-            $table->text('description')->nullable();
+            $table->integer('order')->default(0);
             $table->timestamps();
+
+            $table->unique(['module_id', 'name']);
+            $table->unique(['module_id', 'label']);
 
             $table->foreign('module_id')
                 ->references('id')
@@ -34,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('permissions_metas');
+        Schema::dropIfExists('module_actions');
     }
 };
