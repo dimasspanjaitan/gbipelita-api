@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 class Module extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory, SoftDeletes, HasUuids;
 
     protected $fillable = [
         'name',
@@ -22,7 +23,7 @@ class Module extends Model
     public static function booted(): void
     {
         static::creating(function ($module) {
-            if(empty($module->slug)) {
+            if (empty($module->slug)) {
                 $module->slug = Str::slug($module->name);
             }
         });
@@ -31,5 +32,10 @@ class Module extends Model
     public function permissionsMetas()
     {
         return $this->hasMany(PermissionsMeta::class);
+    }
+
+    public function actions()
+    {
+        return $this->hasMany(ModuleAction::class);
     }
 }

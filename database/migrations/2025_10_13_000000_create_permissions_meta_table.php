@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('permissions_metas', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->uuid('module_id')->index()->nullable();
             $table->string('module')->index();
             $table->string('menu')->nullable();
             $table->string('route_name')->unique();
@@ -20,6 +21,12 @@ return new class extends Migration
             $table->string('action');
             $table->text('description')->nullable();
             $table->timestamps();
+            $table->softDeletes();
+
+            $table->foreign('module_id')
+                ->references('id')
+                ->on('modules')
+                ->cascadeOnDelete();
         });
     }
 

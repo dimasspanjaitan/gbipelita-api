@@ -19,11 +19,7 @@ return new class extends Migration
             $table->integer('order')->default(0);
             $table->string('description')->nullable();
             $table->timestamps();
-        });
-
-        Schema::table('permissions_metas', function (Blueprint $table) {
-            $table->uuid('module_id')->index()->nullable()->after('id');
-            $table->foreign('module_id')->references('id')->on('modules')->cascadeOnDelete();
+            $table->softDeletes();
         });
     }
 

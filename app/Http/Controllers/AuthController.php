@@ -34,30 +34,32 @@ class AuthController extends Controller
     // Login User
     public function login(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'identifier' => 'required|string',
-            'password' => 'required',
+            'password' => 'required|string',
         ]);
 
-        $identifier = $request->identifier;
+        $credentials = [
+            filter_var($validated['identifier'], FILTER_VALIDATE_EMAIL)
+                ? 'email'
+                : 'username' => $validated['identifier'],
+            'password' => $validated['password'],
+        ];
 
-        // Otentikasi user dengan username atau email
-        if (!Auth::attempt(['username' => $identifier, 'password' => $request->password]) && !Auth::attempt(['email' => $identifier, 'password' => $request->password])) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+        if (!Auth::attempt($credentials)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid credentials.',
+            ], 401);
         }
 
-        $user = Auth::user();
-
-        // Hapus semua token lama untuk user ini
-        $user->tokens()->delete();
-
-        // Buat token baru
-        $token = $user->createToken('api_token')->plainTextToken;
+        $request->session()->regenerate();
 
         return response()->json([
-            'user' => $user->load('roles'),
-            'message' => 'Login berhasil!'
-        ])->cookie('token', $token, 60 * 24 * 7, null, null, true, true);
+            'success' => true,
+            'message' => 'Login berhasil!',
+            'data' => Auth::user()->load('roles'),
+        ]);
     }
 
     // Get authenticated user
@@ -84,21 +86,14 @@ class AuthController extends Controller
     // Logout
     public function logout(Request $request)
     {
-        // Cek apakah pengguna terotentikasi dan memiliki sesi aktif.
-        if (Auth::check()) {
-            // Hapus sesi pengguna saat ini.
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
+        Auth::guard('web')->logout();
 
-            // Hapus cookie dari browser.
-            return response()->json([
-                'message' => 'Logout berhasil.'
-            ])->withoutCookie('token');
-        }
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-        // Jika tidak ada sesi atau pengguna, kirim respons 401.
         return response()->json([
-            'message' => 'Tidak terotentikasi.'
-        ], 401)->withoutCookie('token');
+            'success' => true,
+            'message' => 'Logout berhasil!',
+        ]);
     }
 }
