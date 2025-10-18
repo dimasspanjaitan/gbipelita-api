@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('permission_name')->unique();
             $table->integer('order')->default(0);
             $table->timestamps();
+            $table->softDeletes();
 
             $table->unique(['module_id', 'name']);
             $table->unique(['module_id', 'label']);

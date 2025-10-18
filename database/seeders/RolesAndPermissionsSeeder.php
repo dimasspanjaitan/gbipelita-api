@@ -16,6 +16,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
         DB::transaction(function () {
             $permissions = Permission::pluck('name')->toArray();
+            logger()->info('Existing permissions', $permissions);
 
             $roles = [
                 'developer',
@@ -41,33 +42,33 @@ class RolesAndPermissionsSeeder extends Seeder
             Role::findByName('admin', 'api')->givePermissionTo($permissions);
 
             Role::findByName('pastor_youth', 'api')->syncPermissions([
-                'view-users',
-                'view-schedules',
+                'view-user',
+                'view-schedule',
             ]);
 
             Role::findByName('department_head', 'api')->syncPermissions([
-                'view-users',
-                'view-roles',
-                'create-roles',
-                'update-roles',
-                'view-schedules',
-                'assign-schedules',
+                'view-user',
+                'view-role',
+                'create-role',
+                'update-role',
+                'view-schedule',
+                'assign-schedule',
             ]);
 
             Role::findByName('division_leader', 'api')->syncPermissions([
-                'view-users',
-                'view-schedules',
-                'assign-schedules',
+                'view-user',
+                'view-schedule',
+                'assign-schedule',
             ]);
 
             Role::findByName('core_team', 'api')->syncPermissions([
-                'view-schedules',
-                'availability-schedules',
+                'view-schedule',
+                'availability-schedule',
             ]);
 
             Role::findByName('volunteer', 'api')->syncPermissions([
-                'view-schedules',
-                'availability-schedules',
+                'view-schedule',
+                'availability-schedule',
             ]);
         });
     }

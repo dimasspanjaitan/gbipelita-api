@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('action');
             $table->text('description')->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('module_id')
                 ->references('id')

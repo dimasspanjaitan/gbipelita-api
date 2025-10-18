@@ -32,6 +32,7 @@ class ModuleActionSeeder extends Seeder
 
             foreach ($modules as $module) {
                 foreach ($defaultActions as $index => $action) {
+                    logger()->info('Generating permissions for module', [$module->name]);
                     $permissionName = "{$action['name']}-{$module->name}";
 
                     $moduleAction = ModuleAction::firstOrCreate(
