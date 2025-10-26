@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Requests\ModuleAction;
+namespace App\Http\Requests\Action;
 
-use App\Models\ModuleAction;
+use App\Models\Action;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -17,11 +17,11 @@ class UpdateRequest extends FormRequest
 
     public function rules(): array
     {
-        return ModuleAction::rules($this->route('module_action')->id);
+        return Action::rules($this->route('module_action')->id);
     }
 
     public function messages(): array
     {
-        return ModuleAction::MESSAGES;
+        return Action::MESSAGES;
     }
 }

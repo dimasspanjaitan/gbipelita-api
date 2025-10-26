@@ -3,7 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Module;
-use App\Models\ModuleAction;
+use App\Models\Action;
 use App\Models\PermissionsMeta;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
@@ -31,8 +31,8 @@ class ModuleObserver
             foreach ($defaultActions as $index => $action) {
                 $permissionName = "{$action['name']}-{$module->name}";
 
-                // 🔹 Buat ModuleAction
-                $moduleAction = ModuleAction::firstOrCreate(
+                // Buat Action
+                Action::firstOrCreate(
                     [
                         'module_id' => $module->id,
                         'name' => $action['name'],
@@ -45,13 +45,13 @@ class ModuleObserver
                     ]
                 );
 
-                // 🔹 Buat Permission
-                $permission = Permission::firstOrCreate([
+                // Buat Permission
+                Permission::firstOrCreate([
                     'name' => $permissionName,
                     'guard_name' => 'api',
                 ]);
 
-                // 🔹 Sinkron ke PermissionsMeta
+                // Sinkron ke PermissionsMeta
                 PermissionsMeta::updateOrCreate(
                     ['permission_name' => $permissionName],
                     [
@@ -75,7 +75,7 @@ class ModuleObserver
         DB::transaction(function () use ($module) {
             app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-            $actions = ModuleAction::where('module_id', $module->id)->get();
+            $actions = Action::where('module_id', $module->id)->get();
 
             foreach ($actions as $action) {
                 $newPermissionName = "{$action->name}-{$module->name}";
@@ -88,7 +88,7 @@ class ModuleObserver
                         $permission->update(['name' => $newPermissionName]);
                     }
 
-                    // Update ModuleAction & Meta
+                    // Update Action & Meta
                     $action->update(['permission_name' => $newPermissionName]);
 
                     PermissionsMeta::where('permission_name', $action->permission_name)
@@ -111,7 +111,7 @@ class ModuleObserver
         DB::transaction(function () use ($module) {
             app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-            $actions = ModuleAction::where('module_id', $module->id)->get();
+            $actions = Action::where('module_id', $module->id)->get();
 
             foreach ($actions as $action) {
                 // Hapus permission dari Spatie

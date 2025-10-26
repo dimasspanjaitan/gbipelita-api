@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PermissionsMetaSeeder::class,
             ModulesSeeder::class,
-            ModuleActionSeeder::class,
+            ActionSeeder::class,
             SyncPermissionSeeder::class,
             RolesAndPermissionsSeeder::class,
             UserSeeder::class,

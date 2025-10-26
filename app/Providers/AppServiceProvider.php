@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Action;
 use App\Models\Module;
-use App\Models\ModuleAction;
 use App\Models\Setting;
-use App\Observers\ModuleActionObserver;
+use App\Observers\ActionObserver;
 use App\Observers\ModuleObserver;
 use App\Observers\SettingObserver;
 use Illuminate\Support\ServiceProvider;
@@ -27,6 +27,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Setting::observe(SettingObserver::class);
         Module::observe(ModuleObserver::class);
-        ModuleAction::observe(ModuleActionObserver::class);
+        Action::observe(ActionObserver::class);
     }
 }

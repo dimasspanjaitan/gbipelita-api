@@ -51,8 +51,8 @@ class Department extends Model
     }
 
     public const MESSAGES = [
-        'name.required' => 'Nama department wajib diisi.',
-        'name.unique' => 'Nama department sudah digunakan.',
-        'name.string' => 'Nama department harus berupa teks.',
+        'name.required' => 'Department name is required.',
+        'name.unique' => 'Department name has already been used.',
+        'name.string' => 'Department name must be a text string.',
     ];
 }

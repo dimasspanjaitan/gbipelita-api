@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Validation\Rule;
 
-class ModuleAction extends Model
+class Action extends Model
 {
     use HasFactory, SoftDeletes, HasUuids;
 
@@ -62,13 +62,13 @@ class ModuleAction extends Model
     }
 
     public const MESSAGES = [
-        'module_id.required' => 'Module wajib diisi.',
-        'module_id.exists' => 'Module tidak ditemukan.',
-        'name.required' => 'Nama action wajib diisi.',
-        'name.unique' => 'Nama action sudah digunakan pada module ini.',
-        'label.required' => 'Label action wajib diisi.',
-        'label.unique' => 'Label action sudah digunakan pada module ini.',
-        'permission_name.required' => 'Permission name wajib diisi.',
-        'permission_name.unique' => 'Permission name sudah digunakan.',
+        'module_id.required' => 'Module is required.',
+        'module_id.exists' => 'Module not found.',
+        'name.required' => 'Action name is required.',
+        'name.unique' => 'Action name has already been used in this module.',
+        'label.required' => 'Action label is required.',
+        'label.unique' => 'Action label has already been used in this module.',
+        'permission_name.required' => 'Permission name is required.',
+        'permission_name.unique' => 'Permission name has already been used.',
     ];
 }

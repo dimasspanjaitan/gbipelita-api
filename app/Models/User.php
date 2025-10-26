@@ -125,13 +125,13 @@ class User extends Authenticatable
     }
 
     public const MESSAGES = [
-        'username.required' => 'Username wajib diisi.',
-        'username.unique' => 'Username sudah digunakan.',
-        'nickname.required' => 'Nama panggilan wajib diisi.',
-        'nickname.unique' => 'Nama panggilan sudah digunakan.',
-        'email.email' => 'Format email tidak valid.',
-        'email.unique' => 'Email sudah digunakan.',
-        'password.required' => 'Password wajib diisi.',
-        'password.min' => 'Password minimal 8 karakter.',
+        'username.required' => 'Username is required.',
+        'username.unique' => 'Username has already been used.',
+        'nickname.required' => 'Nickname is required.',
+        'nickname.unique' => 'Nickname has already been used.',
+        'email.email' => 'Invalid email format.',
+        'email.unique' => 'Email has already been used.',
+        'password.required' => 'Password is required.',
+        'password.min' => 'Password must be at least 8 characters.',
     ];
 }

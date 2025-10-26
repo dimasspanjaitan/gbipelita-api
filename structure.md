@@ -101,7 +101,7 @@
         - order: integer|default:0
         - description: string|nullable
 
-- ModuleAction
+- Action
         - id: uuid|primary
         - module_id: uuid|index|required
         - is_default_action: boolean|default:false

@@ -2,18 +2,18 @@
 
 namespace App\Observers;
 
-use App\Models\ModuleAction;
+use App\Models\Action;
 use App\Models\PermissionsMeta;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class ModuleActionObserver
+class ActionObserver
 {
     /**
-     * Handle the ModuleAction "created" event.
+     * Handle the Action "created" event.
      */
-    public function created(ModuleAction $action): void
+    public function created(Action $action): void
     {
         DB::transaction(function () use ($action) {
             $permissionName = "{$action->name}-{$action->module->name}";
@@ -40,9 +40,9 @@ class ModuleActionObserver
     }
 
     /**
-     * Handle the ModuleAction "updated" event.
+     * Handle the Action "updated" event.
      */
-    public function updated(ModuleAction $action): void
+    public function updated(Action $action): void
     {
         DB::transaction(function () use ($action) {
             $newPermissionName = "{$action->name}-{$action->module->name}";
@@ -76,9 +76,9 @@ class ModuleActionObserver
     }
 
     /**
-     * Handle the ModuleAction "deleted" event.
+     * Handle the Action "deleted" event.
      */
-    public function deleted(ModuleAction $action): void
+    public function deleted(Action $action): void
     {
         DB::transaction(function () use ($action) {
             $permissionName = "{$action->name}-{$action->module->name}";
@@ -89,9 +89,9 @@ class ModuleActionObserver
     }
 
     /**
-     * Handle the ModuleAction "restored" event.
+     * Handle the Action "restored" event.
      */
-    public function restored(ModuleAction $action): void
+    public function restored(Action $action): void
     {
         DB::transaction(function () use ($action) {
             $permissionName = "{$action->name}-{$action->module->name}";
@@ -128,9 +128,9 @@ class ModuleActionObserver
     }
 
     /**
-     * Handle the ModuleAction "forceDeleted" event.
+     * Handle the Action "forceDeleted" event.
      */
-    public function forceDeleted(ModuleAction $action): void
+    public function forceDeleted(Action $action): void
     {
         DB::transaction(function () use ($action) {
             $permissionName = "{$action->name}-{$action->module->name}";
