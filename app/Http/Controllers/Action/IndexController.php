@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\ModuleAction;
+namespace App\Http\Controllers\Action;
 
 use App\Http\Controllers\Controller;
-use App\Models\ModuleAction;
+use App\Models\Action;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
@@ -11,7 +11,7 @@ class IndexController extends Controller
 {
     public function __invoke(Request $request): JsonResponse
     {
-        $query = ModuleAction::query()
+        $query = Action::query()
             ->with('module')
             ->when($request->module_id, fn($q, $moduleId) => $q->where('module_id', $moduleId))
             ->when($request->search, fn($q, $search) =>
@@ -27,7 +27,7 @@ class IndexController extends Controller
         $actions = $query->paginate($request->limit ?? 10);
 
         return response()->json([
-            'message' => 'Module actions retrieved successfully.',
+            'message' => 'Actions retrieved successfully.',
             'data' => $actions,
         ]);
     }

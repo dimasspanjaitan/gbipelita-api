@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Http\Controllers\ModuleAction;
+namespace App\Http\Controllers\Action;
 
 use App\Http\Controllers\Controller;
-use App\Models\ModuleAction;
+use App\Models\Action;
 
 class ShowController extends Controller
 {
     public function __invoke(string $id)
     {
-        $action = ModuleAction::with('module')->find($id);
+        $action = Action::with('module')->find($id);
 
         if (!$action) {
             return response()->json([
-                'message' => 'Module action not found.',
+                'message' => 'Action not found.',
             ], 404);
         }
 
         return response()->json([
-            'message' => 'Module action detail retrieved successfully.',
+            'message' => 'Action detail retrieved successfully.',
             'data' => $action,
         ]);
     }

@@ -5,11 +5,11 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use App\Models\Module;
-use App\Models\ModuleAction;
+use App\Models\Action;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
 
-class ModuleActionSeeder extends Seeder
+class ActionSeeder extends Seeder
 {
     /**
      * Jalankan seeder.
@@ -35,7 +35,7 @@ class ModuleActionSeeder extends Seeder
                     logger()->info('Generating permissions for module', [$module->name]);
                     $permissionName = "{$action['name']}-{$module->name}";
 
-                    $moduleAction = ModuleAction::firstOrCreate(
+                    $moduleAction = Action::firstOrCreate(
                         [
                             'module_id' => $module->id,
                             'name' => $action['name'],

@@ -36,6 +36,6 @@ class Module extends Model
 
     public function actions()
     {
-        return $this->hasMany(ModuleAction::class);
+        return $this->hasMany(Action::class);
     }
 }

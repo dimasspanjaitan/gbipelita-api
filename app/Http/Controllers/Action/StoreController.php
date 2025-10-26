@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\ModuleAction;
+namespace App\Http\Controllers\Action;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ModuleAction\StoreRequest;
-use App\Models\ModuleAction;
+use App\Http\Requests\Action\StoreRequest;
+use App\Models\Action;
 use Illuminate\Support\Facades\DB;
 
 class StoreController extends Controller
@@ -14,13 +14,13 @@ class StoreController extends Controller
         DB::beginTransaction();
 
         try {
-            $action = ModuleAction::create($request->validated());
+            $action = Action::create($request->validated());
 
             DB::commit();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Module action created successfully.',
+                'message' => 'Action created successfully.',
                 'data' => $action->load('module'),
             ], 201);
         } catch (\Throwable $e) {

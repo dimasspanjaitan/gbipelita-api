@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\ModuleAction;
+namespace App\Http\Controllers\Action;
 
 use App\Http\Controllers\Controller;
-use App\Models\ModuleAction;
+use App\Models\Action;
 
 class ForceDeleteController extends Controller
 {
     public function __invoke(string $id)
     {
-        $action = ModuleAction::onlyTrashed()->find($id);
+        $action = Action::onlyTrashed()->find($id);
 
         if (!$action) {
             return response()->json([
-                'message' => 'Module action not found.',
+                'message' => 'Action not found.',
             ], 404);
         }
 
@@ -21,7 +21,7 @@ class ForceDeleteController extends Controller
             $action->forceDelete();
 
             return response()->json([
-                'message' => 'Module action permanently deleted.',
+                'message' => 'Action permanently deleted.',
             ]);
         } catch (\Throwable $e) {
             return response()->json([

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Requests\ModuleAction;
+namespace App\Http\Requests\Action;
 
-use App\Models\ModuleAction;
+use App\Models\Action;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRequest extends FormRequest
@@ -14,11 +14,11 @@ class StoreRequest extends FormRequest
 
     public function rules(): array
     {
-        return ModuleAction::rules();
+        return Action::rules();
     }
 
     public function messages(): array
     {
-        return ModuleAction::MESSAGES;
+        return Action::MESSAGES;
     }
 }

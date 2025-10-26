@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('module_actions', function (Blueprint $table) {
+        Schema::create('actions', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('module_id')->index();
             $table->boolean('is_default_action')->default(false);
@@ -37,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('module_actions');
+        Schema::dropIfExists('actions');
     }
 };

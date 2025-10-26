@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\ModuleAction;
+namespace App\Http\Controllers\Action;
 
 use App\Http\Controllers\Controller;
-use App\Models\ModuleAction;
+use App\Models\Action;
 
 class RestoreController extends Controller
 {
     public function __invoke(string $id)
     {
-        $action = ModuleAction::withTrashed()->find($id);
+        $action = Action::withTrashed()->find($id);
 
         if (!$action || !$action->trashed()) {
             return response()->json([
-                'message' => 'Module action not found or not deleted.',
+                'message' => 'Action not found or not deleted.',
             ], 404);
         }
 
@@ -21,7 +21,7 @@ class RestoreController extends Controller
             $action->restore();
 
             return response()->json([
-                'message' => 'Module action restored successfully.',
+                'message' => 'Action restored successfully.',
             ]);
         } catch (\Throwable $e) {
             return response()->json([
