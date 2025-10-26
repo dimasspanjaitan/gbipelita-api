@@ -28,6 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Middleware alias (shortcut nama → class)
         $middleware->alias([
             'auth' => \App\Http\Middleware\Authenticate::class,
+            'auth:sanctum' => \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
