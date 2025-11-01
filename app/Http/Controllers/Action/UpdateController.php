@@ -15,14 +15,9 @@ class UpdateController extends Controller
 
         try {
             $action->update($request->validated());
-
             DB::commit();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Action updated successfully.',
-                'data' => $action->fresh('module'),
-            ]);
+            return response()->json($action->fresh('module'));
         } catch (\Throwable $e) {
             DB::rollBack();
 

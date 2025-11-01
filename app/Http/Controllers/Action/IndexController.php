@@ -26,9 +26,6 @@ class IndexController extends Controller
 
         $actions = $query->paginate($request->limit ?? 10);
 
-        return response()->json([
-            'message' => 'Actions retrieved successfully.',
-            'data' => $actions,
-        ]);
+        return response()->json($actions);
     }
 }

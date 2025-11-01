@@ -18,11 +18,7 @@ class StoreController extends Controller
 
             DB::commit();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Action created successfully.',
-                'data' => $action->load('module'),
-            ], 201);
+            return response()->json($action->load('module'));
         } catch (\Throwable $e) {
             DB::rollBack();
 

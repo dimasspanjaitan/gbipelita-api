@@ -11,26 +11,23 @@ class UpdateController extends Controller
 {
     public function __invoke(UpdateRequest $request, string $id)
     {
-        $validated = $request->validated();
-
+        DB::beginTransaction();
         try {
-            $role = DB::transaction(function () use ($id, $validated) {
-                $role = Role::findOrFail($id);
-                $role->update(['name' => $validated['name']]);
-
-                if (!empty($validated['permissions'])) {
-                    $role->syncPermissions($validated['permissions']);
-                }
-
-                return $role->load('permissions');
-            });
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Role berhasil diperbarui.',
-                'data' => $role,
+            $validated = $request->validated();
+            $role = Role::query()->findOrFail($id);
+            $role->update([
+                'name' => $validated['name'],
             ]);
+
+            if(!empty($validated['permissions'])) {
+                $role->syncPermissions($validated['permissions']);
+            }
+
+            DB::commit();
+
+            return response()->json($role->fresh('permissions'));
         } catch (\Throwable $e) {
+            DB::rollBack();
             report($e);
 
             return response()->json([

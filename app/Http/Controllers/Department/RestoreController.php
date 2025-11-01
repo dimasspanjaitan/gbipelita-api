@@ -9,20 +9,11 @@ class RestoreController extends Controller
 {
     public function __invoke(string $id)
     {
-        $department = Department::withTrashed()->find($id);
-
-        if (!$department || !$department->trashed()) {
-            return response()->json([
-                'message' => 'Department tidak ditemukan atau belum dihapus.'
-            ], 404);
-        }
-
         try {
+            $department = Department::onlyTrashed()->findOrFail($id);
             $department->restore();
 
-            return response()->json([
-                'message' => 'Department berhasil dipulihkan.'
-            ]);
+            return response()->json($department->load('divisions'));
         } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage()

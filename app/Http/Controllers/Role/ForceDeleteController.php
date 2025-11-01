@@ -14,9 +14,7 @@ class ForceDeleteController extends Controller
         try {
             $role->forceDelete();
 
-            return response()->json([
-                'message' => 'Role berhasil dihapus permanen.'
-            ]);
+            return response()->noContent();
         } catch (\Throwable $e) {
             return response()->json([
                 'message' => $e->getMessage()

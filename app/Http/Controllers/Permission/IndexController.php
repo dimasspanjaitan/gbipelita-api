@@ -14,9 +14,6 @@ class IndexController extends Controller
             ->get()
             ->groupBy(['module', 'menu']);
 
-        return response()->json([
-            'success' => true,
-            'data' => $permissions,
-        ]);
+        return response()->json($permissions);
     }
 }

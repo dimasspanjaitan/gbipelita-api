@@ -12,7 +12,10 @@ class PermissionsMetaSeeder extends Seeder
     public function run(): void
     {
         $permissions = [
+            'dashboard' => ['Dashboard', ['view']],
             'user' => ['User', ['view', 'show', 'create', 'update', 'delete', 'restore', 'force-delete']],
+            'action' => ['Action', ['view', 'show', 'create', 'update', 'delete', 'restore', 'force-delete']],
+            'module' => ['Module', ['view', 'show', 'create', 'update', 'delete', 'restore', 'force-delete']],
             'role' => ['Role', ['view', 'show', 'create', 'update', 'delete', 'restore', 'force-delete']],
             'department' => ['Department', ['view', 'show', 'create', 'update', 'delete', 'restore', 'force-delete']],
             'division' => ['Division', ['view', 'show', 'create', 'update', 'delete', 'restore', 'force-delete']],

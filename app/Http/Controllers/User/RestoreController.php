@@ -13,9 +13,6 @@ class RestoreController extends Controller
         $user = User::onlyTrashed()->findOrFail($id);
         $user->restore();
 
-        return response()->json([
-            'message' => 'User restored successfully',
-            'data' => $user->load('roles'),
-        ]);
+        return response()->json($user->load('roles'));
     }
 }

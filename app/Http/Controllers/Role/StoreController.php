@@ -27,11 +27,7 @@ class StoreController extends Controller
                 return $role->load('permissions');
             });
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Role berhasil dibuat.',
-                'data' => $role,
-            ], 201);
+            return response()->json($role);
         } catch (\Throwable $e) {
             report($e);
 

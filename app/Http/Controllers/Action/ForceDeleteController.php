@@ -9,20 +9,14 @@ class ForceDeleteController extends Controller
 {
     public function __invoke(string $id)
     {
-        $action = Action::onlyTrashed()->find($id);
+        $action = Action::onlyTrashed()->findOrFail($id);
 
-        if (!$action) {
-            return response()->json([
-                'message' => 'Action not found.',
-            ], 404);
-        }
+        if (!$action) abort(404);
 
         try {
             $action->forceDelete();
 
-            return response()->json([
-                'message' => 'Action permanently deleted.',
-            ]);
+            return response()->noContent();
         } catch (\Throwable $e) {
             return response()->json([
                 'message' => $e->getMessage(),

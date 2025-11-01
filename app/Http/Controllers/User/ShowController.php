@@ -10,9 +10,6 @@ class ShowController extends Controller
 {
     public function __invoke(User $user): JsonResponse
     {
-        return response()->json([
-            'message' => 'User retrieved successfully',
-            'data' => $user->load('roles', 'departments', 'divisions'),
-        ]);
+        return response()->json($user->load('roles', 'departments', 'divisions'));
     }
 }

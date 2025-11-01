@@ -12,8 +12,6 @@ class ForceDeleteController extends Controller
         $department = Department::onlyTrashed()->findOrFail($id);
         $department->forceDelete();
 
-        return response()->json([
-            'message' => 'Department permanently deleted',
-        ]);
+        return response()->noContent();
     }
 }

@@ -8,19 +8,8 @@ use App\Models\Department;
 class ShowController extends Controller
 {
     
-    public function __invoke(string $id)
+    public function __invoke(Department $department)
     {
-        $department = Department::find($id);
-
-        if (!$department) {
-            return response()->json([
-                'message' => 'Department tidak ditemukan.'
-            ], 404);
-        }
-
-        return response()->json([
-            'message' => 'Detail department berhasil dimuat.',
-            'data' => $department
-        ]);
+        return response()->json($department);
     }
 }
