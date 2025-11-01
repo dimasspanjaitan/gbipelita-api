@@ -15,7 +15,9 @@ class IndexController extends Controller
             ->when($request->search, function ($query, $search) {
                 $search = "%{$search}%";
                 $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', $search)
+                    $q->where('first_name', 'like', $search)
+                        ->orWhere('last_name', 'like', $search)
+                        ->orWhere('nickname', 'like', $search)
                         ->orWhere('username', 'like', $search)
                         ->orWhere('email', 'like', $search);
                 });
