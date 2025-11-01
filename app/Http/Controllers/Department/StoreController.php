@@ -17,11 +17,7 @@ class StoreController extends Controller
             $department = Department::create($request->validated());
             DB::commit();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Department created successfully.',
-                'data' => $department,
-            ], 201);
+            return response()->json($department);
         } catch (\Throwable $e) {
             DB::rollBack();
 

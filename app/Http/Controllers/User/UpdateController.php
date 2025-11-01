@@ -46,11 +46,7 @@ class UpdateController extends Controller
 
             DB::commit();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'User updated successfully',
-                'data' => $user->fresh()->load('roles', 'permissions'),
-            ]);
+            return response()->json($user->fresh()->load('roles', 'permissions'));
         } catch (\Throwable $e) {
             DB::rollBack();
 

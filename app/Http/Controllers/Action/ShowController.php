@@ -7,19 +7,8 @@ use App\Models\Action;
 
 class ShowController extends Controller
 {
-    public function __invoke(string $id)
+    public function __invoke(Action $action)
     {
-        $action = Action::with('module')->find($id);
-
-        if (!$action) {
-            return response()->json([
-                'message' => 'Action not found.',
-            ], 404);
-        }
-
-        return response()->json([
-            'message' => 'Action detail retrieved successfully.',
-            'data' => $action,
-        ]);
+        return response()->json($action);
     }
 }

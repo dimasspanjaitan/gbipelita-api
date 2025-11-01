@@ -30,9 +30,6 @@ class IndexController extends Controller
             ->when($request->trashed, fn($query) => $query->onlyTrashed())
             ->paginate($request->limit ?? 10);
 
-        return response()->json([
-            'message' => 'Users retrieved successfully.',
-            'data' => $users,
-        ]);
+        return response()->json($users);
     }
 }

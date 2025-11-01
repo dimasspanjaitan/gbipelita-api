@@ -66,6 +66,8 @@
         - date: date|required
         - session_id: string|index|required // foreign key ke Master
 
+--------------------------------------------------------------------------
+
 - Event
         - id: uuid|primary
         - name: string|required

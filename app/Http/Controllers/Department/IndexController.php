@@ -11,7 +11,7 @@ class IndexController extends Controller
 {
     public function __invoke(Request $request): JsonResponse
     {
-        $users = Department::query()
+        $departments = Department::query()
             ->when($request->search, function ($query, $search) {
                 $search = "%{$search}%";
                 $query->where(function ($q) use ($search) {
@@ -29,9 +29,6 @@ class IndexController extends Controller
             ->when($request->trashed, fn($query) => $query->onlyTrashed())
             ->paginate($request->limit ?? 10);
 
-        return response()->json([
-            'message' => 'Users retrieved successfully.',
-            'data' => $users,
-        ]);
+        return response()->json($departments);
     }
 }

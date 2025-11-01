@@ -8,13 +8,11 @@ use Illuminate\Http\JsonResponse;
 
 class ForceDeleteController extends Controller
 {
-    public function __invoke(string $id): JsonResponse
+    public function __invoke(string $id)
     {
         $user = User::onlyTrashed()->findOrFail($id);
         $user->forceDelete();
 
-        return response()->json([
-            'message' => 'User permanently deleted',
-        ]);
+        return response()->noContent();
     }
 }

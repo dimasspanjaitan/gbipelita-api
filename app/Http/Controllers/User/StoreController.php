@@ -37,11 +37,7 @@ class StoreController extends Controller
 
             DB::commit();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'User created successfully.',
-                'data' => $user->load('roles'),
-            ], 201);
+            return response()->json($user->load('roles'));
         } catch (\Throwable $e) {
             DB::rollBack();
 

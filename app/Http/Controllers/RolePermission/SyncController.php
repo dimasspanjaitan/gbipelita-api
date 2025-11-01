@@ -17,9 +17,6 @@ class SyncController extends Controller
 
         $role->syncPermissions($request->permissions);
 
-        return response()->json([
-            'message' => 'Permissions updated successfully.',
-            'role' => $role->load('permissions')
-        ]);
+        return response()->json($role->load('permissions'));
     }
 }

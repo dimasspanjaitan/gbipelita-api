@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Action;
 
 use App\Http\Controllers\Controller;
 use App\Models\Action;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class RestoreController extends Controller
 {
@@ -11,18 +12,11 @@ class RestoreController extends Controller
     {
         $action = Action::withTrashed()->find($id);
 
-        if (!$action || !$action->trashed()) {
-            return response()->json([
-                'message' => 'Action not found or not deleted.',
-            ], 404);
-        }
+        if (!$action) abort(404);
 
         try {
             $action->restore();
-
-            return response()->json([
-                'message' => 'Action restored successfully.',
-            ]);
+            return new JsonResource($action);
         } catch (\Throwable $e) {
             return response()->json([
                 'message' => $e->getMessage(),
