@@ -10,6 +10,20 @@ use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
 {
+    // Auth Check
+    public function __invoke(Request $request)
+    {
+        $user = $request->user();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Unauthenticated.',
+            ], 401);
+        }
+
+        return response()->json(['valid' => true,]);
+    }
+
     // Register User
     public function register(Request $request)
     {
