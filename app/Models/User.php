@@ -31,8 +31,10 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
         'username',
+        'first_name',
+        'last_name',
+        'nickname',
         'email',
         'password',
         'status',
@@ -67,6 +69,11 @@ class User extends Authenticatable
     public function getFullNameAttribute(): string
     {
         return trim("{$this->first_name} {$this->last_name}");
+    }
+
+    public function setEmailAttribute($value)
+    {
+        $this->attributes['email'] = !empty($value) ? $value : null;
     }
 
     protected static function boot()
@@ -121,6 +128,8 @@ class User extends Authenticatable
             ],
             'password' => [$ignoreId ? 'sometimes' : 'required', 'string', 'min:8'],
             'status' => ['required', 'in:active,inactive'],
+            'departments' => ['sometimes', 'array'],
+            'departments.*' => ['require', 'string', 'uuid', 'exists:divisions, id'],
         ];
     }
 
@@ -133,5 +142,9 @@ class User extends Authenticatable
         'email.unique' => 'Email has already been used.',
         'password.required' => 'Password is required.',
         'password.min' => 'Password must be at least 8 characters.',
+        'departments.*.uuid' => 'Department ID must be a valid UUID.',
+        'departments.*.exists' => 'Selected department does not exist.',
+        'divisions.*.uuid' => 'Division ID must be a valid UUID.',
+        'divisions.*.exists' => 'Selected division does not exist.',
     ];
 }
