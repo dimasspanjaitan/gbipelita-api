@@ -27,15 +27,26 @@ class StoreController extends Controller
             $data['password'] = Hash::make($data['password']);
             $user = User::create($data);
 
+            //  Sync roles
             if (!empty($data['roles'])) {
                 $user->syncRoles($data['roles']);
             } else {
                 $user->assignRole('congregation');
             }
 
+            // Sync departments (jika ada)
+            if (!empty($data['departments'])) {
+                $user->departments()->sync($data['departments']);
+            }
+
+            // Sync divisions (jika ada)
+            if (!empty($data['divisions'])) {
+                $user->divisions()->sync($data['divisions']);
+            }
+
             DB::commit();
 
-            return response()->json($user->load('roles'));
+            return response()->json($user->load(['roles', 'departments', 'divisions']));
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json([
