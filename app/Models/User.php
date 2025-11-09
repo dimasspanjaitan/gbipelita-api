@@ -129,7 +129,9 @@ class User extends Authenticatable
             'password' => [$ignoreId ? 'sometimes' : 'required', 'string', 'min:8'],
             'status' => ['required', 'in:active,inactive'],
             'departments' => ['sometimes', 'array'],
-            'departments.*' => ['require', 'string', 'uuid', 'exists:divisions, id'],
+            'departments.*' => ['required', 'string', 'uuid', 'exists:departments,id'],
+            'divisions' => ['sometimes', 'array'],
+            'divisions.*' => ['required', 'string', 'uuid', 'exists:divisions,id'],
         ];
     }
 
