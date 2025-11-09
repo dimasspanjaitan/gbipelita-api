@@ -19,14 +19,30 @@ class Division extends Model
         'content',
     ];
 
-    public function department()
-    {
-        return $this->belongsTo(Department::class);
-    }
-
     public function users()
     {
         return $this->belongsToMany(User::class, 'user_division', 'division_id', 'user_id')
-                    ->withPivot('priority');
+            ->withPivot('priority');
     }
+
+    public static function rules(?string $ignoreId = null): array
+    {
+        return [
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                "unique:divisons,name,{$ignoreId},id",
+            ],
+            'alias' => ['nullable', 'string', 'max:50'],
+            'content' => ['nullable', 'string'],
+            'status' => ['required', 'in:active,inactive'],
+        ];
+    }
+
+    public const MESSAGES = [
+        'name.required' => 'Division name is required.',
+        'name.unique' => 'Division name has already been used.',
+        'name.string' => 'Division name must be a text string.',
+    ];
 }

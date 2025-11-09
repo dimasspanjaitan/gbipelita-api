@@ -44,9 +44,19 @@ class UpdateController extends Controller
                 $user->syncRoles($request->roles); // bisa array atau string
             }
 
+            // Sync departments (jika ada)
+            if (!empty($data['departments'])) {
+                $user->departments()->sync($data['departments']);
+            }
+
+            // Sync divisions (jika ada)
+            if (!empty($data['divisions'])) {
+                $user->divisions()->sync($data['divisions']);
+            }
+
             DB::commit();
 
-            return response()->json($user->fresh()->load('roles', 'permissions'));
+            return response()->json($user->fresh()->load(['roles', 'departments', 'divisions']));
         } catch (\Throwable $e) {
             DB::rollBack();
 
