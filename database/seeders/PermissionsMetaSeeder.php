@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\PermissionsMeta;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
-use Spatie\Permission\Models\Permission;
+use App\Models\Permission;
 
 class PermissionsMetaSeeder extends Seeder
 {
@@ -58,7 +58,7 @@ class PermissionsMetaSeeder extends Seeder
                     ]
                 );
 
-                // Sinkronkan dengan Spatie permissions
+                // Sinkronkan dengan permissions (model custom)
                 Permission::updateOrCreate(
                     ['name' => $permissionName, 'guard_name' => 'api'],
                     ['name' => $permissionName, 'guard_name' => 'api']

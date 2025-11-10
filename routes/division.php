@@ -19,5 +19,5 @@ Route::middleware('auth:sanctum')->prefix('divisions')->group(function () {
     Route::patch('/{division}', UpdateController::class)->middleware('can:update-division');
     Route::delete('/{division}', DestroyController::class)->middleware('can:delete-division');
     Route::post('/{division}/restore', RestoreController::class)->middleware('can:restore-division');
-    Route::delete('/{division}/force', ForceDeleteController::class)->middleware('can:force-delete-division');
+    Route::delete('/{division}/force-delete', ForceDeleteController::class)->middleware('can:force-delete-division');
 });

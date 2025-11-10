@@ -6,8 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use App\Models\Module;
 use App\Models\Action;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\PermissionRegistrar;
+use App\Models\Permission;
 
 class ActionSeeder extends Seeder
 {
@@ -16,7 +15,8 @@ class ActionSeeder extends Seeder
      */
     public function run(): void
     {
-        app()[PermissionRegistrar::class]->forgetCachedPermissions();
+        // Hapus cache permissions
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         DB::transaction(function () {
             $defaultActions = [
@@ -32,9 +32,9 @@ class ActionSeeder extends Seeder
 
             foreach ($modules as $module) {
                 foreach ($defaultActions as $index => $action) {
-                    logger()->info('Generating permissions for module', [$module->name]);
                     $permissionName = "{$action['name']}-{$module->name}";
 
+                    // Buat action
                     $moduleAction = Action::firstOrCreate(
                         [
                             'module_id' => $module->id,
@@ -48,6 +48,7 @@ class ActionSeeder extends Seeder
                         ]
                     );
 
+                    // Buat permission
                     Permission::firstOrCreate([
                         'name' => $moduleAction->permission_name,
                         'guard_name' => 'api',

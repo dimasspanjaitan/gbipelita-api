@@ -20,6 +20,6 @@ Route::middleware(['auth:sanctum', 'role:developer'])
         Route::put('/{action}', UpdateController::class)->middleware('can:update-action');
         Route::patch('/{action}', UpdateController::class)->middleware('can:update-action');
         Route::delete('/{action}', DestroyController::class)->middleware('can:delete-action');
-        Route::post('/{id}/restore', RestoreController::class)->middleware('can:restore-action');
-        Route::delete('/{id}/force', ForceDeleteController::class)->middleware('can:force-delete-action');
+        Route::post('/{action}/restore', RestoreController::class)->middleware('can:restore-action');
+        Route::delete('/{action}/force-delete', ForceDeleteController::class)->middleware('can:force-delete-action');
     });

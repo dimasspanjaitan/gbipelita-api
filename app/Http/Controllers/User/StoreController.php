@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\StoreRequest;
 use App\Models\User;
+use App\Models\Role;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -27,19 +28,28 @@ class StoreController extends Controller
             $data['password'] = Hash::make($data['password']);
             $user = User::create($data);
 
-            //  Sync roles
+            // Sync roles
             if (!empty($data['roles'])) {
-                $user->syncRoles($data['roles']);
+                $validRoles = Role::whereIn('id', $data['roles'])->pluck('id')->toArray();
+                
+                if (count($validRoles) !== count($data['roles'])) {
+                    throw new Exception('Salah satu role ID tidak valid.');
+                }
+                
+                $user->syncRoles($validRoles);
             } else {
-                $user->assignRole('congregation');
+                $congregationRole = Role::where('name', 'congregation')->first();
+                if ($congregationRole) {
+                    $user->assignRole($congregationRole->id);
+                }
             }
 
-            // Sync departments (jika ada)
+            // Sync departments
             if (!empty($data['departments'])) {
                 $user->departments()->sync($data['departments']);
             }
 
-            // Sync divisions (jika ada)
+            // Sync divisions
             if (!empty($data['divisions'])) {
                 $user->divisions()->sync($data['divisions']);
             }

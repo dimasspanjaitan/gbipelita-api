@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Role;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Role\StoreRequest;
+use App\Models\Role;
 use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Role;
 
 class StoreController extends Controller
 {
@@ -33,7 +33,7 @@ class StoreController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal membuat role.',
+                'message' => 'failed to create role',
                 'error' => $e->getMessage(),
             ], 500);
         }

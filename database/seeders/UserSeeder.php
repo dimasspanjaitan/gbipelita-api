@@ -3,7 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Role;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
@@ -13,87 +15,120 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // 1. User Sistem (Developer)
-        User::factory()
-            ->withRole('developer')
-            ->create([
-                'username' => 'developer',
-                'nickname' => 'Developer',
-                'first_name' => 'Dewa',
-                'last_name' => 'Developer',
-                'email' => 'developer@developer.com',
-                'password' => bcrypt('asdfasdf'),
-                'status' => 'active'
-            ]);
+        $developer = User::factory()->create([
+            'username' => 'developer',
+            'nickname' => 'Developer',
+            'first_name' => 'Dewa',
+            'last_name' => 'Developer',
+            'email' => 'developer@developer.com',
+            'password' => Hash::make('asdfasdf'),
+            'status' => 'active'
+        ]);
 
-        User::factory()
-            ->withRole('admin')
-            ->create([
-                'username' => 'admin',
-                'nickname' => 'Admin',
-                'first_name' => 'Super',
-                'last_name' => 'Admin',
-                'email' => 'admin@gbipelita4.com',
-                'password' => bcrypt('asdfasdf'),
-                'status' => 'active'
-            ]);
+        $developerRole = Role::where('name', 'developer')->first();
+        if ($developerRole) {
+            $developer->assignRole($developerRole);
+        }
 
-        // 2. User MULTI-ROLE
+        // 2. Admin
+        $admin = User::factory()->create([
+            'username' => 'admin',
+            'nickname' => 'Admin',
+            'first_name' => 'Super',
+            'last_name' => 'Admin',
+            'email' => 'admin@gbipelita4.com',
+            'password' => Hash::make('asdfasdf'),
+            'status' => 'active'
+        ]);
+
+        $adminRole = Role::where('name', 'admin')->first();
+        if ($adminRole) {
+            $admin->assignRole($adminRole);
+        }
+
+        // 3. User MULTI-ROLE
         // Jaya (Pastor Youth + Department Head)
-        User::factory()
-            ->create([
-                'username' => 'jaya',
-                'nickname' => 'Jaya',
-                'first_name' => 'Jayanta',
-                'last_name' => 'Bangun',
-                'email' => 'jaya@gbipelita4.com',
-                'password' => bcrypt('asdfasdf'),
-                'status' => 'active'
-            ])
-            ->assignRole(['pastor_youth', 'department_head']);
+        $jaya = User::factory()->create([
+            'username' => 'jaya',
+            'nickname' => 'Jaya',
+            'first_name' => 'Jayanta',
+            'last_name' => 'Bangun',
+            'email' => 'jaya@gbipelita4.com',
+            'password' => Hash::make('asdfasdf'),
+            'status' => 'active'
+        ]);
+
+        $pastorYouthRole = Role::where('name', 'pastor_youth')->first();
+        $deptHeadRole = Role::where('name', 'department_head')->first();
+
+        if ($pastorYouthRole && $deptHeadRole) {
+            $jaya->assignRole([$pastorYouthRole, $deptHeadRole]);
+        }
 
         // Mahenja (Division Leader + Core Team)
-        User::factory()
-            ->create([
-                'username' => 'mahenja',
-                'nickname' => 'Mahenja',
-                'first_name' => 'Dimas',
-                'last_name' => 'S Panjaitan',
-                'email' => 'mahenja@gbipelita4.com',
-                'password' => bcrypt('asdfasdf'),
-                'status' => 'active'
-            ])
-            ->assignRole(['division_leader', 'core_team']);
+        $mahenja = User::factory()->create([
+            'username' => 'mahenja',
+            'nickname' => 'Mahenja',
+            'first_name' => 'Dimas',
+            'last_name' => 'S Panjaitan',
+            'email' => 'mahenja@gbipelita4.com',
+            'password' => Hash::make('asdfasdf'),
+            'status' => 'active'
+        ]);
 
-        // Mahenja (Division Leader + Core Team)
-        User::factory()
-            ->create([
-                'username' => 'laora',
-                'nickname' => 'Laora',
-                'first_name' => 'Laora',
-                'last_name' => 'Simanjuntak',
-                'email' => 'laora@gbipelita4.com',
-                'password' => bcrypt('asdfasdf'),
-                'status' => 'active'
-            ])
-            ->assignRole(['volunteer', 'core_team']);
+        $divisionLeaderRole = Role::where('name', 'division_leader')->first();
+        $coreTeamRole = Role::where('name', 'core_team')->first();
 
-        // 3. User Single Role Lainnya
+        if ($divisionLeaderRole && $coreTeamRole) {
+            $mahenja->assignRole([$divisionLeaderRole, $coreTeamRole]);
+        }
+
+        // Laora (Volunteer + Core Team)
+        $laora = User::factory()->create([
+            'username' => 'laora',
+            'nickname' => 'Laora',
+            'first_name' => 'Laora',
+            'last_name' => 'Simanjuntak',
+            'email' => 'laora@gbipelita4.com',
+            'password' => Hash::make('asdfasdf'),
+            'status' => 'active'
+        ]);
+
+        $volunteerRole = Role::where('name', 'volunteer')->first();
+
+        if ($volunteerRole && $coreTeamRole) {
+            $laora->assignRole([$volunteerRole, $coreTeamRole]);
+        }
+
+        // 4. User Single Role Lainnya
         // Leader
         User::factory()
-            ->withRole('division_leader')
             ->count(3)
-            ->create();
+            ->create()
+            ->each(function ($user) use ($divisionLeaderRole) {
+                if ($divisionLeaderRole) {
+                    $user->assignRole($divisionLeaderRole);
+                }
+            });
 
         // Coreteam
         User::factory()
-            ->withRole('core_team')
             ->count(5)
-            ->create();
+            ->create()
+            ->each(function ($user) use ($coreTeamRole) {
+                if ($coreTeamRole) {
+                    $user->assignRole($coreTeamRole);
+                }
+            });
 
         // Volunteer
         User::factory()
-            ->withRole('volunteer')
             ->count(20)
-            ->create();
+            ->create()
+            ->each(function ($user) use ($volunteerRole) {
+                if ($volunteerRole) {
+                    $user->assignRole($volunteerRole);
+                }
+            });
     }
 }

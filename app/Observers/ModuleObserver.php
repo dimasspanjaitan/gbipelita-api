@@ -5,9 +5,9 @@ namespace App\Observers;
 use App\Models\Module;
 use App\Models\Action;
 use App\Models\PermissionsMeta;
+use App\Models\Permission; // Ganti dari Spatie
 use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\PermissionRegistrar;
+use Ramsey\Uuid\Uuid;
 
 class ModuleObserver
 {
@@ -17,7 +17,8 @@ class ModuleObserver
     public function created(Module $module): void
     {
         DB::transaction(function () use ($module) {
-            app()[PermissionRegistrar::class]->forgetCachedPermissions();
+            // Forget cached permissions
+            app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
             $defaultActions = [
                 ['name' => 'view', 'label' => 'View'],
@@ -31,13 +32,14 @@ class ModuleObserver
             foreach ($defaultActions as $index => $action) {
                 $permissionName = "{$action['name']}-{$module->name}";
 
-                // Buat Action
+                // Buat Action dengan UUID
                 Action::firstOrCreate(
                     [
                         'module_id' => $module->id,
                         'name' => $action['name'],
                     ],
                     [
+                        'id' => Uuid::uuid4()->toString(),
                         'label' => $action['label'],
                         'permission_name' => $permissionName,
                         'order' => $index,
@@ -45,10 +47,12 @@ class ModuleObserver
                     ]
                 );
 
-                // Buat Permission
+                // Buat Permission dengan UUID
                 Permission::firstOrCreate([
                     'name' => $permissionName,
                     'guard_name' => 'api',
+                ], [
+                    'id' => Uuid::uuid4()->toString(),
                 ]);
 
                 // Sinkron ke PermissionsMeta
@@ -57,10 +61,10 @@ class ModuleObserver
                     [
                         'module_id' => $module->id,
                         'module' => $module->name,
-                        'menu' => $module->label,
+                        'menu' => $module->label ?? $module->name,
                         'route_name' => "{$module->name}.{$action['name']}",
                         'action' => $action['name'],
-                        'description' => "{$action['label']} data {$module->label}",
+                        'description' => "{$action['label']} data {$module->label} {$module->name}",
                     ]
                 );
             }
@@ -72,35 +76,51 @@ class ModuleObserver
      */
     public function updated(Module $module): void
     {
-        DB::transaction(function () use ($module) {
-            app()[PermissionRegistrar::class]->forgetCachedPermissions();
+        // Jika nama module berubah, update semua permissions dan actions
+        if ($module->isDirty('name')) {
+            DB::transaction(function () use ($module) {
+                app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-            $actions = Action::where('module_id', $module->id)->get();
+                $oldModuleName = $module->getOriginal('name');
+                $actions = Action::where('module_id', $module->id)->get();
 
-            foreach ($actions as $action) {
-                $newPermissionName = "{$action->name}-{$module->name}";
+                foreach ($actions as $action) {
+                    $oldPermissionName = "{$action->name}-{$oldModuleName}";
+                    $newPermissionName = "{$action->name}-{$module->name}";
 
-                // Jika nama permission lama berbeda, update semua relasi
-                if ($action->permission_name !== $newPermissionName) {
-                    // Update Permission di Spatie
-                    $permission = Permission::where('name', $action->permission_name)->first();
+                    // Update Permission
+                    $permission = Permission::where('name', $oldPermissionName)->first();
                     if ($permission) {
                         $permission->update(['name' => $newPermissionName]);
+                    } else {
+                        // Buat baru jika tidak ditemukan
+                        Permission::create([
+                            'id' => Uuid::uuid4()->toString(),
+                            'name' => $newPermissionName,
+                            'guard_name' => 'api',
+                        ]);
                     }
 
-                    // Update Action & Meta
+                    // Update Action
                     $action->update(['permission_name' => $newPermissionName]);
 
-                    PermissionsMeta::where('permission_name', $action->permission_name)
+                    // Update PermissionsMeta
+                    PermissionsMeta::where('permission_name', $oldPermissionName)
                         ->update([
                             'permission_name' => $newPermissionName,
                             'module' => $module->name,
-                            'menu' => $module->label,
+                            'menu' => $module->label ?? $module->name,
                             'route_name' => "{$module->name}.{$action->name}",
                         ]);
                 }
-            }
-        });
+            });
+        }
+
+        // Jika label berubah, update menu di permissions_meta
+        if ($module->isDirty('label')) {
+            PermissionsMeta::where('module_id', $module->id)
+                ->update(['menu' => $module->label ?? $module->name]);
+        }
     }
 
     /**
@@ -109,19 +129,69 @@ class ModuleObserver
     public function deleted(Module $module): void
     {
         DB::transaction(function () use ($module) {
-            app()[PermissionRegistrar::class]->forgetCachedPermissions();
+            app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
             $actions = Action::where('module_id', $module->id)->get();
 
             foreach ($actions as $action) {
-                // Hapus permission dari Spatie
+                // Soft delete permission
                 Permission::where('name', $action->permission_name)->delete();
 
-                // Hapus metadata
+                // Soft delete metadata
                 PermissionsMeta::where('permission_name', $action->permission_name)->delete();
 
-                // Hapus module action
+                // Soft delete action
                 $action->delete();
+            }
+        });
+    }
+
+    /**
+     * Ketika module di-restore.
+     */
+    public function restored(Module $module): void
+    {
+        DB::transaction(function () use ($module) {
+            app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+
+            $actions = Action::withTrashed()->where('module_id', $module->id)->get();
+
+            foreach ($actions as $action) {
+                // Restore action
+                $action->restore();
+
+                // Restore permission
+                Permission::withTrashed()
+                    ->where('name', $action->permission_name)
+                    ->restore();
+
+                // Restore metadata
+                PermissionsMeta::withTrashed()
+                    ->where('permission_name', $action->permission_name)
+                    ->restore();
+            }
+        });
+    }
+
+    /**
+     * Ketika module dihapus permanen.
+     */
+    public function forceDeleted(Module $module): void
+    {
+        DB::transaction(function () use ($module) {
+            app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+
+            $actions = Action::withTrashed()->where('module_id', $module->id)->get();
+
+            foreach ($actions as $action) {
+                // Force delete permission
+                Permission::where('name', $action->permission_name)->forceDelete();
+
+                // Force delete metadata
+                PermissionsMeta::where('permission_name', $action->permission_name)->forceDelete();
+
+                // Force delete action
+                $action->forceDelete();
             }
         });
     }

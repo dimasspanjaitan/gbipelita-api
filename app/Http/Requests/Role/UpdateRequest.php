@@ -20,11 +20,7 @@ class UpdateRequest extends FormRequest
         $roleId = $this->route('id');
 
         return [
-            'name' => [
-                'required',
-                'string',
-                Rule::unique('roles', 'name')->ignore($roleId),
-            ],
+            'name' => 'required|string|unique:roles,name,' . $roleId . ',id',
             'permissions' => 'nullable|array',
             'permissions.*' => 'string|exists:permissions,name',
         ];
