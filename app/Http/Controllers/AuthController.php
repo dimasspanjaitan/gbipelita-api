@@ -81,7 +81,7 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Login berhasil!',
+            'message' => 'Login successful',
             'token' => $token,
             'data' => $user->load('roles'),
         ]);
@@ -121,7 +121,7 @@ class AuthController extends Controller
         if (!$user) {
             return response()->json([
                 'success' => false,
-                'message' => 'Tidak ada user terautentikasi.'
+                'message' => 'No authenticated user'
             ], 401);
         }
 
@@ -131,7 +131,7 @@ class AuthController extends Controller
         if (!$tokenString) {
             return response()->json([
                 'success' => false,
-                'message' => 'Token tidak ditemukan.'
+                'message' => 'Token not found'
             ], 400);
         }
 
@@ -144,7 +144,7 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Logout berhasil, token sudah dihapus.'
+            'message' => 'Logout successful. Token has been revoked'
         ]);
     }
 }

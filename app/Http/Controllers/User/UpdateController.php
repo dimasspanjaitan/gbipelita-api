@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\UpdateRequest;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -40,8 +41,9 @@ class UpdateController extends Controller
             $user->update($data);
 
             // Sinkronisasi roles (kalau ada dikirim)
-            if ($request->filled('roles')) {
-                $user->syncRoles($request->roles); // bisa array atau string
+            if (!empty($data['roles'])) {
+                $validRoles = Role::whereIn('id', $data['roles'])->pluck('id')->toArray();
+                $user->syncRoles($validRoles); // Ke UUID role
             }
 
             // Sync departments (jika ada)

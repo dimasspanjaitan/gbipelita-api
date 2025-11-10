@@ -18,6 +18,6 @@ Route::middleware('auth:sanctum')->prefix('users')->group(function () {
     Route::put('/{user}', UpdateController::class)->middleware('can:update-user');
     Route::patch('/{user}', UpdateController::class)->middleware('can:update-user');
     Route::delete('/{user}', DestroyController::class)->middleware('can:delete-user');
-    Route::post('/{id}/restore', RestoreController::class)->middleware('can:restore-user');
-    Route::delete('/{id}/force', ForceDeleteController::class)->middleware('can:force-delete-user');
+    Route::post('/{user}/restore', RestoreController::class)->middleware('can:restore-user');
+    Route::delete('/{user}/force-delete', ForceDeleteController::class)->middleware('can:force-delete-user');
 });

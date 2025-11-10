@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
+use App\Models\Role;
 
 class IndexController extends Controller
 {
@@ -16,7 +16,6 @@ class IndexController extends Controller
                     $q->where('name', 'like', $search);
                 });
             })
-            ->with('permissions')
             ->when($request->sort_column, function ($query) use ($request) {
                 $query->orderBy($request->sort_column, $request->sort_direction ?? 'asc');
             })

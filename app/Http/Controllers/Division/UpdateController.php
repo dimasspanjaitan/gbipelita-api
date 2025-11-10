@@ -18,7 +18,7 @@ class UpdateController extends Controller
             $division->update($request->validated());
             DB::commit();
 
-            return response()->json($division)->fresh();
+            return response()->json($division->fresh());
         } catch (\Exception $e) {
             DB::rollBack();
 

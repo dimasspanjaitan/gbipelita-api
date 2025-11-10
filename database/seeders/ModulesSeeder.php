@@ -22,12 +22,14 @@ class ModulesSeeder extends Seeder
             ->pluck('module');
 
         foreach ($modules as $moduleName) {
+            $moduleSlug = Str::slug($moduleName);
+            
             Module::updateOrCreate(
-                ['slug' => Str::slug($moduleName)],
+                ['slug' => $moduleSlug],
                 [
                     'name' => $moduleName,
                     'description' => ucfirst(str_replace('_', ' ', $moduleName)),
-                    'order' => $orders[$moduleName] ?? 0,
+                    'order' => $orders[$moduleSlug] ?? $orders[$moduleName] ?? 0,
                 ]
             );
         }
@@ -36,8 +38,10 @@ class ModulesSeeder extends Seeder
         foreach ($modules as $moduleName) {
             $module = Module::where('slug', Str::slug($moduleName))->first();
 
-            PermissionsMeta::where('module', $moduleName)
-                ->update(['module_id' => $module->id]);
+            if ($module) {
+                PermissionsMeta::where('module', $moduleName)
+                    ->update(['module_id' => $module->id]);
+            }
         }
     }
 }

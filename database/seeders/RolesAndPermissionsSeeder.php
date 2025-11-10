@@ -4,19 +4,18 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\PermissionRegistrar;
+use App\Models\Role; // Ganti dari Spatie
+use App\Models\Permission; // Ganti dari Spatie
 
 class RolesAndPermissionsSeeder extends Seeder
 {
     public function run(): void
     {
-        app()[PermissionRegistrar::class]->forgetCachedPermissions();
+        // Hapus cache permissions
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         DB::transaction(function () {
             $permissions = Permission::pluck('name')->toArray();
-            logger()->info('Existing permissions', $permissions);
 
             $roles = [
                 'developer',
@@ -31,6 +30,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'guest',
             ];
 
+            // Buat roles
             foreach ($roles as $roleName) {
                 Role::firstOrCreate([
                     'name' => $roleName,
@@ -38,15 +38,25 @@ class RolesAndPermissionsSeeder extends Seeder
                 ]);
             }
 
-            Role::findByName('developer', 'api')->givePermissionTo($permissions);
-            Role::findByName('admin', 'api')->givePermissionTo($permissions);
+            // Assign permissions ke roles
+            $developerRole = Role::where('name', 'developer')->first();
+            $adminRole = Role::where('name', 'admin')->first();
 
-            Role::findByName('pastor_youth', 'api')->syncPermissions([
+            if ($developerRole) {
+                $developerRole->givePermissionTo($permissions);
+            }
+
+            if ($adminRole) {
+                $adminRole->givePermissionTo($permissions);
+            }
+
+            // Assign specific permissions ke role lainnya
+            $this->assignRolePermissions('pastor_youth', [
                 'view-user',
                 'view-schedule',
             ]);
 
-            Role::findByName('department_head', 'api')->syncPermissions([
+            $this->assignRolePermissions('department_head', [
                 'view-user',
                 'view-role',
                 'create-role',
@@ -55,21 +65,29 @@ class RolesAndPermissionsSeeder extends Seeder
                 'assign-schedule',
             ]);
 
-            Role::findByName('division_leader', 'api')->syncPermissions([
+            $this->assignRolePermissions('division_leader', [
                 'view-user',
                 'view-schedule',
                 'assign-schedule',
             ]);
 
-            Role::findByName('core_team', 'api')->syncPermissions([
+            $this->assignRolePermissions('core_team', [
                 'view-schedule',
                 'availability-schedule',
             ]);
 
-            Role::findByName('volunteer', 'api')->syncPermissions([
+            $this->assignRolePermissions('volunteer', [
                 'view-schedule',
                 'availability-schedule',
             ]);
         });
+    }
+
+    private function assignRolePermissions(string $roleName, array $permissions)
+    {
+        $role = Role::where('name', $roleName)->first();
+        if ($role) {
+            $role->syncPermissions($permissions);
+        }
     }
 }
