@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
             'status' => 'active'
         ]);
 
-        $developerRole = Role::where('name', 'developer')->first();
+        $developerRole = Role::where('name', 'Developer')->first();
         if ($developerRole) {
             $developer->assignRole($developerRole);
         }
@@ -41,7 +41,7 @@ class UserSeeder extends Seeder
             'status' => 'active'
         ]);
 
-        $adminRole = Role::where('name', 'admin')->first();
+        $adminRole = Role::where('name', 'Admin')->first();
         if ($adminRole) {
             $admin->assignRole($adminRole);
         }
@@ -58,8 +58,8 @@ class UserSeeder extends Seeder
             'status' => 'active'
         ]);
 
-        $pastorYouthRole = Role::where('name', 'pastor_youth')->first();
-        $deptHeadRole = Role::where('name', 'department_head')->first();
+        $pastorYouthRole = Role::where('name', 'Youth Pastor')->first();
+        $deptHeadRole = Role::where('name', 'Department Head')->first();
 
         if ($pastorYouthRole && $deptHeadRole) {
             $jaya->assignRole([$pastorYouthRole, $deptHeadRole]);
@@ -76,8 +76,8 @@ class UserSeeder extends Seeder
             'status' => 'active'
         ]);
 
-        $divisionLeaderRole = Role::where('name', 'division_leader')->first();
-        $coreTeamRole = Role::where('name', 'core_team')->first();
+        $divisionLeaderRole = Role::where('name', 'Division Leader')->first();
+        $coreTeamRole = Role::where('name', 'Core Team')->first();
 
         if ($divisionLeaderRole && $coreTeamRole) {
             $mahenja->assignRole([$divisionLeaderRole, $coreTeamRole]);
@@ -94,7 +94,7 @@ class UserSeeder extends Seeder
             'status' => 'active'
         ]);
 
-        $volunteerRole = Role::where('name', 'volunteer')->first();
+        $volunteerRole = Role::where('name', 'Volunteer')->first();
 
         if ($volunteerRole && $coreTeamRole) {
             $laora->assignRole([$volunteerRole, $coreTeamRole]);

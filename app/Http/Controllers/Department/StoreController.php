@@ -22,9 +22,7 @@ class StoreController extends Controller
             DB::rollBack();
 
             return response()->json([
-                'success' => false,
-                'message' => 'Failed to create department.',
-                'error' => $e->getMessage(),
+                'message' => $e->getMessage(),
             ], 500);
         }
     }

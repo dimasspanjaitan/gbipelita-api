@@ -26,7 +26,5 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Setting::observe(SettingObserver::class);
-        Module::observe(ModuleObserver::class);
-        Action::observe(ActionObserver::class);
     }
 }

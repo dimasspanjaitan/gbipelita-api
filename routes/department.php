@@ -12,8 +12,8 @@ use App\Http\Controllers\Department\{
 };
 
 Route::middleware('auth:sanctum')->prefix('departments')->group(function () {
-    Route::get('/', IndexController::class)->middleware('can:view-department');
-    Route::get('/{department}', ShowController::class)->middleware('can:view-department');
+    Route::get('/', IndexController::class)->middleware('can:read-department');
+    Route::get('/{department}', ShowController::class)->middleware('can:show-department');
     Route::post('/', StoreController::class)->middleware('can:create-department');
     Route::put('/{department}', UpdateController::class)->middleware('can:update-department');
     Route::patch('/{department}', UpdateController::class)->middleware('can:update-department');

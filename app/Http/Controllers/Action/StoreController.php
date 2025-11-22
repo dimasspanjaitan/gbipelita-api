@@ -23,9 +23,7 @@ class StoreController extends Controller
             DB::rollBack();
 
             return response()->json([
-                'success' => false,
-                'message' => 'Failed to create module action.',
-                'error' => $e->getMessage(),
+                'message' => $e->getMessage(),
             ], 500);
         }
     }

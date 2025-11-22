@@ -18,16 +18,15 @@ class RolesAndPermissionsSeeder extends Seeder
             $permissions = Permission::pluck('name')->toArray();
 
             $roles = [
-                'developer',
-                'admin',
-                'pastor_youth',
-                'pastor_ic',
-                'department_head',
-                'division_leader',
-                'core_team',
-                'volunteer',
-                'congregation',
-                'guest',
+                'Developer',
+                'Admin',
+                'Youth Pastor',
+                'Department Head',
+                'Division Leader',
+                'Core Team',
+                'Volunteer',
+                'Congregation',
+                'Guest',
             ];
 
             // Buat roles
@@ -39,8 +38,8 @@ class RolesAndPermissionsSeeder extends Seeder
             }
 
             // Assign permissions ke roles
-            $developerRole = Role::where('name', 'developer')->first();
-            $adminRole = Role::where('name', 'admin')->first();
+            $developerRole = Role::where('name', 'Developer')->first();
+            $adminRole = Role::where('name', 'Admin')->first();
 
             if ($developerRole) {
                 $developerRole->givePermissionTo($permissions);
@@ -51,34 +50,34 @@ class RolesAndPermissionsSeeder extends Seeder
             }
 
             // Assign specific permissions ke role lainnya
-            $this->assignRolePermissions('pastor_youth', [
-                'view-user',
-                'view-schedule',
+            $this->assignRolePermissions('Youth Pastor', [
+                'read-user',
+                'read-schedule',
             ]);
 
-            $this->assignRolePermissions('department_head', [
-                'view-user',
-                'view-role',
+            $this->assignRolePermissions('Department Head', [
+                'read-user',
+                'read-role',
                 'create-role',
                 'update-role',
-                'view-schedule',
-                'assign-schedule',
+                'read-schedule',
+                'read-assign-schedule',
             ]);
 
-            $this->assignRolePermissions('division_leader', [
-                'view-user',
-                'view-schedule',
-                'assign-schedule',
+            $this->assignRolePermissions('Division Leader', [
+                'read-user',
+                'read-schedule',
+                'read-assign-schedule',
             ]);
 
-            $this->assignRolePermissions('core_team', [
-                'view-schedule',
-                'availability-schedule',
+            $this->assignRolePermissions('Core Team', [
+                'read-schedule',
+                'read-availability-schedule',
             ]);
 
-            $this->assignRolePermissions('volunteer', [
-                'view-schedule',
-                'availability-schedule',
+            $this->assignRolePermissions('Volunteer', [
+                'read-schedule',
+                'read-availability-schedule',
             ]);
         });
     }

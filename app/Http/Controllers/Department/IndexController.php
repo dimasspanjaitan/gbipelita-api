@@ -19,7 +19,6 @@ class IndexController extends Controller
                         ->orWhere('alias', 'like', $search);
                 });
             })
-            ->with(['divisions'])
             ->when($request->status, function ($query) use ($request) {
                 $query->where('status', $request->status);
             })
@@ -29,6 +28,6 @@ class IndexController extends Controller
             ->when($request->trashed, fn($query) => $query->onlyTrashed())
             ->paginate($request->limit ?? 10);
 
-        return response()->json($departments);
+        return response()->json($departments->load('divisions'));
     }
 }

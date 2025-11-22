@@ -11,20 +11,17 @@ class IndexController extends Controller
 {
     public function __invoke(Request $request): JsonResponse
     {
-        $query = Action::query()
-            ->with('module')
-            ->when($request->module_id, fn($q, $moduleId) => $q->where('module_id', $moduleId))
+        $actions = Action::query()
             ->when($request->search, fn($q, $search) =>
                 $q->where(function ($sub) use ($search) {
-                    $sub->where('name', 'like', "%{$search}%")
-                        ->orWhere('label', 'like', "%{$search}%")
-                        ->orWhere('permission_name', 'like', "%{$search}%");
+                    $sub->where('name', 'like', "%{$search}%");
                 })
             )
-            ->when($request->trashed, fn($q) => $q->onlyTrashed())
-            ->orderBy($request->sort_column ?? 'order', $request->sort_direction ?? 'asc');
-
-        $actions = $query->paginate($request->limit ?? 10);
+            ->when($request->sort_column, function ($query) use ($request) {
+                $query->orderBy($request->sort_column, $request->sort_direction ?? 'asc');
+            })
+            ->when($request->trashed, fn($query) => $query->onlyTrashed())
+            ->paginate($request->limit ?? 10);
 
         return response()->json($actions);
     }
