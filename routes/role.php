@@ -11,11 +11,11 @@ use App\Http\Controllers\Role\{
     ForceDeleteController,
 };
 
-Route::middleware(['auth:sanctum', 'role:developer'])
+Route::middleware(['auth:sanctum', 'role:Developer'])
     ->prefix('roles')
     ->group(function () {
-        Route::get('/', IndexController::class)->middleware('can:view-role');
-        Route::get('/{role}', ShowController::class)->middleware('can:view-role');
+        Route::get('/', IndexController::class)->middleware('can:read-role');
+        Route::get('/{role}', ShowController::class)->middleware('can:show-role');
         Route::post('/', StoreController::class)->middleware('can:create-role');
         Route::put('/{role}', UpdateController::class)->middleware('can:update-role');
         Route::delete('/{role}', DestroyController::class)->middleware('can:delete-role');

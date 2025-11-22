@@ -33,7 +33,7 @@ class UpdateController extends Controller
             report($e);
 
             return response()->json([
-                'error' => $e->getMessage(),
+                'message' => $e->getMessage(),
             ], 500);
         }
     }

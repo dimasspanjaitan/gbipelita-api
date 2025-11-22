@@ -48,7 +48,7 @@ class UserDivisionSeeder extends Seeder
         }
 
         // === 3. User dengan role tertentu (random assignment) ===
-        $roles = ['division_leader', 'core_team', 'volunteer'];
+        $roles = ['Division Leader', 'Core Team', 'Volunteer'];
 
         // Ambil user yang punya salah satu dari role di atas
         $users = User::role($roles)->get();

@@ -32,9 +32,7 @@ class StoreController extends Controller
             report($e);
 
             return response()->json([
-                'success' => false,
-                'message' => 'failed to create role',
-                'error' => $e->getMessage(),
+                'message' => $e->getMessage(),
             ], 500);
         }
     }

@@ -11,11 +11,11 @@ use App\Http\Controllers\Action\{
     UpdateController,
 };
 
-Route::middleware(['auth:sanctum', 'role:developer'])
+Route::middleware(['auth:sanctum', 'role:Developer'])
     ->prefix('actions')
     ->group(function () {
-        Route::get('/', IndexController::class)->middleware('can:view-action');
-        Route::get('/{action}', ShowController::class)->middleware('can:view-action');
+        Route::get('/', IndexController::class)->middleware('can:read-action');
+        Route::get('/{action}', ShowController::class)->middleware('can:show-action');
         Route::post('/', StoreController::class)->middleware('can:create-action');
         Route::put('/{action}', UpdateController::class)->middleware('can:update-action');
         Route::patch('/{action}', UpdateController::class)->middleware('can:update-action');

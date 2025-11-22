@@ -35,14 +35,12 @@ class UserDepartmentSeeder extends Seeder
         }
 
         // Ambil semua user dengan role tertentu
-        $roles = ['division_leader', 'core_team', 'volunteer'];
+        $roles = ['Division Leader', 'Core Team', 'Volunteer'];
 
         $users = User::whereHas('roles', fn($q) => $q->whereIn('name', $roles))->get();
 
         foreach ($users as $user) {
             $user->departments()->syncWithoutDetaching([$deptEW, $deptPA]);
         }
-
-        $this->command->info('UserDepartmentSeeder selesai dijalankan.');
     }
 }

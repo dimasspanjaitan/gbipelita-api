@@ -22,9 +22,7 @@ class UpdateController extends Controller
             DB::rollBack();
 
             return response()->json([
-                'success' => false,
-                'message' => 'Failed to update module action.',
-                'error' => $e->getMessage(),
+                'message' => $e->getMessage(),
             ], 500);
         }
     }

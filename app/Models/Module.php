@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class Module extends Model
 {
@@ -14,10 +15,13 @@ class Module extends Model
 
     protected $fillable = [
         'name',
-        'slug',
-        'icon',
         'order',
-        'description'
+        'slug',
+    ];
+
+    protected $casts = [
+        'name' => 'string',
+        'slug' => 'string',
     ];
 
     public static function booted(): void
@@ -29,13 +33,38 @@ class Module extends Model
         });
     }
 
-    public function permissionsMetas()
-    {
-        return $this->hasMany(PermissionsMeta::class);
-    }
-
     public function actions()
     {
-        return $this->hasMany(Action::class);
+        return $this->belongsToMany(Action::class, 'module_action', 'module_id', 'action_id');
     }
+
+    public static function rules(?string $ignoreId = null): array
+    {
+        return [
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('modules', 'name')->ignore($ignoreId),
+            ],
+            'slug' => [
+                'nullable',
+                'string',
+                'max:255',
+                Rule::unique('modules', 'slug')->ignore($ignoreId),
+            ],
+            'order' => ['required', 'integer'],
+            'actions' => ['required', 'array'],
+            'actions.*' => ['uuid', 'exists:actions,id'],
+        ];
+    }
+
+    public const MESSAGES = [
+        'name.required' => 'Module name is required.',
+        'name.unique' => 'Module name has already been used.',
+        'slug.unique' => 'Module slug has already been used.',
+        'order.required' => 'Order is required.',
+        'actions.*.uuid' => 'Invalid action ID format.',
+        'actions.*.exists' => 'One or more actions not found.',
+    ];
 }
