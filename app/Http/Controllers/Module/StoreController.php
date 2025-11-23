@@ -6,11 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Module\StoreRequest;
 use App\Models\Module;
 use App\Models\Permission;
+use App\Traits\ClearsPermissionCache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class StoreController extends Controller
 {
+    use ClearsPermissionCache;
+
     public function __invoke(StoreRequest $request)
     {
         DB::beginTransaction();
@@ -35,6 +38,7 @@ class StoreController extends Controller
             }
 
             DB::commit();
+            $this->clearPermissionCache();
             return response()->json($module->load('actions'));
         } catch (\Throwable $e) {
             DB::rollBack();

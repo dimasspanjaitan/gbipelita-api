@@ -5,11 +5,12 @@ namespace App\Http\Controllers\Action;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Action\StoreRequest;
 use App\Models\Action;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
 class StoreController extends Controller
 {
-    public function __invoke(StoreRequest $request)
+    public function __invoke(StoreRequest $request): JsonResponse
     {
         DB::beginTransaction();
 
@@ -18,7 +19,7 @@ class StoreController extends Controller
 
             DB::commit();
 
-            return response()->json($action->load('module'));
+            return response()->json($action);
         } catch (\Throwable $e) {
             DB::rollBack();
 

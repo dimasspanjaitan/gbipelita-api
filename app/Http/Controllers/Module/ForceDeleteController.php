@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Module;
 use App\Http\Controllers\Controller;
 use App\Models\Module;
 use App\Models\Permission;
+use App\Traits\ClearsPermissionCache;
 use Illuminate\Support\Facades\DB;
 
 class ForceDeleteController extends Controller
 {
+    use ClearsPermissionCache;
+
     public function __invoke(string $id)
     {
         DB::beginTransaction();
@@ -29,6 +32,7 @@ class ForceDeleteController extends Controller
 
             DB::commit();
 
+            $this->clearPermissionCache();
             return response()->noContent();
         } catch (\Exception $e) {
             DB::rollBack();
