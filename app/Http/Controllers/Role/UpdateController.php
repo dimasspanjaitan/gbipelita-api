@@ -9,14 +9,12 @@ use Illuminate\Support\Facades\DB;
 
 class UpdateController extends Controller
 {
-    public function __invoke(UpdateRequest $request, $id)
+    public function __invoke(UpdateRequest $request, Role $role)
     {
         $validated = $request->validated();
 
         try {
-            $role = DB::transaction(function () use ($id, $validated) {
-                $role = Role::findOrFail($id);
-                
+            $role = DB::transaction(function () use ($role, $validated) {
                 $role->update([
                     'name' => $validated['name'],
                 ]);

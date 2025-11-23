@@ -1,13 +1,15 @@
 <?php
 
 namespace App\Http\Controllers\Role;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Role;
+use Illuminate\Http\JsonResponse;
 
 class IndexController extends Controller
 {
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): JsonResponse
     {
         $roles = Role::query()
             ->when($request->search, function ($query, $search) {

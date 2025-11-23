@@ -26,6 +26,8 @@ class IndexController extends Controller
             ->when($request->trashed, fn($query) => $query->onlyTrashed())
             ->paginate($request->limit ?? 10);
 
+        $modules->getCollection()->load('actions');
+
         return response()->json($modules);
     }
 }

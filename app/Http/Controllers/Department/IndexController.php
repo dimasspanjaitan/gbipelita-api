@@ -19,15 +19,13 @@ class IndexController extends Controller
                         ->orWhere('alias', 'like', $search);
                 });
             })
-            ->when($request->status, function ($query) use ($request) {
-                $query->where('status', $request->status);
-            })
-            ->when($request->sort_column, function ($query) use ($request) {
-                $query->orderBy($request->sort_column, $request->sort_direction ?? 'asc');
-            })
+            ->when($request->status, fn($query) => $query->where('status', $request->status))
+            ->when($request->sort_column, fn($query) => $query->orderBy($request->sort_column, $request->sort_direction ?? 'asc'))
             ->when($request->trashed, fn($query) => $query->onlyTrashed())
             ->paginate($request->limit ?? 10);
 
-        return response()->json($departments->load('divisions'));
+        $departments->getCollection()->load('divisions');
+
+        return response()->json($departments);
     }
 }
