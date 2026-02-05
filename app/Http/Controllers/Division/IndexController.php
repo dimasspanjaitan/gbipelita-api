@@ -34,6 +34,8 @@ class IndexController extends Controller
             ->when($request->trashed, fn($query) => $query->onlyTrashed())
             ->paginate($request->limit ?? 10);
 
+        $divisions->getCollection()->load("department");
+
         return response()->json($divisions);
     }
 }

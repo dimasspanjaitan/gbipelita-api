@@ -1,47 +1,61 @@
-- User:
-        - id: uuid|primary
+<!-- TYPE
+uuid = char:36
+string = varchar:225
+-->
+
+- User: users
+        - id: uuid|primary|required
         - username: string|required
         - first_name: string|nullable
         - last_name: string|nullable
         - nickname: string|required
         - email: string|nullable
         - password: string|required
-        - status: string|default:active|index|required  // ['active', 'inactive']
+        - status: enum|default:active|index|required  // ['active', 'inactive']
         - photo: string|nullable
+        - created_at: timestamp|nullable
+        - updated_at: timestamp|nullable
+        - deleted_at: timestamp|nullable
 
-- UserAvailability
-        - id: uuid|primary
-        - user_id: string|index|required
-        - availability: string|default:available  // ['available', 'training', 'suspended', 'on_leave']
+- UserAvailability: // migration tablenya belum dibuat
+        - id: uuid|primary|required
+        - user_id: uuid|index|required
+        - availability: enum|default:available  // ['available', 'training', 'suspended', 'on_leave']
         - start_date: date|nullable
         - end_date: date|nullable
 
-- Department
-        - id: uuid|primary
-        - name: string|unique|required
-        - alias: string|unique|required
-        - status: string|default:active|index|required  // ['active', 'inactive']
-        - content: text|nullable
-
-- UserDepartment
-        - user_id: string|index|required|primary
-        - department_id: string|index|required|primary
-
-- Division
-        - id: uuid|primary
+- Department: departments
+        - id: uuid|primary|required
         - name: string|unique|required
         - alias: string|unique|nullable
-        - department_id: string|index|required
-        - status: string|default:active|index|required  // ['active', 'inactive']
+        - status: enum|default:active|index|required  // ['active', 'inactive']
         - content: text|nullable
+        - created_at: timestamp|nullable
+        - updated_at: timestamp|nullable
+        - deleted_at: timestamp|nullable
 
-- UserDivision
-        - user_id: string|index|required|primary
-        - division_id: string|index|required|primary
+- UserDepartment: use_department
+        - user_id: uuid|index|primary|required
+        - department_id: uuid|index|primary|required
+
+- Division: divisions
+        - id: uuid|primary|required
+        - name: string|unique|required
+        - alias: string|unique|nullable
+        - department_id: uuid|index|required
+        - status: enum|default:active|index|required  // ['active', 'inactive']
+        - content: text|nullable
+        - created_at: timestamp|nullable
+        - updated_at: timestamp|nullable
+        - deleted_at: timestamp|nullable
+
+- UserDivision: user_division
+        - user_id: uuid|index|primary|required
+        - division_id: uuid|index|primary|required
         - priority: integer|default:1|required
 
-- Master
-        - id: uuid|primary
+- Master: // migration tablenya belum dibuat
+        - id: uuid|primary|required
         - type: string|required|index
         - name: string|required
         - start_time: time|nullable
@@ -50,9 +64,9 @@
         - order: integer|default:1|required
         - data: json|nullable
 
-- ScheduleAssignments
-        - id: uuid|primary
-        - user_id: string|index|required
+- ScheduleAssignments: // migration tablenya belum dibuat
+        - id: uuid|primary|required
+        - user_id: uuid|index|required
         - date: date|required
         - session_id: string|index|required // foreign key ke Master
         - division_id: string|index|required
@@ -60,14 +74,65 @@
         - content: text|nullable
         - assigned_by: string|index|required // foreign key ke User
 
-- UserScheduleAvailability  // unique (user_id, date, session_id)
-        - id: uuid|primary
-        - user_id: string|index|required
+- UserScheduleAvailability: // migration tablenya belum dibuat
+        - id: uuid|primary|required
+        - user_id: uuid|index|required
         - date: date|required
-        - session_id: string|index|required // foreign key ke Master
+        - session_id: uuid|index|required // foreign key ke Master
 
---------------------------------------------------------------------------
+- Module: modules
+        - id: uuid|primary|required
+        - name: string|unique
+        - slug: string|unique
+        - icon: string|nullable
+        - order: integer|default:0
+        - description: string|nullable
+        - created_at: timestamp|nullable
+        - updated_at: timestamp|nullable
+        - deleted_at: timestamp|nullable
 
+- Action: actions
+        - id: uuid|primary|required
+        - module_id: uuid|index|required
+        - is_default_action: boolean|default:false
+        - name: string|unique|required
+        - label: string|unique|required
+        - permission_name: string|unique|required
+        - order: integer|default:0
+        - created_at: timestamp|nullable
+        - updated_at: timestamp|nullable
+        - deleted_at: timestamp|nullable
+
+- Module Action: module_action
+        - module_id: uuid|required
+        - action_id: uuid|required
+
+- Role: roles
+        - id: uuid|primary|required
+        - name: string|required
+        - gurad_name: string|required
+        - created_at: timestamp|nullable
+        - updated_at: timestamp|nullable
+        - deleted_at: timestamp|nullable
+
+- Permission: permissions
+        - id: uuid|primary|required
+        - name: string|required
+        - quard_name: string|required
+        - created_at: timestamp|nullable
+        - updated_at: timestamp|nullable
+        - deleted_at: timestamp|nullable
+
+- Role Has Permission: role_has_permissions
+        - role_id: uuid|primary|required
+        - permission_id: uuid|primary|required
+
+- Model Has Role: model_has_permissions
+        - role_id: uuid|primary|required
+        - model_id: uuid|primary|required
+        - model_type: string|primary|required
+
+--------------------------------------------------------
 - Event
         - id: uuid|primary
         - name: string|required
@@ -84,30 +149,3 @@
         - lat_long: string|nullable
         - photo: json|nullable
         - banner: string|nullable
-
-- PermissionMeta
-        - id: uuid|primary
-        - module_id: uuid|index|nullable
-        - module: string|index
-        - menu: string|nullable
-        - route_name: string|unique
-        - permission_name: string|unique
-        - action: string
-        - description: text|nullable
-
-- Module
-        - id: uuid|primary
-        - name: string|unique
-        - slug: string|unique
-        - icon: string|nullable
-        - order: integer|default:0
-        - description: string|nullable
-
-- Action
-        - id: uuid|primary
-        - module_id: uuid|index|required
-        - is_default_action: boolean|default:false
-        - name: string|unique|required
-        - label: string|unique|required
-        - permission_name: string|unique|required
-        - order: integer|default:0
