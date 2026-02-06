@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
             \App\Http\Middleware\TrustProxies::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
+            \App\Http\Middleware\ShareSettingsData::class,
         ]);
 
         // Middleware grup untuk API
