@@ -54,32 +54,6 @@ string = varchar:225
         - division_id: uuid|index|primary|required
         - priority: integer|default:1|required
 
-- Master: // migration tablenya belum dibuat
-        - id: uuid|primary|required
-        - type: string|required|index
-        - name: string|required
-        - start_time: time|nullable
-        - end_time: time|nullable
-        - status: string|default:active|required
-        - order: integer|default:1|required
-        - data: json|nullable
-
-- ScheduleAssignments: // migration tablenya belum dibuat
-        - id: uuid|primary|required
-        - user_id: uuid|index|required
-        - date: date|required
-        - session_id: string|index|required // foreign key ke Master
-        - division_id: string|index|required
-        - role_in_session: string
-        - content: text|nullable
-        - assigned_by: string|index|required // foreign key ke User
-
-- UserScheduleAvailability: // migration tablenya belum dibuat
-        - id: uuid|primary|required
-        - user_id: uuid|index|required
-        - date: date|required
-        - session_id: uuid|index|required // foreign key ke Master
-
 - Module: modules
         - id: uuid|primary|required
         - name: string|unique
@@ -132,7 +106,33 @@ string = varchar:225
         - model_id: uuid|primary|required
         - model_type: string|primary|required
 
---------------------------------------------------------
+(DEPRECATED)--------------------------------------------------------
+- Master: // migration tablenya belum dibuat
+        - id: uuid|primary|required
+        - type: string|required|index
+        - name: string|required
+        - start_time: time|nullable
+        - end_time: time|nullable
+        - status: string|default:active|required
+        - order: integer|default:1|required
+        - data: json|nullable
+
+- ScheduleAssignments: // migration tablenya belum dibuat
+        - id: uuid|primary|required
+        - user_id: uuid|index|required
+        - date: date|required
+        - session_id: string|index|required // foreign key ke Master
+        - division_id: string|index|required
+        - role_in_session: string
+        - content: text|nullable
+        - assigned_by: string|index|required // foreign key ke User
+
+- UserScheduleAvailability: // migration tablenya belum dibuat
+        - id: uuid|primary|required
+        - user_id: uuid|index|required
+        - date: date|required
+        - session_id: uuid|index|required // foreign key ke Master
+
 - Event
         - id: uuid|primary
         - name: string|required

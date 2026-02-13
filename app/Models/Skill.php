@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
+
+class Skill extends Model
+{
+    use HasUuids;
+
+    protected $fillable = [
+        'name',
+        'division_id'
+
+    ];
+
+    public function division()
+    {
+        return $this->belongsTo(Division::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_skills')
+            ->withPivot(['is_primary', 'order'])
+            ->withTimestamps();
+    }
+}

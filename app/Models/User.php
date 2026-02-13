@@ -101,6 +101,28 @@ class User extends Authenticatable
             ->withPivot('priority');
     }
 
+    public function skills()
+    {
+        return $this->belongsToMany(Skill::class, 'user_skills')
+            ->withPivot(['is_primary', 'order'])
+            ->withTimestamps();
+    }
+
+    public function userSkills()
+    {
+        return $this->hasMany(UserSkill::class);
+    }
+
+    public function availabilities()
+    {
+        return $this->hasMany(ScheduleAvailability::class);
+    }
+
+    public function assignments()
+    {
+        return $this->hasMany(ScheduleAssignment::class);
+    }
+
     /** ────────────────────────────────
      *  VALIDATION RULES
      *  ──────────────────────────────── */

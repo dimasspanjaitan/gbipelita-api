@@ -12,6 +12,7 @@ class ModulesSeeder extends Seeder
     public function run(): void
     {
         $modules = [
+            'Dashboard',
             'User',
             'Role',
             'Permission',
