@@ -156,6 +156,10 @@ class User extends Authenticatable
             'departments.*' => ['required', 'string', 'uuid', 'exists:departments,id'],
             'divisions' => ['sometimes', 'array'],
             'divisions.*' => ['required', 'string', 'uuid', 'exists:divisions,id'],
+            'skills' => ['array'],
+            'skills.*.skill_id' => ['required', 'uuid', 'exists:skills,id'],
+            'skills.*.is_primary' => ['boolean'],
+            'skills.*.order' => ['integer'],
         ];
     }
 

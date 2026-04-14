@@ -10,6 +10,6 @@ class ShowController extends Controller
     
     public function __invoke(Division $division)
     {
-        return response()->json($division);
+        return response()->json($division->load('department'));
     }
 }

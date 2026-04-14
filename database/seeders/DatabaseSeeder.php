@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             DepartmentSeeder::class,
             DivisionSeeder::class,
+            SkillSeeder::class,
             UserDepartmentSeeder::class,
             UserDivisionSeeder::class,
             SettingSeeder::class,

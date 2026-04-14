@@ -8,3 +8,5 @@ require __DIR__ . '/user.php';
 require __DIR__ . '/department.php';
 require __DIR__ . '/division.php';
 require __DIR__ . '/schedule.php';
+require __DIR__ . '/volunteer.php';
+require __DIR__ . '/skill.php';
