@@ -6,7 +6,7 @@ use App\Http\Controllers\Schedule\{
 };
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth:sanctum')->prefix('schedule')->group(function () {
+Route::middleware('auth:sanctum')->prefix('schedules')->group(function () {
     Route::post(
         '/{period}/generate',
         [GenerationController::class, 'generate']
@@ -14,5 +14,8 @@ Route::middleware('auth:sanctum')->prefix('schedule')->group(function () {
     Route::post(
         '/{period}/assignments',
         [PeriodController::class, 'generate']
+    );
+    Route::post(
+        '/schedule-periods', [PeriodController::class, 'store']
     );
 });

@@ -3,17 +3,37 @@
 namespace App\Http\Controllers\Schedule;
 
 use App\Http\Controllers\Controller;
-use App\Models\SchedulePeriod;
-use Illuminate\Http\JsonResponse;
+use App\Services\Scheduling\PeriodBuilderService;
+use Illuminate\Http\Request;
 
 class PeriodController extends Controller
 {
-    public function assignments(SchedulePeriod $period): JsonResponse
+    public function store(Request $request)
     {
-        $data = $period->assignments()
-            ->with(['user', 'session', 'requirement'])
-            ->get();
+        $request->validate([
+            'month' => 'required|integer|min:1|max:12',
+            'year' => 'required|integer|min:2024',
+            'department_id' => 'required|uuid',
+        ]);
 
-        return response()->json($data);
+        try {
+            $period = app(PeriodBuilderService::class)->build(
+                $request->month,
+                $request->year,
+                $request->department_id
+            );
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Schedule period created',
+                'data' => $period,
+            ]);
+        } catch (\Throwable $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
+        }
     }
 }

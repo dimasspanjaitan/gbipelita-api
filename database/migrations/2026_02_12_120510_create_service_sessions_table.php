@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('service_sessions', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('schedule_period_id')->index();
-            $table->string('service_date');
+            $table->date('service_date');
             $table->unsignedTinyInteger('week_number');
             $table->unsignedTinyInteger('session_number');
             $table->string('start_time');
@@ -40,6 +40,11 @@ return new class extends Migration
             $table->unsignedTinyInteger('required_qty');
             $table->timestamps();
             $table->softDeletes();
+
+            $table->unique([
+                'service_session_id',
+                'skill_id'
+            ], 'sr_session_skill_uq');
         });
     }
 

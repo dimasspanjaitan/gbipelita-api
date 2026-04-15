@@ -24,6 +24,9 @@ return new class extends Migration
                 'service_session_id',
                 'user_id'
             ]);
+            
+            $table->index(['user_id', 'service_session_id']);
+            $table->index(['service_session_id', 'is_available']);
         });
     }
 
