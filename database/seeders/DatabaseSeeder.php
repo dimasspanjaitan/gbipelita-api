@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             SkillSeeder::class,
             UserDepartmentSeeder::class,
             UserDivisionSeeder::class,
+            UserSkillSeeder::class,
             SettingSeeder::class,
         ]);
     }

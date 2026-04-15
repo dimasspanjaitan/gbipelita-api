@@ -123,7 +123,7 @@ class UserSeeder extends Seeder
 
         // Volunteer
         User::factory()
-            ->count(20)
+            ->count(100)
             ->create()
             ->each(function ($user) use ($volunteerRole) {
                 if ($volunteerRole) {

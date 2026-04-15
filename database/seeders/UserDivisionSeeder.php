@@ -18,11 +18,14 @@ class UserDivisionSeeder extends Seeder
         $divisions = Division::whereIn('name', [
             'Musik',
             'Multimedia',
-            'LICC Youth',
+            'Vocal',
+            'Choir',
+            'Sound System'
+            // 'LICC Youth',
         ])->get()->keyBy('name');
 
         // Validasi kalau ada yang belum ada
-        foreach (['Musik', 'Multimedia', 'LICC Youth'] as $name) {
+        foreach (['Musik', 'Multimedia', 'Vocal', 'Choir', 'Sound System'] as $name) {
             if (!isset($divisions[$name])) {
                 $this->command->error("Division '{$name}' tidak ditemukan. Pastikan DivisionSeeder sudah dijalankan.");
                 return;
@@ -34,7 +37,7 @@ class UserDivisionSeeder extends Seeder
         if ($mahenja) {
             $mahenja->divisions()->syncWithoutDetaching([
                 $divisions['Musik']->id => ['priority' => 1],
-                $divisions['LICC Youth']->id => ['priority' => 1],
+                // $divisions['LICC Youth']->id => ['priority' => 1],
             ]);
         }
 
@@ -43,32 +46,57 @@ class UserDivisionSeeder extends Seeder
         if ($laora) {
             $laora->divisions()->syncWithoutDetaching([
                 $divisions['Multimedia']->id => ['priority' => 1],
-                $divisions['LICC Youth']->id => ['priority' => 1],
+                // $divisions['LICC Youth']->id => ['priority' => 1],
             ]);
         }
 
-        // === 3. User dengan role tertentu (random assignment) ===
-        $roles = ['Division Leader', 'Core Team', 'Volunteer'];
+        $userDivisionCount = [];
+        $maxDivisionPerUser = 2;
+        $users = User::role('Volunteer')->get()->shuffle();
 
-        // Ambil user yang punya salah satu dari role di atas
-        $users = User::role($roles)->get();
-
-        // Ambil semua divisi di bawah departemen "EW"
-        $divisionsEW = Division::whereHas('department', fn($q) => $q->where('alias', 'EW'))->get();
-
-        if ($divisionsEW->isEmpty()) {
-            $this->command->error('Tidak ada division di bawah department EW.');
+        // Pastikan cukup user
+        if ($users->count() < 100) {
+            $this->command->error('Jumlah user volunteer kurang dari 100.');
             return;
         }
 
+        // Mapping kebutuhan
+        $distribution = collect([
+            'Musik' => 60,
+            'Vocal' => 40,
+            'Multimedia' => 20,
+            'Choir' => 20,
+            'Sound System' => 4,
+        ])->sortDesc();
+
+        // Semua user wajib punya minimal 1 division
         foreach ($users as $user) {
-            // Pilih satu divisi random dari EW
-            $randomDivision = $divisionsEW->random();
+            $randomDivision = $divisions->random();
 
             $user->divisions()->syncWithoutDetaching([
                 $randomDivision->id => ['priority' => 1],
-                $divisions['LICC Youth']->id => ['priority' => 1],
             ]);
+        }
+
+        foreach ($distribution as $divisionName => $total) {
+            $eligibleUsers = $users->filter(function ($user) use ($userDivisionCount, $maxDivisionPerUser) {
+                return ($userDivisionCount[$user->id] ?? 0) < $maxDivisionPerUser;
+            });
+
+            if ($eligibleUsers->count() < $total) {
+                $this->command->warn("User tidak cukup untuk {$divisionName}, mengambil sisanya tanpa batas.");
+                $eligibleUsers = $users;
+            }
+
+            $selectedUsers = $eligibleUsers->shuffle()->take($total);
+
+            foreach ($selectedUsers as $user) {
+                $user->divisions()->syncWithoutDetaching([
+                    $divisions[$divisionName]->id => ['priority' => 1],
+                ]);
+
+                $userDivisionCount[$user->id] = ($userDivisionCount[$user->id] ?? 0) + 1;
+            }
         }
 
         $this->command->info('UserDivision seeding completed successfully.');
