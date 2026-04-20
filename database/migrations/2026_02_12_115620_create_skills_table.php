@@ -17,6 +17,8 @@ return new class extends Migration
             $table->uuid('division_id')->index();
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('division_id')->references('id')->on('divisions')->onDelete('cascade');
         });
 
         Schema::create('user_skills', function (Blueprint $table) {
@@ -29,6 +31,9 @@ return new class extends Migration
             $table->softDeletes();
 
             $table->unique(['user_id', 'skill_id']);
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('skill_id')->references('id')->on('skills')->onDelete('cascade');
         });
     }
 

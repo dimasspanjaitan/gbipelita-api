@@ -14,6 +14,9 @@ return new class extends Migration
         Schema::create('module_action', function (Blueprint $table) {
             $table->uuid('module_id');
             $table->uuid('action_id');
+
+            $table->foreign('module_id')->references('id')->on('modules')->onDelete('cascade');
+            $table->foreign('action_id')->references('id')->on('actions')->onDelete('cascade');
         });
     }
 

@@ -30,6 +30,8 @@ return new class extends Migration
             $table->softDeletes();
 
             $table->unique(['department_id', 'month', 'year']);
+
+            $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
         });
     }
 

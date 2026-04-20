@@ -27,6 +27,10 @@ return new class extends Migration
             
             $table->index(['user_id', 'service_session_id']);
             $table->index(['service_session_id', 'is_available']);
+
+            $table->foreign('schedule_period_id')->references('id')->on('schedule_periods')->onDelete('cascade');
+            $table->foreign('service_session_id')->references('id')->on('service_sessions')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

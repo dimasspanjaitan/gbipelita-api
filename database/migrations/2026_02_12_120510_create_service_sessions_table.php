@@ -30,6 +30,8 @@ return new class extends Migration
                 ],
                 'ss_period_date_session_uq'
             );
+
+            $table->foreign('schedule_period_id')->references('id')->on('schedule_periods')->onDelete('cascade');
         });
 
         Schema::create('service_requirements', function (Blueprint $table) {
@@ -45,6 +47,10 @@ return new class extends Migration
                 'service_session_id',
                 'skill_id'
             ], 'sr_session_skill_uq');
+
+            $table->foreign('service_session_id')->references('id')->on('service_sessions')->onDelete('cascade');
+            $table->foreign('division_id')->references('id')->on('divisions')->onDelete('cascade');
+            $table->foreign('skill_id')->references('id')->on('skills')->onDelete('cascade');
         });
     }
 

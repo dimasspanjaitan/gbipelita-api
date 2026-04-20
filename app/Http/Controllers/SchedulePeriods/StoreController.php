@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Schedule;
+namespace App\Http\Controllers\SchedulePeriods;
 
 use App\Http\Controllers\Controller;
 use App\Services\Scheduling\PeriodBuilderService;
 use Illuminate\Http\Request;
 
-class PeriodController extends Controller
+class StoreController extends Controller
 {
-    public function store(Request $request)
+    public function __invoke(Request $request)
     {
         $request->validate([
             'month' => 'required|integer|min:1|max:12',

@@ -18,6 +18,9 @@ return new class extends Migration
             $table->boolean('has_submitted')->default(false);
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('schedule_period_id')->references('id')->on('schedule_periods')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
