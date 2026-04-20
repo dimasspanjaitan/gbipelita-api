@@ -3,7 +3,9 @@
 namespace App\Http\Requests\Role;
 
 use App\Models\Role;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 /**
  * @method mixed route(string|null $param = null, mixed $default = null)
@@ -24,5 +26,14 @@ class UpdateRequest extends FormRequest
     public function messages(): array
     {
         return Role::MESSAGES;
+    }
+
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'message' => 'Validation errors',
+            'errors'  => $validator->errors(),
+        ], 422));
     }
 }
