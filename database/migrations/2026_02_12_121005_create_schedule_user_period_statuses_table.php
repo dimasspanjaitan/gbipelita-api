@@ -11,13 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('schedule_user_period_status', function (Blueprint $table) {
+        Schema::create('schedule_user_period_statuses', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('schedule_period_id')->index();
             $table->uuid('user_id')->index();
             $table->boolean('has_submitted')->default(false);
             $table->timestamps();
             $table->softDeletes();
+
+            $table->unique([
+                'schedule_period_id',
+                'user_id'
+            ]);
 
             $table->foreign('schedule_period_id')->references('id')->on('schedule_periods')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
@@ -29,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('schedule_user_period_status');
+        Schema::dropIfExists('schedule_user_period_statuses');
     }
 };

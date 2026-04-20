@@ -26,10 +26,10 @@ return new class extends Migration
                 'user_id',
             ]);
 
-            $table->foreign('schedule_period_id')->references('id')->on('schedule_periods')->onDelete('cascade');
-            $table->foreign('service_session_id')->references('id')->on('service_sessions')->onDelete('cascade');
-            $table->foreign('service_requirement_id')->references('id')->on('service_requirements')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('schedule_period_id')->references('id')->on('schedule_periods')->cascadeOnDelete();
+            $table->foreign('service_session_id')->references('id')->on('service_sessions')->cascadeOnDelete();
+            $table->foreign('service_requirement_id')->references('id')->on('service_requirements')->cascadeOnDelete();
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
         });
     }
 
