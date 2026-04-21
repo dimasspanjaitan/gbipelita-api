@@ -15,27 +15,32 @@ class GenerateScheduleJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public SchedulePeriod $period;
+    public string $periodId;
 
-    public function __construct(SchedulePeriod $period)
+    public function __construct(string $periodId)
     {
-        $this->period = $period;
+        $this->periodId = $periodId;
     }
 
     public function handle(): void
     {
-        $this->period->update(['status' => 'generating']);
+        Log::info('JOB STARTED');
+
+        $period = SchedulePeriod::findOrFail($this->periodId);
+
+        $period->update(['status' => 'generating']);
 
         try {
             app(ScheduleGeneratorService::class)
-                ->generate($this->period);
+                ->generate($period);
 
-            $this->period->update(['status' => 'generated']);
+            $period->update(['status' => 'generated']);
         } catch (\Throwable $e) {
-            $this->period->updated(['status' => 'failed']);
+
+            $period->update(['status' => 'failed']);
 
             Log::error('Schedule generation failed', [
-                'period_id' => $this->period->id,
+                'period_id' => $this->periodId,
                 'error' => $e->getMessage(),
             ]);
 

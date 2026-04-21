@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\SchedulePeriods\{
+use App\Http\Controllers\SchedulePeriod\{
     DestroyController,
     ForceDeleteController,
     IndexController,

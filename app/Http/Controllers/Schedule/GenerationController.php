@@ -16,8 +16,8 @@ class GenerationController extends Controller
                 'message' => 'Schedule is already generating.'
             ], 409);
         }
-        
-        GenerateScheduleJob::dispatch($period);
+
+        GenerateScheduleJob::dispatch($period->id);
 
         return response()->json([
             'message' => 'Schedule generated successfully.'

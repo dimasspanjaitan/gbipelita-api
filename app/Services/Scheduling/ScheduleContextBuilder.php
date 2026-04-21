@@ -18,7 +18,7 @@ class ScheduleContextBuilder
         $users = User::with([
             'skills',
             'availabilities' => fn($q) =>
-            $q->where('schedule_perio  d_id', $period->id),
+            $q->where('schedule_period_id', $period->id),
         ])->get();
 
         $context = [

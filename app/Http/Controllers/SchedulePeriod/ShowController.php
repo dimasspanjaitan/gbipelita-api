@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\SchedulePeriods;
+namespace App\Http\Controllers\SchedulePeriod;
 
 use App\Http\Controllers\Controller;
 use App\Models\SchedulePeriod;
