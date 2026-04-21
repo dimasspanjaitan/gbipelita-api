@@ -11,5 +11,5 @@ Route::middleware('auth:sanctum')->prefix('schedules')->group(function () {
         '/{period}/generate',
         [GenerationController::class, 'generate']
     );
-    Route::get('/', IndexController::class);
+    Route::get('/{period}', IndexController::class);
 });

@@ -9,11 +9,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class IndexController extends Controller
 {
-    public function __invoke(): JsonResponse
+    public function __invoke(SchedulePeriod $period): JsonResponse
     {
-        $schedulePeriod = SchedulePeriod::where('status', 'generated')->first();
-        $scheduleAssignment = ScheduleAssignment::where('schedule_period_id', $schedulePeriod->id)->get();
+        $scheduleAssignment = ScheduleAssignment::where('schedule_period_id', $period->id)->get();
 
-        return response()->json($scheduleAssignment->load('period', 'session', 'requirement.skill', 'user'));
+        return response()->json([
+            'period' => $period,
+            'assignment' => $scheduleAssignment->load('session', 'requirement.skill', 'user')
+        ]);
     }
 }
