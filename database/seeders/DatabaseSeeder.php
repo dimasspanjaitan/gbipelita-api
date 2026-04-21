@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
             UserDepartmentSeeder::class,
             UserDivisionSeeder::class,
             UserSkillSeeder::class,
+            ScheduleSeeder::class,
+            ServiceRequirementSeeder::class,
             SettingSeeder::class,
         ]);
     }

@@ -33,7 +33,7 @@ class SchedulePeriod extends Model
         return $this->hasMany(ScheduleAssignment::class);
     }
 
-    public function userStatues()
+    public function userStatuses()
     {
         return $this->hasMany(ScheduleUserPeriodStatus::class);
     }

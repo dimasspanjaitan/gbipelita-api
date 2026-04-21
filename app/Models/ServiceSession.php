@@ -18,7 +18,7 @@ class ServiceSession extends Model
         'end_time',
     ];
 
-    public function period()
+    public function schedulePeriod()
     {
         return $this->belongsTo(SchedulePeriod::class, 'schedule_period_id');
     }
@@ -28,7 +28,7 @@ class ServiceSession extends Model
         return $this->hasMany(ServiceRequirement::class);
     }
 
-    public function assigments()
+    public function assignments()
     {
         return $this->hasMany(ScheduleAssignment::class);
     }
