@@ -46,13 +46,6 @@ class ShowController extends Controller
         });
 
         return response()->json([
-            'department' => $period->department,
-            'period' => [
-                'id' => $period->id,
-                'month' => $period->month,
-                'year' => $period->year,
-                'status' => $period->status,
-            ],
             'submitted' => $submitted,
             'sessions' => $sessions,
         ]);

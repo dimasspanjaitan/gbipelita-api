@@ -14,16 +14,6 @@ class StoreRequest extends FormRequest
         return true;
     }
 
-    public function rules(): array
-    {
-        return ScheduleAvailability::rules();
-    }
-
-    public function messages(): array
-    {
-        return ScheduleAvailability::MESSAGES;
-    }
-
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
