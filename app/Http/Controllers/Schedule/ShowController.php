@@ -10,6 +10,8 @@ class ShowController extends Controller
 {
     public function __invoke(SchedulePeriod $period): JsonResponse
     {
+        if ($period->status != "published") return response()->json(['message' => "Jadwal periode ini belum dipublish"]);
+
         $scheduleAssignments = $period->assignments()->with(['session', 'user', 'requirement.skill.division'])->get();
 
         return response()->json([

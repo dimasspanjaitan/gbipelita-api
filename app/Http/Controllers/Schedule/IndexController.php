@@ -10,7 +10,7 @@ class IndexController extends Controller
 {
     public function __invoke(): JsonResponse
     {
-        $schedules = SchedulePeriod::has('assignments')->get();
+        $schedules = SchedulePeriod::has('assignments')->where('status', 'published')->get();
 
         return response()->json($schedules->load('department'));
     }

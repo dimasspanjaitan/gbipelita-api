@@ -78,6 +78,9 @@ class RolesAndPermissionsSeeder extends Seeder
             $this->assignRolePermissions('Volunteer', [
                 'read-schedule',
                 'read-availability-schedule',
+                'show-availability-schedule',
+                'create-availability-schedule',
+                'update-availability-schedule',
             ]);
         });
     }
