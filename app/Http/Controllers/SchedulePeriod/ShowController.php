@@ -27,10 +27,16 @@ class ShowController extends Controller
         $submittedUsers = $volunteers->whereIn('id', $submittedUserIds)->values();
         $notSubmittedUsers = $volunteers->whereNotIn('id', $submittedUserIds)->values();
 
+        $scheduleAssignments = [];
+        if ($schedulePeriod->status == "generated") {
+            $scheduleAssignments = $schedulePeriod->assignments()->with(['session', 'user', 'requirement.skill.division'])->get();
+        }
+
         return response()->json([
             'schedule_period' => $schedulePeriod->load('department'),
             'submitted_users' => $submittedUsers,
-            'not_submitted_users' => $notSubmittedUsers
+            'not_submitted_users' => $notSubmittedUsers,
+            'assignments' => $scheduleAssignments
         ]);
     }
 }
