@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Schedule\{
+    BulkUpdateController,
     GenerationController,
     IndexController,
     ShowController,
@@ -14,4 +15,5 @@ Route::middleware('auth:sanctum')->prefix('schedules')->group(function () {
     );
     Route::get('/', IndexController::class);
     Route::get('/{period}', ShowController::class);
+    Route::put('/{period}/assignments', BulkUpdateController::class);
 });
