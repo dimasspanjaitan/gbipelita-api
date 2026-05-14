@@ -24,11 +24,7 @@ class GenerateScheduleJob implements ShouldQueue
 
     public function handle(): void
     {
-        Log::info('JOB STARTED');
-
         $period = SchedulePeriod::findOrFail($this->periodId);
-
-        $period->update(['status' => 'generating']);
 
         try {
             app(ScheduleGeneratorService::class)

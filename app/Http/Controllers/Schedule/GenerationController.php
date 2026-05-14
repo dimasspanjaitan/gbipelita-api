@@ -17,10 +17,14 @@ class GenerationController extends Controller
             ], 409);
         }
 
+        $period->update([
+            'status' => 'generating'
+        ]);
+
         GenerateScheduleJob::dispatch($period->id);
 
         return response()->json([
-            'message' => 'Schedule generated successfully.'
+            'message' => 'Schedule generated started.'
         ]);
     }
 }
