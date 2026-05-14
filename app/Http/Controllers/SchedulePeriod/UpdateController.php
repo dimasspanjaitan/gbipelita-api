@@ -9,15 +9,15 @@ use Illuminate\Support\Facades\DB;
 
 class UpdateController extends Controller
 {
-    public function __invoke(UpdateRequest $request, SchedulePeriod $schedulePeriod)
+    public function __invoke(UpdateRequest $request, SchedulePeriod $period)
     {
         DB::beginTransaction();
         
         try {
-            $schedulePeriod->update($request->validated());
+            $period->update($request->validated());
             DB::commit();
 
-            return response()->json($schedulePeriod->fresh());
+            return response()->json($period->fresh());
         } catch (\Exception $e) {
             DB::rollBack();
 

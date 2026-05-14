@@ -25,7 +25,12 @@ class IndexController extends Controller
             ->whereHas('roles', function ($q) {
                 $q->where('name', 'volunteer');
             })
-            ->with(['roles', 'departments', 'divisions'])
+            ->when($request->skill, function ($query) use ($request) {
+                $query->whereHas('skills', function ($q) use ($request) {
+                    $q->where('name', $request->skill);
+                });
+            })
+            ->with(['roles', 'departments', 'divisions', 'skills'])
             ->when($request->status, function ($query) use ($request) {
                 $query->where('status', $request->status);
             })

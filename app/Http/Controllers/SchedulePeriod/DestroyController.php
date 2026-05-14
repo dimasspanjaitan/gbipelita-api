@@ -7,9 +7,9 @@ use App\Models\SchedulePeriod;
 
 class DestroyController extends Controller
 {
-    public function __invoke(SchedulePeriod $schedulePeriod)
+    public function __invoke(SchedulePeriod $period)
     {
-        $schedulePeriod->delete();
+        $period->delete();
         return response()->noContent();
     }
 }

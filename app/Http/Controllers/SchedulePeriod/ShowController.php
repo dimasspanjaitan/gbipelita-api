@@ -11,7 +11,7 @@ use Illuminate\Http\JsonResponse;
 class ShowController extends Controller
 {
 
-    public function __invoke(SchedulePeriod $schedulePeriod): JsonResponse
+    public function __invoke(SchedulePeriod $period): JsonResponse
     {
         $volunteers = User::query()
             ->whereHas('roles', function ($q) {
@@ -20,7 +20,7 @@ class ShowController extends Controller
             ->get();
 
         $submittedUserIds = ScheduleAvailability::query()
-            ->where('schedule_period_id', $schedulePeriod->id)
+            ->where('schedule_period_id', $period->id)
             ->pluck('user_id')
             ->unique();
 
@@ -28,12 +28,12 @@ class ShowController extends Controller
         $notSubmittedUsers = $volunteers->whereNotIn('id', $submittedUserIds)->values();
 
         $scheduleAssignments = [];
-        if ($schedulePeriod->status == "generated") {
-            $scheduleAssignments = $schedulePeriod->assignments()->with(['session', 'user', 'requirement.skill.division'])->get();
+        if ($period->status == "generated" || $period->status == "published") {
+            $scheduleAssignments = $period->assignments()->with(['session', 'user', 'requirement.skill.division'])->get();
         }
 
         return response()->json([
-            'schedule_period' => $schedulePeriod->load('department'),
+            'schedule_period' => $period->load('department'),
             'submitted_users' => $submittedUsers,
             'not_submitted_users' => $notSubmittedUsers,
             'assignments' => $scheduleAssignments

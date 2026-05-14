@@ -5,24 +5,24 @@ namespace App\Http\Controllers\SchedulePeriod;
 use App\Http\Controllers\Controller;
 use App\Models\SchedulePeriod;
 
-class OpenController extends Controller
+class PublishController extends Controller
 {
     public function __invoke(SchedulePeriod $period)
     {
-        if ($period->status != 'draft') {
+        if ($period->status != 'generated') {
             return response()->json([
                 'success' => false,
-                'message' => "Only draft can be opened"
+                'message' => "Only generated can be published"
             ], 422);
         }
 
         $period->update([
-            'status' => 'open',
+            'status' => 'published',
         ]);
 
         return response()->json([
             'success' => true,
-            'message' => 'Schedule period opened successfully',
+            'message' => 'Schedule period published successfully',
             'data' => $period,
         ]);
     }
