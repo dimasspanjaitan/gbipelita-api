@@ -11,8 +11,37 @@
                         <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
                             <ClockIcon class="w-6 h-6 text-blue-600" />
                         </div>
-                        <h3 class="text-xl font-semibold mb-2">Jadwal Ibadah</h3>
-                        <p class="text-gray-600">Minggu: 08.00 & 10.30 WIB<br>Rabu: 19.30 WIB</p>
+                        <h3 class="text-xl font-semibold mb-2">Jadwal Ibadah Minggu</h3>
+                        <div class="grid grid-cols-[1fr_0.2fr_2fr] text-gray-600">
+                            <div class="font-bold">Sesi 1</div>
+                            <div>:</div>
+                            <div>09.00 WIB</div>
+                        </div>
+                        <div class="grid grid-cols-[1fr_0.2fr_2fr] text-gray-600">
+                            <div class="font-bold">Sesi 2</div>
+                            <div>:</div>
+                            <div>11.00 WIB</div>
+                        </div>
+                        <div class="grid grid-cols-[1fr_0.2fr_2fr] text-gray-600">
+                            <div class="font-bold">Sesi 3</div>
+                            <div>:</div>
+                            <div>14.00 WIB</div>
+                        </div>
+                        <div class="grid grid-cols-[1fr_0.2fr_2fr] text-gray-600">
+                            <div class="font-bold">Sesi 4</div>
+                            <div>:</div>
+                            <div>16.00 WIB</div>
+                        </div>
+                        <div class="grid grid-cols-[1fr_0.2fr_2fr] text-gray-600">
+                            <div class="font-bold">Sesi 5</div>
+                            <div>:</div>
+                            <div>18.00 WIB</div>
+                        </div>
+                        <div class="grid grid-cols-[1fr_0.2fr_2fr] text-gray-600">
+                            <div class="font-bold">Sesi 6</div>
+                            <div>:</div>
+                            <div>20.00 WIB</div>
+                        </div>
                     </div>
 
                     <div
