@@ -16,6 +16,8 @@ class SchedulePeriod extends Model
         'year',
         'max_service_per_week',
         'status',
+        'submitted_count',
+        'not_submitted_count',
     ];
 
     public function department()

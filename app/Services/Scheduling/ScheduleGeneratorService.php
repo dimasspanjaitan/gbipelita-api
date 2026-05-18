@@ -26,7 +26,8 @@ class ScheduleGeneratorService
             Log::info('ASSIGNMENTS COUNT: ' . count($assignments));
             Log::info('SAVE ASSIGNMENTS');
             // clear existing system generated assignments
-            ScheduleAssignment::where('schedule_period_id', $period->id)
+            ScheduleAssignment::query()
+                ->where('schedule_period_id', $period->id)
                 ->where('is_system_generated', true)
                 ->delete();
 

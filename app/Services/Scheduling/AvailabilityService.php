@@ -13,7 +13,8 @@ class AvailabilityService
         DB::transaction(function () use ($periodId, $userId, $sessionIds) {
 
             // delete existing
-            ScheduleAvailability::where('schedule_period_id', $periodId)
+            ScheduleAvailability::query()
+                ->where('schedule_period_id', $periodId)
                 ->where('user_id', $userId)
                 ->delete();
 

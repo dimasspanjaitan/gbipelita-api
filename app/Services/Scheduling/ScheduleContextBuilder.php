@@ -19,7 +19,9 @@ class ScheduleContextBuilder
             'skills',
             'availabilities' => fn($q) =>
             $q->where('schedule_period_id', $period->id),
-        ])->get();
+        ])
+            ->where('status', 'active')
+            ->get();
 
         $context = [
             'period' => [

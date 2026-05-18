@@ -17,6 +17,7 @@ class ShowController extends Controller
             ->whereHas('roles', function ($q) {
                 $q->where('name', 'volunteer');
             })
+            ->where('status', 'active')
             ->get();
 
         $submittedUserIds = ScheduleAvailability::query()

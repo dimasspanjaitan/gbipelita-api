@@ -26,6 +26,8 @@ return new class extends Migration
                 'published',
                 'failed',
             ])->default('draft');
+            $table->integer('submitted_count')->nullable()->default(0);
+            $table->integer('not_submitted_count')->nullable()->default(0);
             $table->timestamps();
             $table->softDeletes();
 

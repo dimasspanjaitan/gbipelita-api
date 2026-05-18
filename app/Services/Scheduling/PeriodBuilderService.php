@@ -18,11 +18,12 @@ class PeriodBuilderService
         return DB::transaction(function () use ($month, $year, $departmentId) {
 
             // ❗ prevent duplicate period
-            $existing = SchedulePeriod::where([
-                'department_id' => $departmentId,
-                'month' => $month,
-                'year' => $year,
-            ])->first();
+            $existing = SchedulePeriod::query()
+                ->where([
+                    'department_id' => $departmentId,
+                    'month' => $month,
+                    'year' => $year,
+                ])->first();
 
             if ($existing) {
                 throw new \Exception('Schedule period already exists');
