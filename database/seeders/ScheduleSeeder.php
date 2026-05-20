@@ -15,7 +15,7 @@ class ScheduleSeeder extends Seeder
     public function run(): void
     {
         // ambil 1 department (sesuaikan)
-        $departmentId = \App\Models\Department::first()->id;
+        $departmentId = \App\Models\Department::query()->first()->id;
 
         // ======================
         // 1. CREATE PERIOD

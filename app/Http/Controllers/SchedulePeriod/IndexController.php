@@ -12,6 +12,7 @@ class IndexController extends Controller
     public function __invoke(Request $request): JsonResponse
     {
         $schedulePeriods = SchedulePeriod::query()
+            ->with('department')
             ->when($request->search, function ($query, $search) {
                 $search = "%{$search}%";
                 $query->where(function ($q) use ($search) {

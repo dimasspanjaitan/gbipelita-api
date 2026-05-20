@@ -11,7 +11,7 @@ class UserDepartmentSeeder extends Seeder
     public function run(): void
     {
         // Ambil Department yang dibutuhkan
-        $departments = Department::whereIn('alias', ['EW', 'PA'])
+        $departments = Department::query()->whereIn('alias', ['EW', 'PA'])
             ->get()
             ->keyBy('alias');
 
@@ -24,8 +24,8 @@ class UserDepartmentSeeder extends Seeder
         $deptPA = $departments['PA']->id;
 
         // Ambil user spesifik
-        $mahenja = User::where('username', 'mahenja')->first();
-        $laora   = User::where('username', 'laora')->first();
+        $mahenja = User::query()->where('username', 'mahenja')->first();
+        $laora   = User::query()->where('username', 'laora')->first();
 
         // Assign manual ke dua departemen
         foreach ([$mahenja, $laora] as $user) {

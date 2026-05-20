@@ -15,7 +15,7 @@ class UserDivisionSeeder extends Seeder
         DB::table('user_division')->truncate();
 
         // Ambil semua divisi yang dibutuhkan
-        $divisions = Division::whereIn('name', [
+        $divisions = Division::query()->whereIn('name', [
             'Musik',
             'Multimedia',
             'Vocal',
@@ -33,7 +33,7 @@ class UserDivisionSeeder extends Seeder
         }
 
         // === 1. Mahenja ke divisi Musik ===
-        $mahenja = User::where('username', 'mahenja')->first();
+        $mahenja = User::query()->where('username', 'mahenja')->first();
         if ($mahenja) {
             $mahenja->divisions()->syncWithoutDetaching([
                 $divisions['Musik']->id => ['priority' => 1],
@@ -42,7 +42,7 @@ class UserDivisionSeeder extends Seeder
         }
 
         // === 2. Laora ke divisi Multimedia ===
-        $laora = User::where('username', 'laora')->first();
+        $laora = User::query()->where('username', 'laora')->first();
         if ($laora) {
             $laora->divisions()->syncWithoutDetaching([
                 $divisions['Multimedia']->id => ['priority' => 1],

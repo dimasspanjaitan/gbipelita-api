@@ -15,7 +15,7 @@ class RolesAndPermissionsSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         DB::transaction(function () {
-            $permissions = Permission::pluck('name')->toArray();
+            $permissions = Permission::query()->pluck('name')->toArray();
 
             $roles = [
                 'Developer',
@@ -38,8 +38,8 @@ class RolesAndPermissionsSeeder extends Seeder
             }
 
             // Assign permissions ke roles
-            $developerRole = Role::where('name', 'Developer')->first();
-            $adminRole = Role::where('name', 'Admin')->first();
+            $developerRole = Role::query()->where('name', 'Developer')->first();
+            $adminRole = Role::query()->where('name', 'Admin')->first();
 
             if ($developerRole) {
                 $developerRole->givePermissionTo($permissions);
@@ -87,7 +87,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
     private function assignRolePermissions(string $roleName, array $permissions)
     {
-        $role = Role::where('name', $roleName)->first();
+        $role = Role::query()->where('name', $roleName)->first();
         if ($role) {
             $role->syncPermissions($permissions);
         }

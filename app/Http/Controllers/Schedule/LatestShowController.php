@@ -6,11 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\SchedulePeriod;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class ShowController extends Controller
+class LatestShowController extends Controller
 {
-    public function __invoke(SchedulePeriod $period): JsonResponse
+    public function __invoke(): JsonResponse
     {
-        if ($period->status != "published") return response()->json(['message' => "Jadwal periode ini belum dipublish"]);
+        $period = SchedulePeriod::query()
+            ->where('status', 'published')
+            ->latest('created_at')
+            ->first();
 
         $scheduleAssignments = $period->assignments()->with(['session', 'user', 'requirement.skill.division'])->get();
 

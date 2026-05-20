@@ -11,7 +11,7 @@ class SkillSeeder extends Seeder
     public function run(): void
     {
         // Ambil semua department yang dibutuhkan
-        $divisions = Division::whereIn('name', ['Musik', 'Vocal', 'Multimedia', 'Choir', 'Sound System'])
+        $divisions = Division::query()->whereIn('name', ['Musik', 'Vocal', 'Multimedia', 'Choir', 'Sound System'])
             ->get()
             ->keyBy('name');
 

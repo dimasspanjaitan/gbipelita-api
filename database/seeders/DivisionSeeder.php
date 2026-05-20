@@ -11,7 +11,7 @@ class DivisionSeeder extends Seeder
     public function run(): void
     {
         // Ambil semua department yang dibutuhkan
-        $departments = Department::whereIn('alias', ['EW', 'PA'])
+        $departments = Department::query()->whereIn('alias', ['EW', 'PA'])
             ->get()
             ->keyBy('alias');
 

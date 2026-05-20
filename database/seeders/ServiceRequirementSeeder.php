@@ -42,8 +42,8 @@ class ServiceRequirementSeeder extends Seeder
 
             foreach ($requirements as $req) {
 
-                $divisionId = Division::where('name', $req['division'])->value('id');
-                $skillId = Skill::where('name', $req['skill'])->value('id');
+                $divisionId = Division::query()->where('name', $req['division'])->value('id');
+                $skillId = Skill::query()->where('name', $req['skill'])->value('id');
 
                 if (!$divisionId || !$skillId) {
                     continue;
