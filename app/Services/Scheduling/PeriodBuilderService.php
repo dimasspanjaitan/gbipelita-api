@@ -55,17 +55,20 @@ class PeriodBuilderService
 
         $sessionTemplates = [
             [
-                'name' => 'PAGI 09:00-10.30 & 11.00-12.30',
+                'name' => 'IBRA 1&2 (PAGI)',
+                'time' => '(09:00-10:30) & (11:00-12:30)',
                 'start' => '09:00',
                 'end' => '12:30',
             ],
             [
-                'name' => 'SORE 14.00-15.30 & 16.00-17.30',
+                'name' => 'IBRA 3&4 (SORE)',
+                'time' => '(14:00-15:30) & (16:00-17:30)',
                 'start' => '14:00',
                 'end' => '17:30',
             ],
             [
-                'name' => 'MALAM 18.00-19.30 & 20.00-21.30',
+                'name' => 'IBRA 5&6 (MALAM)',
+                'time' => '(18:00-19:30) & (20:00-21:30)',
                 'start' => '18:00',
                 'end' => '21:30',
             ],
@@ -79,6 +82,8 @@ class PeriodBuilderService
 
                 $sessions[] = ServiceSession::create([
                     'id' => Str::uuid(),
+                    'name' => $template['name'],
+                    'time' => $template['time'],
                     'schedule_period_id' => $period->id,
                     'service_date' => $date->toDateString(),
                     'week_number' => $week,

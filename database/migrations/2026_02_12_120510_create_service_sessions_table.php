@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('service_sessions', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->string('name');
+            $table->string('time');
             $table->uuid('schedule_period_id')->index();
             $table->date('service_date');
             $table->unsignedTinyInteger('week_number');

@@ -10,6 +10,8 @@ class ServiceSession extends Model
     use HasUuids;
 
     protected $fillable = [
+        'name',
+        'time',
         'schedule_period_id',
         'service_date',
         'week_number',

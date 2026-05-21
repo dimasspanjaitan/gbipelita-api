@@ -40,25 +40,27 @@ class ScheduleSeeder extends Seeder
 
         // cari semua minggu di bulan
         $sessionTimes = [
-            1 => ['09:00', '10:30'],
-            2 => ['11:00', '12:30'],
-            3 => ['17:00', '18:30'],
+            1 => ['IBRA 1&2 (PAGI)', '09:00', '10:30', '11:00', '12:30'],
+            2 => ['IBRA 3&4 (SORE)', '14:00', '15:30', '16:00', '17:30'],
+            3 => ['IBRA 5&6 (MALAM)', '18:00', '19:30', '20:00', '21:30'],
         ];
 
         while ($startDate->month == 5) {
 
             if ($startDate->dayOfWeek == Carbon::SUNDAY) {
 
-                foreach ($sessionTimes as $sessionNumber => [$start, $end]) {
+                foreach ($sessionTimes as $sessionNumber => [$name, $start, $end, $start2, $end2]) {
 
                     $session = ServiceSession::create([
                         'id' => Str::uuid(),
+                        'name' => $name,
+                        'time' => '(' . $start . '-' . $end . ') & (' . $start2 . '-' . $end2 . ')',
                         'schedule_period_id' => $period->id,
                         'service_date' => $startDate->toDateString(),
                         'week_number' => $week,
                         'session_number' => $sessionNumber,
                         'start_time' => $start,
-                        'end_time' => $end,
+                        'end_time' => $end2,
                     ]);
 
                     $sessions[] = $session;
