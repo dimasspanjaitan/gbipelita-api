@@ -72,6 +72,7 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
+        $permissions = $user->getAllPermissions()->pluck('name');
 
         // Hapus semua token lama
         $user->tokens()->delete();
@@ -83,7 +84,8 @@ class AuthController extends Controller
             'success' => true,
             'message' => 'Login successful',
             'token' => $token,
-            'data' => $user->load('roles'),
+            'user' => $user->load('roles'),
+            'permissions' => $permissions,
         ]);
     }
 
