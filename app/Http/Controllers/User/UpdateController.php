@@ -27,7 +27,9 @@ class UpdateController extends Controller
                     Storage::disk('public')->delete($user->photo);
                 }
 
-                $data['photo'] = $request->file('photo')->store('users', 'public');
+                $path = $request->file('photo')->store('users', 'public');
+
+                $data['photo'] = Storage::disk('public')->url($path);
             }
 
             // Hash password jika diubah

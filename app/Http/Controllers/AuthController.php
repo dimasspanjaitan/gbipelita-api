@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
@@ -92,27 +93,19 @@ class AuthController extends Controller
     // Get authenticated user
     public function me(Request $request)
     {
-        $user = $request->user();
-
-        if (!$user) {
+        if (!$request->user()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthenticated.',
             ], 401);
         }
 
-        $roles = $user->getRoleNames();
-        $permissions = $user->getAllPermissions()->pluck('name');
+        $user = User::query()
+            ->with('roles', 'departments', 'divisions', 'skills')
+            ->where('id', $request->user()->id)
+            ->first();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Authenticated user retrieved successfully',
-            'data' => [
-                'user' => $user,
-                'roles' => $roles,
-                'permissions' => $permissions,
-            ],
-        ]);
+        return response()->json($user);
     }
 
     // Logout (revoke current token)
