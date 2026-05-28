@@ -27,6 +27,22 @@ class Skill extends Model
             ->withTimestamps();
     }
 
+    /** ────────────────────────────────
+     *  VALIDATION RULES
+     *  ──────────────────────────────── */
+    public static function rules(?string $ignoreId = null): array
+    {
+        return [
+            'name' => [
+                'required',
+                'string',
+                'max:50',
+                "unique:skills,name,{$ignoreId},id",
+            ],
+            'division_id' => ['required', 'uuid', 'exists:divisions,id'],
+        ];
+    }
+
     public const MESSAGES = [
         'name.required' => 'Skill name is required.',
         'name.unique' => 'Skill name has already been used in this division.',
