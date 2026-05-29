@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Volunteer;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\User\StoreRequest;
+use App\Http\Requests\Volunteer\StoreRequest;
 use App\Models\User;
 use App\Models\Role;
+use App\Models\Skill;
 use App\Models\UserSkill;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -21,28 +22,14 @@ class StoreController extends Controller
         try {
             $data = $request->validated();
 
-            /** @var \Illuminate\Http\Request $request */
-            if ($request->hasFile('photo')) {
-                $data['photo'] = $request->file('photo')->store('users', 'public');
-            }
-
             $data['password'] = Hash::make($data['password']);
             $user = User::create($data);
 
+
             // Sync roles
-            if (!empty($data['roles'])) {
-                $validRoles = Role::whereIn('id', $data['roles'])->pluck('id')->toArray();
-
-                if (count($validRoles) !== count($data['roles'])) {
-                    throw new Exception('Salah satu role ID tidak valid.');
-                }
-
-                $user->syncRoles($validRoles);
-            } else {
-                $congregationRoleId = Role::where('name', 'congregation')->value('id');
-                if ($congregationRoleId) {
-                    $user->assignRole($congregationRoleId->id);
-                }
+            $volunteerRoleId = Role::where('name', 'volunteer')->value('id');
+            if ($volunteerRoleId) {
+                $user->assignRole($volunteerRoleId);
             }
 
             // Sync departments
@@ -60,7 +47,7 @@ class StoreController extends Controller
                 $skillIds = collect($data['skills'])->pluck('skill_id')->toArray();
 
                 // Validasi skill
-                $validSkillIds = \App\Models\Skill::whereIn('id', $skillIds)->pluck('id')->toArray();
+                $validSkillIds = Skill::whereIn('id', $skillIds)->pluck('id')->toArray();
 
                 if (count($validSkillIds) !== count($skillIds)) {
                     throw new Exception('Salah satu skill ID tidak valid.');
@@ -76,8 +63,8 @@ class StoreController extends Controller
                         'order'      => $skill['order'] ?? 0,
                     ];
                 })->toArray();
-
-                $user->skills()->createMany($userSkills);
+                
+                $user->userSkills()->createMany($userSkills);
             }
 
             DB::commit();
