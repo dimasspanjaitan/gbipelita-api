@@ -11,6 +11,7 @@ class ActionSeeder extends Seeder
     public function run()
     {
         $actions = [
+            'menu',
             'read',
             'show',
             'create',

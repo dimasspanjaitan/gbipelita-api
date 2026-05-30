@@ -11,7 +11,7 @@ use App\Http\Controllers\Module\{
     UpdateController,
 };
 
-Route::middleware(['auth:sanctum', 'role:Developer'])
+Route::middleware(['auth:sanctum'])
     ->prefix('modules')
     ->group(function () {
         Route::get('/', IndexController::class)->middleware('can:read-module');

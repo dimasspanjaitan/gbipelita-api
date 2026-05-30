@@ -15,7 +15,10 @@ class LatestShowController extends Controller
             ->latest('created_at')
             ->first();
 
-        $scheduleAssignments = $period->assignments()->with(['session', 'user', 'requirement.skill.division'])->get();
+        $scheduleAssignments = [];
+        if ($period) {
+            $scheduleAssignments = $period->assignments()->with(['session', 'user', 'requirement.skill.division'])->get();
+        }
 
         return response()->json([
             'period' => $period,

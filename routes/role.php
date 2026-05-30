@@ -11,7 +11,7 @@ use App\Http\Controllers\Role\{
     ForceDeleteController,
 };
 
-Route::middleware(['auth:sanctum', 'role:Developer'])
+Route::middleware(['auth:sanctum'])
     ->prefix('roles')
     ->group(function () {
         Route::get('/', IndexController::class)->middleware('can:read-role');

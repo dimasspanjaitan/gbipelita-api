@@ -11,7 +11,7 @@ use App\Http\Controllers\Action\{
     UpdateController,
 };
 
-Route::middleware(['auth:sanctum', 'role:Developer'])
+Route::middleware(['auth:sanctum'])
     ->prefix('actions')
     ->group(function () {
         Route::get('/', IndexController::class)->middleware('can:read-action');
