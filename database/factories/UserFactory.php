@@ -28,8 +28,7 @@ class UserFactory extends Factory
     {
         $firstName = $this->faker->firstName();
         $lastName = $this->faker->lastName();
-        $shortLast = substr($lastName, 0, 1);
-        $nickname = "{$firstName} {$shortLast}";
+        $nickname = $this->generateUniqueNickname($firstName, $lastName);
         $username = strtolower($this->generateUsername($firstName, $lastName));
         $email = strtolower($username . "@gbipelita4.com");
 
@@ -60,6 +59,23 @@ class UserFactory extends Factory
         }
 
         return $username;
+    }
+
+    private function generateUniqueNickname(string $firstName, string $lastName): string
+    {
+        $baseNickname = $firstName . ' ' . substr($lastName, 0, 1);
+        $nickname = $baseNickname;
+
+        $counter = 2;
+
+        while (
+            User::query()->where('nickname', $nickname)->exists()
+        ) {
+            $nickname = $baseNickname . $counter;
+            $counter++;
+        }
+
+        return $nickname;
     }
 
     /**

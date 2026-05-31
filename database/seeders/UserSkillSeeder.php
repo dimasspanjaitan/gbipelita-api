@@ -17,9 +17,9 @@ class UserSkillSeeder extends Seeder
         $users = User::with('divisions')->get();
         $skillsByDivision = Skill::all()->groupBy('division_id');
 
-        $skillIndex = [];
-
         foreach ($users as $user) {
+            $userSkills = collect();
+
             foreach ($user->divisions as $division) {
 
                 $skills = $skillsByDivision[$division->id] ?? collect();
@@ -30,40 +30,32 @@ class UserSkillSeeder extends Seeder
                     continue;
                 }
 
-                // === 1. Primary skill (pasti ada) ===
-                if (!isset($skillIndex[$division->id])) {
-                    $skillIndex[$division->id] = 0;
-                }
+                $userSkills->push(
+                    $skills->random()
+                );
+            }
 
-                $skill = $skills->values()[$skillIndex[$division->id] % $skills->count()];
+            $userSkills = $userSkills->unique('id')->values();
 
+            if ($userSkills->isEmpty()) continue;
+
+            $primarySkill = $userSkills->random();
+            $order = 1;
+
+            UserSkill::create([
+                'user_id' => $user->id,
+                'skill_id' => $primarySkill->id,
+                'is_primary' => true,
+                'order' => $order++,
+            ]);
+
+            foreach ($userSkills->where('id', '!=', $primarySkill->id) as $skill) {
                 UserSkill::create([
                     'user_id' => $user->id,
                     'skill_id' => $skill->id,
-                    'is_primary' => true,
-                    'order' => 1,
+                    'is_primary' => false,
+                    'order' => $order++
                 ]);
-
-                $skillIndex[$division->id]++;
-
-                // === 2. Secondary skill (HANYA jika skill > 1) ===
-                if ($skills->count() > 1 && rand(0, 1)) {
-
-                    $remainingSkills = $skills
-                        ->where('id', '!=', $skill->id)
-                        ->values();
-
-                    if ($remainingSkills->isNotEmpty()) {
-                        $extraSkill = $remainingSkills->random();
-
-                        UserSkill::create([
-                            'user_id' => $user->id,
-                            'skill_id' => $extraSkill->id,
-                            'is_primary' => false,
-                            'order' => 2,
-                        ]);
-                    }
-                }
             }
         }
 

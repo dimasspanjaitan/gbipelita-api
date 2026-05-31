@@ -51,11 +51,17 @@ class RolesAndPermissionsSeeder extends Seeder
 
             // Assign specific permissions ke role lainnya
             $this->assignRolePermissions('Youth Pastor', [
-                'read-user',
+                'menu-dashboard',
+                'read-dashboard',
+                'menu-volunteer',
+                'read-volunteer',
+                'menu-schedule',
                 'read-schedule',
             ]);
 
             $this->assignRolePermissions('Department Head', [
+                'menu-dashboard',
+                'read-dashboard',
                 'menu-user',
                 'read-user',
                 'show-user',
@@ -121,22 +127,34 @@ class RolesAndPermissionsSeeder extends Seeder
             ]);
 
             $this->assignRolePermissions('Division Leader', [
-                'read-user',
+                'menu-volunteer',
+                'read-volunteer',
+                'show-volunteer',
+                'menu-schedule',
                 'read-schedule',
+                'menu-assign-schedule',
                 'read-assign-schedule',
             ]);
 
             $this->assignRolePermissions('Core Team', [
+                'menu-schedule',
                 'read-schedule',
+                'menu-availability-schedule',
                 'read-availability-schedule',
             ]);
 
             $this->assignRolePermissions('Volunteer', [
+                'menu-schedule',
+                'show-schedule',
                 'read-schedule',
+                'menu-availability-schedule',
                 'read-availability-schedule',
                 'show-availability-schedule',
                 'create-availability-schedule',
                 'update-availability-schedule',
+                'read-profile',
+                'show-profile',
+                'update-profile',
             ]);
         });
     }

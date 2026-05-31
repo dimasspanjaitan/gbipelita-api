@@ -26,6 +26,8 @@ class ModulesSeeder extends Seeder
             'Schedule',
             'Availability Schedule',
             'Assign Schedule',
+            'Profile',
+            'Setting'
         ];
 
         foreach ($modules as $name) {

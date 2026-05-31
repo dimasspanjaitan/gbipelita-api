@@ -12,7 +12,7 @@ class GeneticScheduler
 
         $population = $this->initialPopulation($context, $baseAssignments);
 
-        for ($gen = 0; $gen < 20; $gen++) {
+        for ($gen = 0; $gen < 49; $gen++) {
 
             $fitness = [];
 
@@ -20,28 +20,25 @@ class GeneticScheduler
                 $fitness[$i] = $this->fitness($chromosome, $context);
             }
 
-            $selected = $this->selection($population, $fitness);
+            $elite = $this->eliteSelection($population, $fitness, 10);
 
-            $offspring = $this->crossover($selected);
-
-            $population = $this->mutation($offspring, $context);
+            $population = $this->reproduce($elite, $context, 50);
         }
 
         $best = $this->best($population, $context);
 
         return $this->toAssignments($best, $context);
     }
-    
+
     protected function initialPopulation(array $context, array $baseAssignments): array
     {
-        $population = [];
+        $base = $this->assignmentToChromosome($baseAssignments);
+        $population = [$base];
 
-        // convert deterministic ke chromosome
-        $population[] = $this->assignmentToChromosome($baseAssignments);
+        for ($i = 0; $i < 49; $i++) {
+            $copy = $base;
 
-        // sisanya random
-        for ($i = 0; $i < 9; $i++) {
-            $population[] = $this->randomChromosome($context);
+            $population[] = $this->mutateChromosome($copy, $context, 1);
         }
 
         return $population;
@@ -51,31 +48,119 @@ class GeneticScheduler
     {
         $chromosome = [];
 
-        foreach ($assignments as $a) {
-            $chromosome[$a['requirement_id']] = $a['user_id'];
+        foreach ($assignments as $assignment) {
+            $chromosome[] = [
+                'requirement_id' => $assignment['requirement_id'],
+                'user_id' => $assignment['user_id']
+            ];
         }
 
         return $chromosome;
     }
 
-    protected function randomChromosome(array $context): array
-    {
-        $chromosome = [];
+    protected function mutateChromosome(
+        array $chromosome,
+        array $context,
+        int $changes = 1
+    ): array {
+        $userLoads = $this->calculateUserLoads($chromosome);
 
-        foreach ($context['requirements'] as $reqId => $req) {
+        for ($i = 0; $i < $changes; $i++) {
 
-            $candidates = $this->getCandidates($context, $req);
+            $geneIndex = array_rand($chromosome);
 
-            if (!empty($candidates)) {
-                $chromosome[$reqId] = $candidates[array_rand($candidates)];
+            $reqId =
+                $chromosome[$geneIndex]['requirement_id'];
+
+            $currentUser =
+                $chromosome[$geneIndex]['user_id'];
+
+
+            $ranked = $this->getRankedCandidates(
+                $context,
+                $context['requirements'][$reqId],
+                $userLoads
+            );
+
+            if (count($ranked) <= 1) {
+                continue;
             }
+
+            $sessionId =
+                $context['requirements'][$reqId]['session_id'];
+
+            $usedUsersInSession =
+                $this->getUsedUsersInSession(
+                    $chromosome,
+                    $context,
+                    $sessionId,
+                    $geneIndex
+                );
+
+            $alternatives = array_values(
+                array_filter(
+                    $ranked,
+                    fn($userId) => $userId !== $currentUser && !in_array($userId, $usedUsersInSession, true)
+                )
+            );
+
+            if (empty($alternatives)) {
+                continue;
+            }
+
+            $topN = array_slice($alternatives, 0, min(3, count($alternatives)));
+
+            $newUserId =
+                $topN[array_rand($topN)];
+
+            $chromosome[$geneIndex]['user_id'] =
+                $newUserId;
+
+            $userLoads[$currentUser]--;
+            $userLoads[$newUserId]++;
         }
 
         return $chromosome;
     }
 
-    protected function getCandidates(array $context, array $req): array
-    {
+    protected function getUsedUsersInSession(
+        array $chromosome,
+        array $context,
+        string $sessionId,
+        ?int $excludeGeneIndex = null
+    ): array {
+
+        $usedUsers = [];
+
+        foreach ($chromosome as $index => $gene) {
+
+            if ($excludeGeneIndex !== null && $index === $excludeGeneIndex) {
+                continue;
+            }
+
+            $geneReqId = $gene['requirement_id'];
+
+            $geneSessionId =
+                $context['requirements'][$geneReqId]['session_id'];
+
+            if ($geneSessionId !== $sessionId) {
+                continue;
+            }
+
+            $usedUsers[] = $gene['user_id'];
+        }
+
+        return array_unique($usedUsers);
+    }
+
+    protected function getRankedCandidates(
+        array $context,
+        array $req,
+        array $userLoads = []
+    ): array {
+
+        $sessionId = $req['session_id'];
+
         $candidates = [];
 
         foreach ($context['users'] as $userId => $user) {
@@ -84,113 +169,243 @@ class GeneticScheduler
                 continue;
             }
 
-            $candidates[] = $userId;
+            $submitted =
+                $context['user_submission'][$userId] ?? false;
+
+            $available =
+                $context['availability'][$userId][$sessionId] ?? false;
+
+            $candidates[] = [
+                'user_id' => $userId,
+                'submitted' => $submitted,
+                'available' => $available,
+                'current_load' => $userLoads[$userId] ?? 0,
+                'is_primary' => $user['skills'][$req['skill_id']]['is_primary'],
+                'order' => $user['skills'][$req['skill_id']]['order'],
+            ];
         }
 
-        return $candidates;
+        usort($candidates, function ($a, $b) {
+
+            return
+                $b['submitted'] <=> $a['submitted']
+                ?: $b['available'] <=> $a['available']
+                ?: $a['current_load'] <=> $b['current_load']
+                ?: $b['is_primary'] <=> $a['is_primary']
+                ?: ($a['order'] ?? 999) <=> ($b['order'] ?? 999);
+        });
+
+        return array_column($candidates, 'user_id');
     }
 
-    protected function fitness(array $chromosome, array $context): int
-    {
+    protected function fitness(
+        array $chromosome,
+        array $context
+    ): int {
+
         $score = 0;
 
         $sessionAssignments = [];
         $weeklyLoad = [];
+        $userAssignments = [];
 
-        foreach ($chromosome as $reqId => $userId) {
-
+        foreach ($chromosome as $gene) {
+            $reqId = $gene['requirement_id'];
+            $userId = $gene['user_id'];
             $req = $context['requirements'][$reqId];
             $sessionId = $req['session_id'];
             $week = $context['sessions'][$sessionId]['week'];
 
-            // ❌ skill
-            if (!isset($context['users'][$userId]['skills'][$req['skill_id']])) {
-                $score -= 100;
+            $user = $context['users'][$userId] ?? null;
+
+            if (!$user) {
+                $score -= 100000;
                 continue;
             }
 
-            // ❌ double session
-            if (in_array($userId, $sessionAssignments[$sessionId] ?? [])) {
-                $score -= 50;
+            /*
+            |--------------------------------------------------------------------------
+            | Skill Check
+            |--------------------------------------------------------------------------
+            */
+            if (!isset($user['skills'][$req['skill_id']])) {
+                $score -= 100000;
+                continue;
             }
 
-            // ❌ availability
-            $submitted = $context['user_submission'][$userId] ?? false;
-            $isAvailable = $context['availability'][$userId][$sessionId] ?? false;
+            $skill = $user['skills'][$req['skill_id']];
 
-            if ($submitted && !$isAvailable) {
-                $score -= 100;
+            /*
+            |--------------------------------------------------------------------------
+            | Double Assignment in Same Session
+            |--------------------------------------------------------------------------
+            */
+            if (in_array(
+                $userId,
+                $sessionAssignments[$sessionId] ?? []
+            )) {
+                return -9999999;
             }
 
-            // ❌ weekly overload
+            /*
+            |--------------------------------------------------------------------------
+            | Availability
+            |--------------------------------------------------------------------------
+            */
+            $submitted =
+                $context['user_submission'][$userId] ?? false;
+
+            $isAvailable =
+                $context['availability'][$userId][$sessionId] ?? false;
+
+            if ($submitted) {
+                if (!$isAvailable) {
+                    // submit tapi tidak available, langsung buang
+                    return -9999999;
+                } else {
+                    // submit + available
+                    $score += 200;
+                }
+                // reward submit
+                $score += 100;
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Primary Skill
+            |--------------------------------------------------------------------------
+            */
+            if ($skill['is_primary']) {
+                $score += 30;
+            } else {
+                /*
+                |--------------------------------------------------------------------------
+                | Skill Order
+                |--------------------------------------------------------------------------
+                */
+                $score += max(0, 20 - ($skill['order'] * 2));
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Weekly Load
+            |--------------------------------------------------------------------------
+            */
             $weeklyLoad[$userId][$week] =
                 ($weeklyLoad[$userId][$week] ?? 0) + 1;
 
-            if ($weeklyLoad[$userId][$week] > 2) {
-                $score -= 20;
+            $limit = $context['period']['max_per_week'];
+
+            if ($weeklyLoad[$userId][$week] > $limit) {
+
+                $overflow =
+                    $weeklyLoad[$userId][$week] - $limit;
+
+                $score -= $overflow * 25000;
             }
 
-            // ✔ reward
-            $score += 10;
+            /*
+            |--------------------------------------------------------------------------
+            | Tracking
+            |--------------------------------------------------------------------------
+            */
+            $userAssignments[$userId] =
+                ($userAssignments[$userId] ?? 0) + 1;
 
             $sessionAssignments[$sessionId][] = $userId;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Fairness
+        |--------------------------------------------------------------------------
+        */
+        if (!empty($userAssignments)) {
+            $fairnessPenalty = 0;
+
+            $totalAssignments = count($chromosome);
+
+            $totalUsers = count($context['users']);
+
+            $targetLoad =
+                $totalAssignments / max(1, $totalUsers);
+
+            foreach ($context['users'] as $userId => $user) {
+
+                $load =
+                    $userAssignments[$userId] ?? 0;
+
+                $fairnessPenalty += abs(
+                    $load - $targetLoad
+                );
+            }
+
+            $score -= $fairnessPenalty * 20;
         }
 
         return $score;
     }
 
-    protected function selection(array $population, array $fitness): array
-    {
+    protected function calculateUserLoads(
+        array $chromosome
+    ): array {
+
+        $loads = [];
+
+        foreach ($chromosome as $gene) {
+
+            $userId = $gene['user_id'];
+
+            $loads[$userId] =
+                ($loads[$userId] ?? 0) + 1;
+        }
+
+        return $loads;
+    }
+
+    protected function eliteSelection(
+        array $population,
+        array $fitness,
+        int $eliteCount = 10
+    ): array {
+
         arsort($fitness);
 
-        $selected = [];
+        $elite = [];
 
         foreach (array_keys($fitness) as $i) {
-            $selected[] = $population[$i];
-            if (count($selected) >= 5) break;
-        }
 
-        return $selected;
-    }
+            $elite[] = $population[$i];
 
-    protected function crossover(array $parents): array
-    {
-        $offspring = [];
-
-        for ($i = 0; $i < count($parents); $i += 2) {
-
-            $a = $parents[$i];
-            $b = $parents[$i + 1] ?? $parents[0];
-
-            $child = [];
-
-            foreach ($a as $reqId => $userId) {
-                $child[$reqId] = rand(0, 1) ? $a[$reqId] : ($b[$reqId] ?? $userId);
+            if (count($elite) >= $eliteCount) {
+                break;
             }
-
-            $offspring[] = $child;
         }
 
-        return $offspring;
+        return $elite;
     }
 
-    protected function mutation(array $population, array $context): array
-    {
-        foreach ($population as &$chromosome) {
+    protected function reproduce(
+        array $elite,
+        array $context,
+        int $populationSize = 50
+    ): array {
 
-            if (rand(0, 100) < 20) {
+        $population = $elite;
 
-                $reqId = array_rand($chromosome);
+        while (count($population) < $populationSize) {
 
-                $candidates = $this->getCandidates(
+            $parent =
+                $elite[array_rand($elite)];
+
+            $child =
+                $this->mutateChromosome(
+                    $parent,
                     $context,
-                    $context['requirements'][$reqId]
+                    rand(1, 3)
                 );
 
-                if (!empty($candidates)) {
-                    $chromosome[$reqId] = $candidates[array_rand($candidates)];
-                }
-            }
+            $population[] = $child;
         }
 
         return $population;
@@ -217,12 +432,13 @@ class GeneticScheduler
     {
         $assignments = [];
 
-        foreach ($chromosome as $reqId => $userId) {
+        foreach ($chromosome as $gene) {
+            $reqId = $gene['requirement_id'];
 
             $assignments[] = [
                 'session_id' => $context['requirements'][$reqId]['session_id'],
                 'requirement_id' => $reqId,
-                'user_id' => $userId,
+                'user_id' => $gene['user_id'],
             ];
         }
 

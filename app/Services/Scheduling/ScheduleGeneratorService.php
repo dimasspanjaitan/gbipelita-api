@@ -16,8 +16,8 @@ class ScheduleGeneratorService
             $context = app(ScheduleContextBuilder::class)
                 ->build($period);
 
-            $scheduler = app(DeterministicScheduler::class);
-            // $scheduler = app(GeneticScheduler::class);
+            // $scheduler = app(DeterministicScheduler::class);
+            $scheduler = app(GeneticScheduler::class);
 
             $assignments = $scheduler->run($context);
             // clear existing system generated assignments
