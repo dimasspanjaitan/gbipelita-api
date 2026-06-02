@@ -3,9 +3,12 @@
 namespace App\Services\Scheduling;
 
 use App\Models\SchedulePeriod;
+use App\Models\ScheduleUserPeriodStatus;
 use App\Models\ServiceSession;
 use App\Models\ServiceRequirement;
 use App\Models\Skill;
+use App\Models\User;
+use App\Services\UserVolunteerService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -13,6 +16,10 @@ use Carbon\CarbonPeriod;
 
 class PeriodBuilderService
 {
+    public function __construct(
+        protected UserVolunteerService $userVolunteerService
+    ) {}
+
     public function build(int $month, int $year, string $departmentId): SchedulePeriod
     {
         return DB::transaction(function () use ($month, $year, $departmentId) {
@@ -40,6 +47,8 @@ class PeriodBuilderService
             $sessions = $this->generateSessions($period);
 
             $this->generateRequirements($sessions);
+
+            $this->generateUserStatuses($period);
 
             return $period;
         });
@@ -129,5 +138,32 @@ class PeriodBuilderService
             'Camera' => 2,
             default => 1,
         };
+    }
+
+    protected function generateUserStatuses(
+        SchedulePeriod $period
+    ): void {
+
+        $volunteers = $this->userVolunteerService
+            ->getDepartmentVolunteers($period->department_id)
+            ->pluck('id');
+
+        $now = now();
+        $rows = [];
+
+        foreach ($volunteers as $userId) {
+            $rows[] = [
+                'id' => Str::uuid(),
+                'schedule_period_id' => $period->id,
+                'user_id' => $userId,
+                'has_submitted' => false,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
+        }
+
+        if (!empty($rows)) {
+            ScheduleUserPeriodStatus::insert($rows);
+        }
     }
 }

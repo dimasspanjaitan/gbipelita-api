@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ScheduleAvailability;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ScheduleAvailability\StoreRequest;
 use App\Models\SchedulePeriod;
+use App\Models\ScheduleUserPeriodStatus;
 use App\Services\Scheduling\AvailabilityService;
 
 class StoreController extends Controller
@@ -19,6 +20,16 @@ class StoreController extends Controller
             $period->id,
             auth()->id(),
             $request->session_ids ?? []
+        );
+
+        ScheduleUserPeriodStatus::updateOrCreate(
+            [
+                'schedule_period_id' => $period->id,
+                'user_id' => auth()->id()
+            ],
+            [
+                'has_submitted' => true
+            ]
         );
 
         return response()->json([

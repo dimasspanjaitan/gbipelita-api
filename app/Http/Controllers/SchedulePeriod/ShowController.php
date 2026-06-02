@@ -5,6 +5,7 @@ namespace App\Http\Controllers\SchedulePeriod;
 use App\Http\Controllers\Controller;
 use App\Models\ScheduleAvailability;
 use App\Models\SchedulePeriod;
+use App\Models\ScheduleUserPeriodStatus;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 
@@ -13,20 +14,19 @@ class ShowController extends Controller
 
     public function __invoke(SchedulePeriod $period): JsonResponse
     {
-        $volunteers = User::query()
-            ->whereHas('roles', function ($q) {
-                $q->where('name', 'volunteer');
+        $submittedUsers = User::query()
+            ->whereHas('schedulePeriodStatuses', function ($q) use ($period) {
+                $q->where('schedule_period_id', $period->id)
+                    ->where('has_submitted', true);
             })
-            ->where('status', 'active')
             ->get();
 
-        $submittedUserIds = ScheduleAvailability::query()
-            ->where('schedule_period_id', $period->id)
-            ->pluck('user_id')
-            ->unique();
-
-        $submittedUsers = $volunteers->whereIn('id', $submittedUserIds)->values();
-        $notSubmittedUsers = $volunteers->whereNotIn('id', $submittedUserIds)->values();
+        $notSubmittedUsers = User::query()
+            ->whereHas('schedulePeriodStatuses', function ($q) use ($period) {
+                $q->where('schedule_period_id', $period->id)
+                    ->where('has_submitted', false);
+            })
+            ->get();
 
         $scheduleAssignments = [];
         if ($period->status == "generated" || $period->status == "published") {
@@ -35,7 +35,8 @@ class ShowController extends Controller
 
         return response()->json([
             'schedule_period' => $period->load('department'),
-            'submitted_users' => $submittedUsers,
+            'service_sessions' => $period->sessions,
+            'submitted_users' => $submittedUsers->load('availabilities.session'),
             'not_submitted_users' => $notSubmittedUsers,
             'assignments' => $scheduleAssignments
         ]);

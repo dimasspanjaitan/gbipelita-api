@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\SchedulePeriod;
 use App\Models\ServiceSession;
 use App\Models\ScheduleAvailability;
+use App\Models\ScheduleUserPeriodStatus;
 
 class ScheduleSeeder extends Seeder
 {
@@ -75,49 +76,86 @@ class ScheduleSeeder extends Seeder
         // ======================
         // 3. CREATE AVAILABILITY
         // ======================
+        $volunteers = User::query()
+            ->whereHas('roles', function ($q) {
+                $q->where('name', 'volunteer');
+            })
+            ->where('status', 'active')
+            ->get();
 
-        $users = User::take(30)->get(); // ambil 30 user
+        foreach ($volunteers as $volunteer) {
+            ScheduleUserPeriodStatus::create([
+                'id' => Str::uuid(),
+                'schedule_period_id' => $period->id,
+                'user_id' => $volunteer->id,
+                'has_submitted' => false,
+            ]);
+        }
+
+        $users = $volunteers->take(40); // ambil 30 volunteer
 
         foreach ($users as $user) {
+            /*
+            |--------------------------------------------------------------------------
+            | MODE
+            |--------------------------------------------------------------------------
+            | 1 = rajin (80%)
+            | 2 = normal (50%)
+            | 3 = jarang (25%)
+            | 4 = tidak submit
+            | 5 = submit tapi tidak available sama sekali
+            |--------------------------------------------------------------------------
+            */
+            $mode = rand(1, 5);
 
-            // RANDOM SCENARIO
-            $mode = rand(1, 4);
+            $hasSubmitted = $mode !== 4;
+            ScheduleUserPeriodStatus::query()
+                ->where('schedule_period_id', $period->id)
+                ->where('user_id', $user->id)
+                ->update([
+                    'has_submitted' => $hasSubmitted
+                ]);
+
+            // mode = 4 = tidak submit
+            if (!$hasSubmitted) {
+                continue;
+            }
 
             foreach ($sessions as $session) {
 
                 $isAvailable = false;
 
                 switch ($mode) {
-
                     // 1. rajin (banyak available)
                     case 1:
-                        $isAvailable = rand(0, 100) < 80;
+                        $isAvailable = rand(0, 100) <= 80;
                         break;
 
                     // 2. normal
                     case 2:
-                        $isAvailable = rand(0, 100) < 50;
+                        $isAvailable = rand(0, 100) <= 50;
                         break;
 
                     // 3. jarang
                     case 3:
-                        $isAvailable = rand(0, 100) < 25;
+                        $isAvailable = rand(0, 100) <= 25;
                         break;
 
-                    // 4. tidak submit sama sekali
-                    case 4:
-                        continue 2;
+                    // 5. submit tapi tidak available sama sekali
+                    case 5:
+                        $isAvailable = false;
+                        break;
                 }
 
-                if ($isAvailable) {
-                    ScheduleAvailability::create([
-                        'id' => Str::uuid(),
-                        'schedule_period_id' => $period->id,
-                        'service_session_id' => $session->id,
-                        'user_id' => $user->id,
-                        'is_available' => true,
-                    ]);
-                }
+                if (!$isAvailable) continue;
+
+                ScheduleAvailability::create([
+                    'id' => Str::uuid(),
+                    'schedule_period_id' => $period->id,
+                    'service_session_id' => $session->id,
+                    'user_id' => $user->id,
+                    'is_available' => true,
+                ]);
             }
         }
     }

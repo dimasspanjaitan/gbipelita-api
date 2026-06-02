@@ -36,7 +36,6 @@ class ScheduleContextBuilder
             'user_submission' => [],
             'tracking' => [
                 'weekly_load' => [],
-                'department_load' => [],
                 'session_assignments' => [],
             ],
         ];
@@ -71,7 +70,6 @@ class ScheduleContextBuilder
 
             $context['users'][$user->id] = [
                 'id' => $user->id,
-                'department_id' => $user->department_id,
                 'skills' => [],
             ];
 
@@ -97,7 +95,6 @@ class ScheduleContextBuilder
                 $status?->has_submitted ?? false;
 
             $context['tracking']['weekly_load'][$user->id] = [];
-            $context['tracking']['department_load'][$user->department_id][$user->id] = 0;
         }
 
         return $context;

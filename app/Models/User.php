@@ -118,6 +118,11 @@ class User extends Authenticatable
         return $this->hasMany(ScheduleAvailability::class);
     }
 
+    public function schedulePeriodStatuses()
+    {
+        return $this->hasMany(ScheduleUserPeriodStatus::class);
+    }
+
     public function assignments()
     {
         return $this->hasMany(ScheduleAssignment::class);

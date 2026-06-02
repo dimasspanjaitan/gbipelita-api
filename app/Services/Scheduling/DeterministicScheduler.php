@@ -165,14 +165,10 @@ class DeterministicScheduler
 
         $sessionId = $req['session_id'];
         $week = $context['sessions'][$sessionId]['week'];
-        $deptId = $context['users'][$userId]['department_id'];
 
         // increment weekly load
         $context['tracking']['weekly_load'][$userId][$week] =
             ($context['tracking']['weekly_load'][$userId][$week] ?? 0) + 1;
-
-        // increment department load
-        $context['tracking']['department_load'][$deptId][$userId]++;
 
         // mark session assignment
         $context['tracking']['session_assignments'][$sessionId][] = $userId;
