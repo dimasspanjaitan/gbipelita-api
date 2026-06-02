@@ -116,8 +116,8 @@ class GeneticScheduler
             $chromosome[$geneIndex]['user_id'] =
                 $newUserId;
 
-            $userLoads[$currentUser]--;
-            $userLoads[$newUserId]++;
+            $userLoads[$currentUser] = ($userLoads[$currentUser] ?? 0) - 1;
+            $userLoads[$newUserId] = ($userLoads[$newUserId] ?? 0) + 1;
         }
 
         return $chromosome;
@@ -175,8 +175,18 @@ class GeneticScheduler
             $available =
                 $context['availability'][$userId][$sessionId] ?? false;
 
+            $priority = 0;
+            if ($submitted && $available) {
+                $priority = 1;
+            } elseif (!$submitted) {
+                $priority = 2;
+            } else {
+                continue;
+            }
+
             $candidates[] = [
                 'user_id' => $userId,
+                'priority' => $priority,
                 'submitted' => $submitted,
                 'available' => $available,
                 'current_load' => $userLoads[$userId] ?? 0,
@@ -188,8 +198,7 @@ class GeneticScheduler
         usort($candidates, function ($a, $b) {
 
             return
-                $b['submitted'] <=> $a['submitted']
-                ?: $b['available'] <=> $a['available']
+                $a['priority'] <=> $b['priority']
                 ?: $a['current_load'] <=> $b['current_load']
                 ?: $b['is_primary'] <=> $a['is_primary']
                 ?: ($a['order'] ?? 999) <=> ($b['order'] ?? 999);
@@ -217,6 +226,12 @@ class GeneticScheduler
             $week = $context['sessions'][$sessionId]['week'];
 
             $user = $context['users'][$userId] ?? null;
+
+            // jika user dari deterministic itu null, karna masuk kondisi terakhir
+            if ($userId === null) {
+                $score -= 5000;
+                continue;
+            }
 
             if (!$user) {
                 $score -= 100000;
@@ -323,7 +338,12 @@ class GeneticScheduler
         if (!empty($userAssignments)) {
             $fairnessPenalty = 0;
 
-            $totalAssignments = count($chromosome);
+            $totalAssignments = count(
+                array_filter(
+                    $chromosome,
+                    fn($gene) => $gene['user_id'] !== null
+                )
+            );
 
             $totalUsers = count($context['users']);
 

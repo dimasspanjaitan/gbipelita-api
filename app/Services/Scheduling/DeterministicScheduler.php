@@ -57,7 +57,14 @@ class DeterministicScheduler
             );
 
             if (!$candidate) {
-                break;
+                $assignments[] = [
+                    'session_id' => $req['session_id'],
+                    'requirement_id' => $req['id'],
+                    'user_id' => null,
+                ];
+
+                $req['assigned']++;
+                continue;
             }
 
             $this->assign($context, $req, $candidate);
@@ -121,8 +128,11 @@ class DeterministicScheduler
 
             $fairnessScore = $this->fairness->score($context, $userId);
 
+            $priority = $submitted ? 1 : 2;
+
             $candidates[] = [
                 'user_id' => $userId,
+                'priority' => $priority,
                 'is_primary' => $user['skills'][$skillId]['is_primary'],
                 'order' => $user['skills'][$skillId]['order'],
                 'weekly_load' => $weeklyLoad,
@@ -137,10 +147,11 @@ class DeterministicScheduler
         usort($candidates, function ($a, $b) {
 
             return
-                $a['weekly_load'] <=> $b['weekly_load']
+                $a['priority'] <=> $b['priority']
+                ?: $a['weekly_load'] <=> $b['weekly_load']
                 ?: $a['fairness_score'] <=> $b['fairness_score']
                 ?: $b['is_primary'] <=> $a['is_primary']
-                ?: $b['order'] <=> $a['order'];
+                ?: ($a['order'] ?? 999) <=> ($b['order'] ?? 999);
         });
 
         return $candidates[0]['user_id'];
