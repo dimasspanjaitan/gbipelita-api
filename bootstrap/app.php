@@ -4,6 +4,8 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -42,18 +44,38 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Render: respon error ke user
         $exceptions->render(function (Throwable $e, $request) {
-            if ($request->is('api/*')) {
-                if ($e instanceof AuthenticationException) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Unauthenticated.'
-                    ], 401);
-                }
 
+            if (! $request->is('api/*')) {
+                return null;
+            }
+
+            if ($e instanceof AuthenticationException) {
                 return response()->json([
                     'success' => false,
-                    'message' => $e->getMessage()
-                ], 500);
+                    'message' => 'Unauthenticated.',
+                ], 401);
             }
+
+            if ($e instanceof ValidationException) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed.',
+                    'errors' => $e->errors(),
+                ], 422);
+            }
+
+            if ($e instanceof HttpExceptionInterface) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $e->getMessage() ?: 'Error',
+                ], $e->getStatusCode());
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => config('app.debug')
+                    ? $e->getMessage()
+                    : 'Server Error',
+            ], 500);
         });
     })->create();

@@ -19,8 +19,6 @@ class ActionSeeder extends Seeder
             'delete',
             'restore',
             'force-delete',
-            'export',
-            'import',
         ];
 
         foreach ($actions as $name) {

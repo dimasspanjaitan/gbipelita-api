@@ -19,6 +19,7 @@ class PermissionSeeder extends Seeder
         $modules = Module::all();
         $actions = Action::all();
 
+        $now = now();
         $permissionsToCreate = [];
 
         foreach ($modules as $module) {
@@ -28,8 +29,8 @@ class PermissionSeeder extends Seeder
                     'id' => Str::uuid()->toString(),
                     'name' => $permissionName,
                     'guard_name' => 'api',
-                    'created_at' => now(),
-                    'updated_at' => now(),
+                    'created_at' => $now,
+                    'updated_at' => $now,
                 ];
             }
         }
@@ -38,5 +39,13 @@ class PermissionSeeder extends Seeder
         foreach (array_chunk($permissionsToCreate, 100) as $chunk) {
             DB::table('permissions')->insertOrIgnore($chunk);
         }
+
+        DB::table('permissions')->insertOrIgnore([
+            'id' => Str::uuid()->toString(),
+            'name' => "generate-schedule",
+            'guard_name' => 'api',
+            'created_at' => $now,
+            'updated_at' => $now
+        ]);
     }
 }

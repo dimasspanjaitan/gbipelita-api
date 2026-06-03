@@ -19,6 +19,8 @@ class UserFactory extends Factory
      */
     protected static ?string $password;
 
+    protected static array $usedNicknames = [];
+
     /**
      * Define the model's default state.
      *
@@ -63,19 +65,34 @@ class UserFactory extends Factory
 
     private function generateUniqueNickname(string $firstName, string $lastName): string
     {
-        $baseNickname = $firstName . ' ' . substr($lastName, 0, 1);
-        $nickname = $baseNickname;
+        $base = $firstName;
+
+        if (! in_array($base, self::$usedNicknames)) {
+            self::$usedNicknames[] = $base;
+            return $base;
+        }
+
+        for ($i = 1; $i <= strlen($lastName); $i++) {
+            $nickname = $firstName . ' ' . substr($lastName, 0, $i);
+
+            if (! in_array($nickname, self::$usedNicknames)) {
+                self::$usedNicknames[] = $nickname;
+                return $nickname;
+            }
+        }
 
         $counter = 2;
 
-        while (
-            User::query()->where('nickname', $nickname)->exists()
-        ) {
-            $nickname = $baseNickname . $counter;
+        while (true) {
+            $nickname = $firstName . ' ' . $lastName . $counter;
+
+            if (! in_array($nickname, self::$usedNicknames)) {
+                self::$usedNicknames[] = $nickname;
+                return $nickname;
+            }
+
             $counter++;
         }
-
-        return $nickname;
     }
 
     /**
