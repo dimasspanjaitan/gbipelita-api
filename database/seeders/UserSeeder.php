@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Role;
+use App\Services\UserVolunteerService;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -58,13 +59,13 @@ class UserSeeder extends Seeder
             'status' => 'active'
         ]);
 
-        // Samuel (Department Head)
-        $samuel = User::factory()->create([
-            'username' => 'samuel',
-            'nickname' => 'Samuel',
-            'first_name' => 'Samuel',
-            'last_name' => 'Sembiring',
-            'email' => 'samuel@gbipelita4.com',
+        // Hani (Department Head + Division Leader Musik)
+        $hani = User::factory()->create([
+            'username' => 'hani',
+            'nickname' => 'Hani',
+            'first_name' => 'Yohania',
+            'last_name' => 'Gultom',
+            'email' => 'hani@gbipelita4.com',
             'password' => Hash::make('asdfasdf'),
             'status' => 'active'
         ]);
@@ -74,7 +75,6 @@ class UserSeeder extends Seeder
 
         if ($pastorYouthRole && $deptHeadRole) {
             $jaya->assignRole([$pastorYouthRole, $deptHeadRole]);
-            $samuel->assignRole($deptHeadRole);
         }
 
         // Mahenja (Division Leader + Core Team)
@@ -89,15 +89,6 @@ class UserSeeder extends Seeder
         ]);
 
         // Division Leader
-        $hani = User::factory()->create([
-            'username' => 'hani',
-            'nickname' => 'Hani',
-            'first_name' => 'Yohania',
-            'last_name' => 'Gultom',
-            'email' => 'hani@gbipelita4.com',
-            'password' => Hash::make('asdfasdf'),
-            'status' => 'active'
-        ]);
         $odde = User::factory()->create([
             'username' => 'odde',
             'nickname' => 'Odde',
@@ -155,8 +146,12 @@ class UserSeeder extends Seeder
 
         $volunteerRole = Role::query()->where('name', 'Volunteer')->first();
 
-        if($divisionLeaderRole && $volunteerRole) {
-            $hani->assignRole([$divisionLeaderRole, $volunteerRole]);
+        //  Hani (Department Head + Division Leader + Volunteer + Core Team)
+        if ($deptHeadRole && $divisionLeaderRole && $volunteerRole && $coreTeamRole) {
+            $hani->assignRole([$deptHeadRole, $divisionLeaderRole, $volunteerRole]);
+        }
+
+        if ($divisionLeaderRole && $volunteerRole) {
             $odde->assignRole([$divisionLeaderRole, $volunteerRole]);
             $meli->assignRole([$divisionLeaderRole, $volunteerRole]);
             $dennis->assignRole([$divisionLeaderRole, $volunteerRole]);
@@ -168,16 +163,6 @@ class UserSeeder extends Seeder
         }
 
         // 4. User Single Role Lainnya
-        // Leader
-        User::factory()
-            ->count(3)
-            ->create()
-            ->each(function ($user) use ($divisionLeaderRole) {
-                if ($divisionLeaderRole) {
-                    $user->assignRole($divisionLeaderRole);
-                }
-            });
-
         // Coreteam
         User::factory()
             ->count(5)

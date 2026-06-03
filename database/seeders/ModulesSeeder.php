@@ -22,6 +22,7 @@ class ModulesSeeder extends Seeder
             'Division',
             'Skill',
             'Volunteer',
+            'User Position',
             'Schedule Period',
             'Schedule',
             'Availability Schedule',

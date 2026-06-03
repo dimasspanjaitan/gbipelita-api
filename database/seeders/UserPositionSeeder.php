@@ -24,7 +24,6 @@ class UserPositionSeeder extends Seeder
         $choirDivision = Division::query()->where('name', 'Choir')->firstOrFail();
         $soundSystemDivision = Division::query()->where('name', 'Sound System')->firstOrFail();
 
-        $samuel = User::query()->where('username', 'samuel')->firstOrFail();
         $hani = User::query()->where('username', 'hani')->firstOrFail();
         $odde = User::query()->where('username', 'odde')->firstOrFail();
         $meli = User::query()->where('username', 'meli')->firstOrFail();
@@ -33,7 +32,7 @@ class UserPositionSeeder extends Seeder
 
         UserPosition::updateOrCreate(
             [
-                'user_id' => $samuel->id,
+                'user_id' => $hani->id,
                 'role_id' => $departmentHeadRole->id,
                 'department_id' => $ewDepartment->id,
             ],

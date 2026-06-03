@@ -128,6 +128,11 @@ class User extends Authenticatable
         return $this->hasMany(ScheduleAssignment::class);
     }
 
+    public function positions()
+    {
+        return $this->hasMany(UserPosition::class);
+    }
+
     /** ────────────────────────────────
      *  VALIDATION RULES
      *  ──────────────────────────────── */

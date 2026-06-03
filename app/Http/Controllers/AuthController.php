@@ -85,7 +85,7 @@ class AuthController extends Controller
             'success' => true,
             'message' => 'Login successful',
             'token' => $token,
-            'user' => $user->load('roles'),
+            'user' => $user->load('roles', 'positions'),
             'permissions' => $permissions,
         ]);
     }
