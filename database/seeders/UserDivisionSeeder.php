@@ -21,7 +21,6 @@ class UserDivisionSeeder extends Seeder
             'Vocal',
             'Choir',
             'Sound System'
-            // 'LICC Youth',
         ])->get()->keyBy('name');
 
         // Validasi kalau ada yang belum ada
