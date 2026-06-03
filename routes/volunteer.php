@@ -12,7 +12,7 @@ use App\Http\Controllers\Volunteer\{
 };
 
 Route::middleware('auth:sanctum')->prefix('volunteers')->group(function () {
-    Route::get('/', IndexController::class)->middleware('can:read-user');
+    Route::get('/', IndexController::class)->middleware('can:read-volunteer');
     Route::get('/{user}', ShowController::class)->middleware('can:show-volunteer');
     Route::post('/', StoreController::class)->middleware('can:create-volunteer');
     Route::put('/{user}', UpdateController::class)->middleware('can:update-volunteer');

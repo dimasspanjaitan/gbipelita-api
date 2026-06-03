@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Module;
-use App\Models\PermissionsMeta;
 use Illuminate\Support\Str;
 
 class ModulesSeeder extends Seeder
@@ -26,7 +25,6 @@ class ModulesSeeder extends Seeder
             'Schedule Period',
             'Schedule',
             'Availability Schedule',
-            'Assign Schedule',
             'Profile',
             'Setting'
         ];

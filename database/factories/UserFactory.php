@@ -65,9 +65,14 @@ class UserFactory extends Factory
 
     private function generateUniqueNickname(string $firstName, string $lastName): string
     {
+        // Load semua nickname dari database sekali saja
+        if (empty(self::$usedNicknames)) {
+            self::$usedNicknames = User::query()->pluck('nickname')->toArray();
+        }
+
         $base = $firstName;
 
-        if (! in_array($base, self::$usedNicknames)) {
+        if (! in_array($base, self::$usedNicknames, true)) {
             self::$usedNicknames[] = $base;
             return $base;
         }
@@ -75,7 +80,7 @@ class UserFactory extends Factory
         for ($i = 1; $i <= strlen($lastName); $i++) {
             $nickname = $firstName . ' ' . substr($lastName, 0, $i);
 
-            if (! in_array($nickname, self::$usedNicknames)) {
+            if (! in_array($nickname, self::$usedNicknames, true)) {
                 self::$usedNicknames[] = $nickname;
                 return $nickname;
             }
@@ -86,7 +91,7 @@ class UserFactory extends Factory
         while (true) {
             $nickname = $firstName . ' ' . $lastName . $counter;
 
-            if (! in_array($nickname, self::$usedNicknames)) {
+            if (! in_array($nickname, self::$usedNicknames, true)) {
                 self::$usedNicknames[] = $nickname;
                 return $nickname;
             }

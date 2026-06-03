@@ -30,6 +30,9 @@ class IndexController extends Controller
                     $q->where('name', $request->skill);
                 });
             })
+            ->when($request->exclude_ids, function ($query) use ($request) {
+                $query->whereNotIn('id', $request->exclude_ids);
+            })
             ->with(['roles', 'departments', 'divisions', 'skills'])
             ->when($request->status, function ($query) use ($request) {
                 $query->where('status', $request->status);

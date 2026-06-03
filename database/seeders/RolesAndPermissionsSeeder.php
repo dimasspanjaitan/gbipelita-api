@@ -121,9 +121,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'show-availability-schedule',
                 'create-availability-schedule',
                 'update-availability-schedule',
-                'menu-assign-schedule',
-                'read-assign-schedule',
-                'show-assign-schedule',
+                'generate-schedule'
             ]);
 
             $this->assignRolePermissions('Division Leader', [
@@ -132,8 +130,10 @@ class RolesAndPermissionsSeeder extends Seeder
                 'show-volunteer',
                 'menu-schedule',
                 'read-schedule',
-                'menu-assign-schedule',
-                'read-assign-schedule',
+                'menu-schedule-period',
+                'read-schedule-period',
+                'show-schedule-period',
+                'update-schedule',
             ]);
 
             $this->assignRolePermissions('Core Team', [
