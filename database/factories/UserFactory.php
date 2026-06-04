@@ -20,6 +20,7 @@ class UserFactory extends Factory
     protected static ?string $password;
 
     protected static array $usedNicknames = [];
+    protected static array $usedUsernames = [];
 
     /**
      * Define the model's default state.
@@ -45,11 +46,18 @@ class UserFactory extends Factory
             'password' => static::$password ??= Hash::make('asdfasdf'), // default password
             'status' => 'active',
             'remember_token' => Str::random(10),
+            'phone' => '0812555500000',
+            'address' => 'Medan Timur',
+            'birth_date' => '2000-01-01'
         ];
     }
 
     private function generateUsername(string $firstName, string $lastName): string
     {
+        if (empty(self::$usedUsernames)) {
+            self::$usedUsernames = User::query()->pluck('username')->toArray();
+        }
+
         // ambil 1–2 huruf dari last name, untuk variasi
         $shortLast = substr($lastName, 0, 2);
 
@@ -118,5 +126,11 @@ class UserFactory extends Factory
         return $this->afterCreating(function (User $user) use ($role) {
             $user->assignRole($role);
         });
+    }
+
+    public static function resetNicknames(): void
+    {
+        self::$usedNicknames = [];
+        self::$usedUsernames = [];
     }
 }

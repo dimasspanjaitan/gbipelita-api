@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Role;
 use App\Services\UserVolunteerService;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -23,7 +24,10 @@ class UserSeeder extends Seeder
             'last_name' => 'Developer',
             'email' => 'developer@developer.com',
             'password' => Hash::make('asdfasdf'),
-            'status' => 'active'
+            'status' => 'active',
+            'phone' => '081381174410',
+            'address' => 'Jakarta Pusat',
+            'birth_date' => '2001-10-23'
         ]);
 
         $developerRole = Role::query()->where('name', 'Developer')->first();
@@ -39,7 +43,10 @@ class UserSeeder extends Seeder
             'last_name' => 'Admin',
             'email' => 'admin@gbipelita4.com',
             'password' => Hash::make('asdfasdf'),
-            'status' => 'active'
+            'status' => 'active',
+            'phone' => '081300000000',
+            'address' => 'Medan Timur',
+            'birth_date' => '2000-01-01'
         ]);
 
         $adminRole = Role::query()->where('name', 'Admin')->first();
@@ -67,7 +74,10 @@ class UserSeeder extends Seeder
             'last_name' => 'Gultom',
             'email' => 'hani@gbipelita4.com',
             'password' => Hash::make('asdfasdf'),
-            'status' => 'active'
+            'status' => 'active',
+            'phone' => '081311112222',
+            'address' => 'Medan',
+            'birth_date' => '1997-04-17'
         ]);
 
         $pastorYouthRole = Role::query()->where('name', 'Youth Pastor')->first();
@@ -85,7 +95,10 @@ class UserSeeder extends Seeder
             'last_name' => 'S Panjaitan',
             'email' => 'mahenja@gbipelita4.com',
             'password' => Hash::make('asdfasdf'),
-            'status' => 'active'
+            'status' => 'active',
+            'phone' => '081381174410',
+            'address' => 'Jakarta Pusat',
+            'birth_date' => '2001-10-23'
         ]);
 
         // Division Leader
@@ -96,7 +109,10 @@ class UserSeeder extends Seeder
             'last_name' => 'Hondro',
             'email' => 'odde@gbipelita4.com',
             'password' => Hash::make('asdfasdf'),
-            'status' => 'active'
+            'status' => 'active',
+            'phone' => '081344445555',
+            'address' => 'Medan Timur',
+            'birth_date' => '1997-02-01'
         ]);
         $meli = User::factory()->create([
             'username' => 'meli',
@@ -105,7 +121,10 @@ class UserSeeder extends Seeder
             'last_name' => 'Sibagariang',
             'email' => 'meli@gbipelita4.com',
             'password' => Hash::make('asdfasdf'),
-            'status' => 'active'
+            'status' => 'active',
+            'phone' => '081355554444',
+            'address' => 'Medan Timur',
+            'birth_date' => '1998-09-28'
         ]);
         $dennis = User::factory()->create([
             'username' => 'dennis',
@@ -161,6 +180,8 @@ class UserSeeder extends Seeder
         if ($volunteerRole && $coreTeamRole) {
             $laora->assignRole([$volunteerRole, $coreTeamRole]);
         }
+
+        UserFactory::resetNicknames();
 
         // 4. User Single Role Lainnya
         // Coreteam
