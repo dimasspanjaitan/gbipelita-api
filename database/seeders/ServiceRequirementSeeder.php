@@ -24,10 +24,10 @@ class ServiceRequirementSeeder extends Seeder
                 ['division' => 'Vocal', 'skill' => 'Singer', 'qty' => 3],
 
                 // Music
-                ['division' => 'Musik', 'skill' => 'Piano', 'qty' => 1],
-                ['division' => 'Musik', 'skill' => 'Bass', 'qty' => 1],
-                ['division' => 'Musik', 'skill' => 'Guitar/Saxo', 'qty' => 1],
-                ['division' => 'Musik', 'skill' => 'Drum', 'qty' => 1],
+                ['division' => 'Music', 'skill' => 'Piano', 'qty' => 1],
+                ['division' => 'Music', 'skill' => 'Bass', 'qty' => 1],
+                ['division' => 'Music', 'skill' => 'Guitar/Saxo', 'qty' => 1],
+                ['division' => 'Music', 'skill' => 'Drum', 'qty' => 1],
 
                 // Multimedia
                 ['division' => 'Multimedia', 'skill' => 'Camera', 'qty' => 2],
@@ -36,12 +36,11 @@ class ServiceRequirementSeeder extends Seeder
                 ['division' => 'Multimedia', 'skill' => 'Monitor', 'qty' => 1],
 
                 // Choir
-                ['division' => 'Choir', 'skill' => 'Choir', 'qty' => 5],
+                ['division' => 'Choir', 'skill' => 'Choir', 'qty' => 6],
                 ['division' => 'Sound System', 'skill' => 'Soundman', 'qty' => 1]
             ];
 
             foreach ($requirements as $req) {
-
                 $divisionId = Division::query()->where('name', $req['division'])->value('id');
                 $skillId = Skill::query()->where('name', $req['skill'])->value('id');
 

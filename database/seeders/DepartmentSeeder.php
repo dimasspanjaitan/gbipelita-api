@@ -19,11 +19,11 @@ class DepartmentSeeder extends Seeder
                 'status' => 'active'
             ]);
 
-        Department::create([
-                'name' => 'Pemuda & Anak',
-                'alias' => 'PA',
-                'content' => 'Departemen Pemuda dan Anak, termasuk Profesional, Youth, Nextgen, Starkids',
-                'status' => 'active'
-            ]);
+        // Department::create([
+        //         'name' => 'Pemuda & Anak',
+        //         'alias' => 'PA',
+        //         'content' => 'Departemen Pemuda dan Anak, termasuk Profesional, Youth, Nextgen, Starkids',
+        //         'status' => 'active'
+        //     ]);
     }
 }

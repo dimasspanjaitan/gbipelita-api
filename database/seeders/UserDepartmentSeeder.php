@@ -11,36 +11,29 @@ class UserDepartmentSeeder extends Seeder
     public function run(): void
     {
         // Ambil Department yang dibutuhkan
-        $departments = Department::query()->whereIn('alias', ['EW', 'PA'])
-            ->get()
-            ->keyBy('alias');
+        $department = Department::query()
+            ->where('alias', 'EW')
+            ->first();
 
-        if ($departments->count() < 2) {
-            $this->command->error('Department EW dan PA belum tersedia. Jalankan DepartmentSeeder terlebih dahulu.');
+        if (!$department) {
+            $this->command->error('Department EW belum tersedia. Jalankan DepartmentSeeder terlebih dahulu.');
             return;
         }
 
-        $deptEW = $departments['EW']->id;
-        $deptPA = $departments['PA']->id;
-
-        // Ambil user spesifik
-        $mahenja = User::query()->where('username', 'mahenja')->first();
         $laora   = User::query()->where('username', 'laora')->first();
-
-        // Assign manual ke dua departemen
-        foreach ([$mahenja, $laora] as $user) {
-            if ($user) {
-                $user->departments()->syncWithoutDetaching([$deptEW, $deptPA]);
-            }
+        if ($laora) {
+            $laora->departments()->syncWithoutDetaching($department->id);
         }
 
         // Ambil semua user dengan role tertentu
-        $roles = ['Division Leader', 'Core Team', 'Volunteer'];
-
-        $users = User::whereHas('roles', fn($q) => $q->whereIn('name', $roles))->get();
+        $roles = ['Division Leader', 'Volunteer'];
+        $users = User::query()
+            ->whereHas('roles', fn($q) => $q->whereIn('name', $roles))
+            ->where('status', 'active')
+            ->get();
 
         foreach ($users as $user) {
-            $user->departments()->syncWithoutDetaching([$deptEW, $deptPA]);
+            $user->departments()->syncWithoutDetaching($department->id);
         }
     }
 }

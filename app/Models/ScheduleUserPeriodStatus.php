@@ -13,6 +13,7 @@ class ScheduleUserPeriodStatus extends Model
         'schedule_period_id',
         'user_id',
         'has_submitted',
+        'notes',
     ];
 
     protected $casts = [
@@ -28,4 +29,19 @@ class ScheduleUserPeriodStatus extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public static function rules(): array
+    {
+        return [
+            'session_ids' => ['array'],
+            'session_ids.*' => ['uuid', 'exists:service_sessions,id'],
+            'notes' => ['nullable', 'string'],
+        ];
+    }
+
+    public const MESSAGES = [
+        'session_ids.*.uuid' => 'Service Session ID must be a valid UUID.',
+        'session_ids.*.exists' => 'The selected service session is invalid.',
+        'notes.string' => 'Year must be strings.',
+    ];
 }

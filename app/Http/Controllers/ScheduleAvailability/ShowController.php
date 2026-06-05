@@ -19,10 +19,12 @@ class ShowController extends Controller
             ->pluck('service_session_id')
             ->toArray();
 
-        $submitted = ScheduleUserPeriodStatus::query()
+        $scheduleUserPeriodStatus = ScheduleUserPeriodStatus::query()
             ->where('schedule_period_id', $period->id)
             ->where('user_id', $userId)
-            ->value('has_submitted') ?? false;
+            ->first();
+
+        $submitted = $scheduleUserPeriodStatus->has_submitted ?? false;
 
         // transform ke format frontend
         $sessions = $period->sessions->map(function ($session) use ($availableSessionIds) {
@@ -32,8 +34,9 @@ class ShowController extends Controller
 
         return response()->json([
             'period' => $period->load('department')->unsetRelation('sessions'),
-            'submitted' => $submitted,
             'sessions' => $sessions,
+            'submitted' => $submitted,
+            'notes' => $scheduleUserPeriodStatus->notes ?? null,
         ]);
     }
 }

@@ -12,19 +12,23 @@ class ModulesSeeder extends Seeder
     {
         $modules = [
             'Dashboard',
-            'User',
-            'Role',
-            'Permission',
-            'Module',
-            'Action',
+            // Master Data
             'Department',
             'Division',
             'Skill',
             'Volunteer',
             'User Position',
+            // Schedule
             'Schedule Period',
-            'Schedule',
             'Availability Schedule',
+            'Schedule',
+            // Authorization
+            'Action',
+            'Module',
+            'Role',
+            'User',
+            // OTher
+            'Permission',
             'Profile',
             'Setting'
         ];

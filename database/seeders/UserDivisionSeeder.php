@@ -15,37 +15,29 @@ class UserDivisionSeeder extends Seeder
         DB::table('user_division')->truncate();
 
         // Ambil semua divisi yang dibutuhkan
-        $divisions = Division::query()->whereIn('name', [
-            'Musik',
-            'Multimedia',
-            'Vocal',
-            'Choir',
-            'Sound System'
-        ])->get()->keyBy('name');
+        $divisions = Division::query()
+            ->where('status', 'active')
+            ->whereIn('name', [
+                'Music',
+                'Multimedia',
+                'Vocal',
+                'Choir',
+                'Sound System'
+            ])->get()->keyBy('name');
 
         // Validasi kalau ada yang belum ada
-        foreach (['Musik', 'Multimedia', 'Vocal', 'Choir', 'Sound System'] as $name) {
+        foreach (['Music', 'Multimedia', 'Vocal', 'Choir', 'Sound System'] as $name) {
             if (!isset($divisions[$name])) {
                 $this->command->error("Division '{$name}' tidak ditemukan. Pastikan DivisionSeeder sudah dijalankan.");
                 return;
             }
         }
 
-        // === 1. Mahenja ke divisi Musik ===
-        $mahenja = User::query()->where('username', 'mahenja')->first();
-        if ($mahenja) {
-            $mahenja->divisions()->syncWithoutDetaching([
-                $divisions['Musik']->id => ['priority' => 1],
-                // $divisions['LICC Youth']->id => ['priority' => 1],
-            ]);
-        }
-
-        // === 2. Laora ke divisi Multimedia ===
+        // === 1. Laora ke divisi Multimedia ===
         $laora = User::query()->where('username', 'laora')->first();
         if ($laora) {
             $laora->divisions()->syncWithoutDetaching([
                 $divisions['Multimedia']->id => ['priority' => 1],
-                // $divisions['LICC Youth']->id => ['priority' => 1],
             ]);
         }
 
@@ -61,7 +53,7 @@ class UserDivisionSeeder extends Seeder
 
         // Mapping kebutuhan
         $distribution = collect([
-            'Musik' => 60,
+            'Music' => 60,
             'Vocal' => 40,
             'Multimedia' => 20,
             'Choir' => 20,

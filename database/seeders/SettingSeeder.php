@@ -14,9 +14,9 @@ class SettingSeeder extends Seeder
     {
         Setting::create([
             // 'app_name' => 'GBI Pelita Medan',
-            'app_name' => 'GBI AJA',
+            'app_name' => 'GBI Pelita',
             'app_title' => 'GBI Pelita Medan',
-            'app_description' => '2025: Hidup Berdampak Melalui Kebiasaan Baik',
+            'app_description' => '2026: Hidup Berdampak Melalui Kebiasaan Baik',
             'app_logo' => '#',
             'app_logo_alternative' => '#',
             'app_favicon' => '#',

@@ -19,17 +19,27 @@ class LatestShowController extends Controller
             ->latest('created_at')
             ->first();
 
+        if (!$latestPeriodOpen) {
+            return response()->json([
+                'period' => null,
+                'sessions' => [],
+                'submitted' => false,
+                'notes' => null,
+            ]);
+        }
+
         $availableSessionIds = ScheduleAvailability::query()
             ->where('schedule_period_id', $latestPeriodOpen->id)
             ->where('user_id', $userId)
             ->pluck('service_session_id')
             ->toArray();
 
-        $submitted = ScheduleUserPeriodStatus::query()
+        $scheduleUserPeriodStatus = ScheduleUserPeriodStatus::query()
             ->where('schedule_period_id', $latestPeriodOpen->id)
             ->where('user_id', $userId)
-            ->value('has_submitted') ?? false;
+            ->first();
 
+        $submitted = $scheduleUserPeriodStatus->has_submitted ?? false;
 
         // transform ke format frontend
         $sessions = $latestPeriodOpen->sessions->map(function ($session) use ($availableSessionIds) {
@@ -37,11 +47,11 @@ class LatestShowController extends Controller
             return $session;
         });
 
-        // dd([$availableSessionIds, $sessions]);
         return response()->json([
             'period' => $latestPeriodOpen->unsetRelation('sessions') ?? null,
-            'submitted' => $submitted,
             'sessions' => $sessions,
+            'submitted' => $submitted,
+            'notes' => $scheduleUserPeriodStatus->notes ?? null,
         ]);
     }
 }

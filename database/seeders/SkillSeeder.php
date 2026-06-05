@@ -11,18 +11,20 @@ class SkillSeeder extends Seeder
     public function run(): void
     {
         // Ambil semua department yang dibutuhkan
-        $divisions = Division::query()->whereIn('name', ['Musik', 'Vocal', 'Multimedia', 'Choir', 'Sound System'])
+        $divisions = Division::query()
+            ->where('status', 'active')
+            ->whereIn('name', ['Music', 'Vocal', 'Multimedia', 'Choir', 'Sound System'])
             ->get()
             ->keyBy('name');
 
         // Validasi ketersediaan
-        if (!isset($divisions['Musik']) || !isset($divisions['Vocal']) || !isset($divisions['Multimedia']) || !isset($divisions['Choir']) || !isset($divisions['Sound System'])) {
+        if (!isset($divisions['Music']) || !isset($divisions['Vocal']) || !isset($divisions['Multimedia']) || !isset($divisions['Choir']) || !isset($divisions['Sound System'])) {
             $this->command->error('Pastikan DivisionSeeder sudah dijalankan terlebih dahulu.');
             return;
         }
 
         $skills = [
-            'Musik' => [
+            'Music' => [
                 ['name' => 'Piano'],
                 ['name' => 'Filler'],
                 ['name' => 'Bass'],

@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\DB;
 
 class AvailabilityService
 {
-    public function submit(string $periodId, string $userId, array $sessionIds): void
+    public function submit(string $periodId, string $userId, array $sessionIds, string $notes): void
     {
-        DB::transaction(function () use ($periodId, $userId, $sessionIds) {
+        DB::transaction(function () use ($periodId, $userId, $sessionIds, $notes) {
 
             // delete existing
             ScheduleAvailability::query()
@@ -41,7 +41,8 @@ class AvailabilityService
                     'user_id' => $userId,
                 ],
                 [
-                    'has_submitted' => true
+                    'has_submitted' => true,
+                    'notes' => $notes
                 ]
             );
         });

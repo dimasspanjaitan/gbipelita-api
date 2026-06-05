@@ -18,7 +18,7 @@ class UserPositionSeeder extends Seeder
 
         $ewDepartment = Department::query()->where('alias', 'EW')->firstOrFail();
 
-        $musicDivision = Division::query()->where('name', 'Musik')->firstOrFail();
+        $musicDivision = Division::query()->where('name', 'Music')->firstOrFail();
         $multimediaDivision = Division::query()->where('name', 'Multimedia')->firstOrFail();
         $vocalDivision = Division::query()->where('name', 'Vocal')->firstOrFail();
         $choirDivision = Division::query()->where('name', 'Choir')->firstOrFail();

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->uuid('schedule_period_id')->index();
             $table->uuid('user_id')->index();
             $table->boolean('has_submitted')->default(false);
+            $table->text('notes')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
