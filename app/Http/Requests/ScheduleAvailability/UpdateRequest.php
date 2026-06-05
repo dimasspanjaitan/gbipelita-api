@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\SchedulePeriod;
+namespace App\Http\Requests\ScheduleAvailabilityq;
 
 use App\Models\SchedulePeriod;
 use Illuminate\Contracts\Validation\Validator;

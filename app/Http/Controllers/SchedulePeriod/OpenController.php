@@ -4,6 +4,7 @@ namespace App\Http\Controllers\SchedulePeriod;
 
 use App\Http\Controllers\Controller;
 use App\Models\SchedulePeriod;
+use App\Services\Scheduling\PeriodBuilderService;
 
 class OpenController extends Controller
 {
@@ -16,9 +17,7 @@ class OpenController extends Controller
             ], 422);
         }
 
-        $period->update([
-            'status' => 'open',
-        ]);
+        $period = app(PeriodBuilderService::class)->build($period);
 
         return response()->json([
             'success' => true,

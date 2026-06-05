@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\ScheduleAvailability;
 
-use App\Models\ScheduleAvailability;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;

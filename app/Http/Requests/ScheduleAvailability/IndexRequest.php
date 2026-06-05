@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\SchedulePeriod;
+namespace App\Http\Requests\ScheduleAvailability;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;

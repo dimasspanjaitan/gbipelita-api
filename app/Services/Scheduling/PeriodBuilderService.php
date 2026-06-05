@@ -7,7 +7,6 @@ use App\Models\ScheduleUserPeriodStatus;
 use App\Models\ServiceSession;
 use App\Models\ServiceRequirement;
 use App\Models\Skill;
-use App\Models\User;
 use App\Services\UserVolunteerService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -20,28 +19,16 @@ class PeriodBuilderService
         protected UserVolunteerService $userVolunteerService
     ) {}
 
-    public function build(int $month, int $year, string $departmentId): SchedulePeriod
+    public function build(SchedulePeriod $period): SchedulePeriod
     {
-        return DB::transaction(function () use ($month, $year, $departmentId) {
-
-            // ❗ prevent duplicate period
-            $existing = SchedulePeriod::query()
-                ->where([
-                    'department_id' => $departmentId,
-                    'month' => $month,
-                    'year' => $year,
-                ])->first();
-
-            if ($existing) {
-                throw new \Exception('Schedule period already exists');
+        return DB::transaction(function () use ($period) {
+            // schedule already open
+            if ($period->status !== "draft") {
+                throw new \Exception('Schedule period is already open');
             }
 
-            $period = SchedulePeriod::create([
-                'id' => Str::uuid(),
-                'department_id' => $departmentId,
-                'month' => $month,
-                'year' => $year,
-                'status' => 'draft',
+            $period->update([
+                'status' => 'open',
             ]);
 
             $sessions = $this->generateSessions($period);

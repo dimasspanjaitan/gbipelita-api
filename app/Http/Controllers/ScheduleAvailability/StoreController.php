@@ -22,16 +22,6 @@ class StoreController extends Controller
             $request->session_ids ?? []
         );
 
-        ScheduleUserPeriodStatus::updateOrCreate(
-            [
-                'schedule_period_id' => $period->id,
-                'user_id' => auth()->id()
-            ],
-            [
-                'has_submitted' => true
-            ]
-        );
-
         return response()->json([
             'message' => 'Availability saved'
         ]);
