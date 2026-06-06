@@ -33,11 +33,17 @@ class UserDivisionSeeder extends Seeder
             }
         }
 
-        // === 1. Laora ke divisi Multimedia ===
+        // === Laora ke divisi Multimedia, riris ke divisi Vocal ===
         $laora = User::query()->where('username', 'laora')->first();
+        $riris = User::query()->where('username', 'riris')->first();
         if ($laora) {
             $laora->divisions()->syncWithoutDetaching([
                 $divisions['Multimedia']->id => ['priority' => 1],
+            ]);
+        }
+        if ($riris) {
+            $riris->divisions()->syncWithoutDetaching([
+                $divisions['Vocal']->id => ['priority' => 1],
             ]);
         }
 
@@ -62,15 +68,18 @@ class UserDivisionSeeder extends Seeder
 
         // Semua user wajib punya minimal 1 division
         foreach ($users as $user) {
-            $randomDivision = $divisions->random();
+            if ($user->username === "laora" || $user->username === "riris") continue;
 
+            $randomDivision = $divisions->random();
             $user->divisions()->syncWithoutDetaching([
                 $randomDivision->id => ['priority' => 1],
             ]);
         }
 
         foreach ($distribution as $divisionName => $total) {
+
             $eligibleUsers = $users->filter(function ($user) use ($userDivisionCount, $maxDivisionPerUser) {
+                if ($user->username === "laora" || $user->username === "riris") return;
                 return ($userDivisionCount[$user->id] ?? 0) < $maxDivisionPerUser;
             });
 

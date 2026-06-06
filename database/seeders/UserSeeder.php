@@ -41,6 +41,18 @@ class UserSeeder extends Seeder
             'address' => 'Medan Timur',
             'birth_date' => '2000-01-01'
         ]);
+        $riris = User::factory()->create([
+            'username' => 'riris',
+            'nickname' => 'Riris',
+            'first_name' => 'Riris',
+            'last_name' => 'Mikroskil',
+            'email' => 'riris@gmail.com',
+            'password' => Hash::make('asdfasdf'),
+            'status' => 'active',
+            'phone' => '082299999999',
+            'address' => 'Medan Timur',
+            'birth_date' => '2000-01-01'
+        ]);
         $hani = User::factory()->create([
             'username' => 'hani',
             'nickname' => 'Hani',
@@ -110,6 +122,7 @@ class UserSeeder extends Seeder
         // Admin + Volunteer
         if ($adminRole && $volunteerRole) {
             $laora->assignRole([$adminRole, $volunteerRole]);
+            $riris->assignRole([$adminRole, $volunteerRole]);
         }
 
         //  Department Head + Division Leader + Volunteer

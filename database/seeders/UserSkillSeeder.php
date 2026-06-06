@@ -19,20 +19,33 @@ class UserSkillSeeder extends Seeder
 
         foreach ($users as $user) {
             $userSkills = collect();
+            $manualSkills = [
+                'laora' => 'Slide',
+                'riris' => 'Singer'
+            ];
 
-            foreach ($user->divisions as $division) {
+            // Manual assignment
+            if (isset($manualSkills[$user->username])) {
+                $skill = Skill::query()
+                    ->where('name', $manualSkills[$user->username])
+                    ->first();
 
-                $skills = $skillsByDivision[$division->id] ?? collect();
+                if ($skill) $userSkills->push($skill);
+            } else {
+                foreach ($user->divisions as $division) {
 
-                // Skip kalau tidak ada skill
-                if ($skills->isEmpty()) {
-                    $this->command->warn("Division {$division->name} tidak punya skill.");
-                    continue;
+                    $skills = $skillsByDivision[$division->id] ?? collect();
+
+                    // Skip kalau tidak ada skill
+                    if ($skills->isEmpty()) {
+                        $this->command->warn("Division {$division->name} tidak punya skill.");
+                        continue;
+                    }
+
+                    $userSkills->push(
+                        $skills->random()
+                    );
                 }
-
-                $userSkills->push(
-                    $skills->random()
-                );
             }
 
             $userSkills = $userSkills->unique('id')->values();

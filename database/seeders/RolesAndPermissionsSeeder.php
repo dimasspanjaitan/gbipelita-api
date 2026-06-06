@@ -2,10 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\Action;
+use App\Models\Module;
+use App\Models\Permission;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use App\Models\Role; // Ganti dari Spatie
-use App\Models\Permission; // Ganti dari Spatie
 
 class RolesAndPermissionsSeeder extends Seeder
 {
@@ -16,17 +18,29 @@ class RolesAndPermissionsSeeder extends Seeder
 
         DB::transaction(function () {
             $permissions = Permission::query()->pluck('name')->toArray();
+            $excludeModules = [
+                'action',
+                'module',
+                'role',
+            ];
+
+            $modules = Module::whereNotIn('slug', $excludeModules)->pluck('slug');
+            $actions = Action::pluck('name');
+
+            $adminPermissions = [];
+
+            foreach ($modules as $module) {
+                foreach ($actions as $action) {
+                    $adminPermissions[] = "{$action}-{$module}";
+                }
+            }
 
             $roles = [
                 'Developer',
                 'Admin',
-                // 'Youth Pastor',
                 'Department Head',
                 'Division Leader',
-                // 'Core Team',
                 'Volunteer',
-                // 'Congregation',
-                'Guest',
             ];
 
             // Buat roles
@@ -46,19 +60,13 @@ class RolesAndPermissionsSeeder extends Seeder
             }
 
             if ($adminRole) {
-                $adminRole->givePermissionTo($permissions);
+                $adminRole->givePermissionTo([
+                    ...$adminPermissions,
+                    "read-role"
+                ]);
             }
 
             // Assign specific permissions ke role lainnya
-            // $this->assignRolePermissions('Youth Pastor', [
-            //     'menu-dashboard',
-            //     'read-dashboard',
-            //     'menu-volunteer',
-            //     'read-volunteer',
-            //     'menu-schedule',
-            //     'read-schedule',
-            // ]);
-
             $this->assignRolePermissions('Department Head', [
                 'menu-dashboard',
                 'read-dashboard',
@@ -135,13 +143,6 @@ class RolesAndPermissionsSeeder extends Seeder
                 'show-schedule-period',
                 'update-schedule',
             ]);
-
-            // $this->assignRolePermissions('Core Team', [
-            //     'menu-schedule',
-            //     'read-schedule',
-            //     'menu-availability-schedule',
-            //     'read-availability-schedule',
-            // ]);
 
             $this->assignRolePermissions('Volunteer', [
                 'menu-schedule',
