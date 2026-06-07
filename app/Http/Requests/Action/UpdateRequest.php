@@ -19,7 +19,7 @@ class UpdateRequest extends FormRequest
 
     public function rules(): array
     {
-        return Action::rules($this->route('module_action')->id);
+        return Action::rules($this->route('action')->id);
     }
 
     public function messages(): array
