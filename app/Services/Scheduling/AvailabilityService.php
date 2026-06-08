@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class AvailabilityService
 {
-    public function submit(string $periodId, string $userId, array $sessionIds, string $notes): void
+    public function submit(string $periodId, string $userId, array $sessionIds, ?string $notes): void
     {
         DB::transaction(function () use ($periodId, $userId, $sessionIds, $notes) {
 
@@ -42,7 +42,7 @@ class AvailabilityService
                 ],
                 [
                     'has_submitted' => true,
-                    'notes' => $notes
+                    'notes' => $notes ?? null
                 ]
             );
         });
