@@ -13,18 +13,27 @@ return new class extends Migration
     {
         Schema::create('user_positions', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignUuid('role_id')->constrained()->restrictOnDelete();
-            $table->foreignUuid('department_id')->nullable()->constrained()->restrictOnDelete();
-            $table->foreignUuid('division_id')->nullable()->constrained()->restrictOnDelete();
+
+            $table->foreignUuid('user_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
+            $table->foreignUuid('role_id')
+                ->constrained()
+                ->restrictOnDelete();
+
+            $table->foreignUuid('department_id')
+                ->nullable()
+                ->constrained()
+                ->restrictOnDelete();
+
+            $table->foreignUuid('division_id')
+                ->nullable()
+                ->constrained()
+                ->restrictOnDelete();
+
             $table->timestamps();
             $table->softDeletes();
-
-            $table->unique([
-                'user_id',
-                'role_id',
-                'department_id',
-            ], 'user_positions_unique');
         });
     }
 

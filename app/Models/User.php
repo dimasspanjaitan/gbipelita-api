@@ -133,6 +133,26 @@ class User extends Authenticatable
         return $this->hasMany(UserPosition::class);
     }
 
+    public function managedDepartmentIds(): array
+    {
+        return $this->positions()
+            ->whereNotNull('department_id')
+            ->pluck('department_id')
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    public function managedDivisionIds(): array
+    {
+        return $this->positions()
+            ->whereNotNull('division_id')
+            ->pluck('division_id')
+            ->unique()
+            ->values()
+            ->all();
+    }
+
     /** ────────────────────────────────
      *  VALIDATION RULES
      *  ──────────────────────────────── */

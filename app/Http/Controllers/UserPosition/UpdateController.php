@@ -17,7 +17,14 @@ class UpdateController extends Controller
             $userPosition->update($request->validated());
             DB::commit();
 
-            return response()->json($userPosition->fresh());
+            return response()->json(
+                $userPosition->fresh()->load([
+                    'user',
+                    'role',
+                    'department',
+                    'division',
+                ])
+            );
         } catch (\Exception $e) {
             DB::rollBack();
 

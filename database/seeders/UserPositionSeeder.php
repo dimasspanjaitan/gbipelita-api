@@ -35,9 +35,9 @@ class UserPositionSeeder extends Seeder
                 'user_id' => $hani->id,
                 'role_id' => $departmentHeadRole->id,
                 'department_id' => $ewDepartment->id,
+                'division_id' => null,
             ],
             [
-                'division_id' => null,
             ]
         );
 
@@ -45,10 +45,10 @@ class UserPositionSeeder extends Seeder
             [
                 'user_id' => $hani->id,
                 'role_id' => $divisionLeaderRole->id,
+                'department_id' => null,
                 'division_id' => $musicDivision->id,
             ],
             [
-                'department_id' => null,
             ]
         );
 
@@ -56,10 +56,10 @@ class UserPositionSeeder extends Seeder
             [
                 'user_id' => $odde->id,
                 'role_id' => $divisionLeaderRole->id,
+                'department_id' => null,
                 'division_id' => $vocalDivision->id,
             ],
             [
-                'department_id' => null,
             ]
         );
 
@@ -67,10 +67,10 @@ class UserPositionSeeder extends Seeder
             [
                 'user_id' => $meli->id,
                 'role_id' => $divisionLeaderRole->id,
+                'department_id' => null,
                 'division_id' => $choirDivision->id,
             ],
             [
-                'department_id' => null,
             ]
         );
 
@@ -78,10 +78,10 @@ class UserPositionSeeder extends Seeder
             [
                 'user_id' => $dennis->id,
                 'role_id' => $divisionLeaderRole->id,
+                'department_id' => null,
                 'division_id' => $multimediaDivision->id,
             ],
             [
-                'department_id' => null,
             ]
         );
 
@@ -89,10 +89,10 @@ class UserPositionSeeder extends Seeder
             [
                 'user_id' => $dandi->id,
                 'role_id' => $divisionLeaderRole->id,
+                'department_id' => null,
                 'division_id' => $soundSystemDivision->id,
             ],
             [
-                'department_id' => null,
             ]
         );
     }

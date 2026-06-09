@@ -19,7 +19,7 @@ class UpdateRequest extends FormRequest
 
     public function rules(): array
     {
-        return UserPosition::rules($this->route('userPosision')->id);
+        return UserPosition::rules($this->userPosition->id);
     }
 
     public function messages(): array

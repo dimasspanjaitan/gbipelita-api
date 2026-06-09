@@ -20,6 +20,19 @@ class UserPosition extends Model
         'division_id',
     ];
 
+    protected $appends = [
+        'display_name'
+    ];
+
+    public function getDisplayNameAttribute(): string
+    {
+        if ($this->department_id) {
+            return "{$this->role->name} {$this->department->name}";
+        }
+
+        return "{$this->role->name} {$this->division->name}";
+    }
+
     /**
      * User yang memiliki posisi ini.
      */
@@ -75,20 +88,33 @@ class UserPosition extends Model
     /** ────────────────────────────────
      *  VALIDATION RULES
      *  ──────────────────────────────── */
-    public static function rules(?string $ignoreId = null): array
+    public static function rules(): array
     {
         return [
             'user_id' => ['required', 'uuid', 'exists:users,id'],
             'role_id' => ['required', 'uuid', 'exists:roles,id'],
-            'department_id' => ['nullable', 'uuid', 'exists:departments,id'],
-            'division_id' => ['nullable', 'uuid', 'exists:divisions,id'],
+            'department_id' => [
+                'nullable',
+                'uuid',
+                'exists:departments,id',
+                'required_without:division_id',
+                'prohibited_with:division_id',
+            ],
+
+            'division_id' => [
+                'nullable',
+                'uuid',
+                'exists:divisions,id',
+                'required_without:department_id',
+                'prohibited_with:department_id',
+            ],
         ];
     }
 
     public const MESSAGES = [
-        'user_id.required' => 'Divisi is required.',
-        'user_id.uuid' => 'Divisi ID must be a valid UUID.',
-        'user_id.exists' => 'Selected divisi does not exist.',
+        'user_id.required' => 'User is required.',
+        'user_id.uuid' => 'User ID must be a valid UUID.',
+        'user_id.exists' => 'Selected user does not exist.',
         'role_id.required' => 'Role is required.',
         'role_id.uuid' => 'Role ID must be a valid UUID.',
         'role_id.exists' => 'Selected role does not exist.',
