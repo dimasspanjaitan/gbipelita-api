@@ -47,5 +47,12 @@ class PermissionSeeder extends Seeder
             'created_at' => $now,
             'updated_at' => $now
         ]);
+        DB::table('permissions')->insertOrIgnore([
+            'id' => Str::uuid()->toString(),
+            'name' => "open-schedule-period",
+            'guard_name' => 'api',
+            'created_at' => $now,
+            'updated_at' => $now
+        ]);
     }
 }

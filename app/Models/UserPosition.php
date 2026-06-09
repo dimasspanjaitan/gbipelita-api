@@ -27,10 +27,10 @@ class UserPosition extends Model
     public function getDisplayNameAttribute(): string
     {
         if ($this->department_id) {
-            return "{$this->role->name} {$this->department->name}";
+            return "Kepala Departemen {$this->department->name}";
         }
 
-        return "{$this->role->name} {$this->division->name}";
+        return "Ketua Divisi {$this->division->name} Division";
     }
 
     /**
@@ -85,20 +85,42 @@ class UserPosition extends Model
             ->all();
     }
 
+    public static function positionExists(
+        array $data,
+        ?string $ignoreId = null
+    ): bool {
+        $query = static::query()
+            ->where('role_id', $data['role_id']);
+
+        if ($ignoreId) {
+            $query->whereKeyNot($ignoreId);
+        }
+
+        if (!empty($data['department_id'])) {
+            $query->where('department_id', $data['department_id']);
+        }
+
+        if (!empty($data['division_id'])) {
+            $query->where('division_id', $data['division_id']);
+        }
+
+        return $query->exists();
+    }
+
     /** ────────────────────────────────
      *  VALIDATION RULES
      *  ──────────────────────────────── */
     public static function rules(): array
     {
         return [
-            'user_id' => ['required', 'uuid', 'exists:users,id'],
-            'role_id' => ['required', 'uuid', 'exists:roles,id'],
+            'user_id' => ['bail', 'required', 'uuid', 'exists:users,id'],
+            'role_id' => ['bail', 'required', 'uuid', 'exists:roles,id'],
             'department_id' => [
                 'nullable',
                 'uuid',
                 'exists:departments,id',
                 'required_without:division_id',
-                'prohibited_with:division_id',
+                'prohibits:division_id',
             ],
 
             'division_id' => [
@@ -106,7 +128,7 @@ class UserPosition extends Model
                 'uuid',
                 'exists:divisions,id',
                 'required_without:department_id',
-                'prohibited_with:department_id',
+                'prohibits:department_id',
             ],
         ];
     }
@@ -120,7 +142,11 @@ class UserPosition extends Model
         'role_id.exists' => 'Selected role does not exist.',
         'department_id.uuid' => 'Department ID must be a valid UUID.',
         'department_id.exists' => 'Selected department does not exist.',
+        'department_id.required_without' => 'Department is required when division is not selected.',
+        'department_id.prohibits' => 'Department and division cannot be selected together.',
         'division_id.uuid' => 'Division ID must be a valid UUID.',
         'division_id.exists' => 'Selected division does not exist.',
+        'division_id.required_without' => 'Division is required when department is not selected.',
+        'division_id.prohibits' => 'Division and department cannot be selected together.',
     ];
 }

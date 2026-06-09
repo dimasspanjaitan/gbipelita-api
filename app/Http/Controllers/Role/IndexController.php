@@ -38,6 +38,12 @@ class IndexController extends Controller
 
                 $query->where('name', 'like', $search);
             })
+            ->when($request->boolean('position'), function ($query) {
+                $query->whereIn('name', [
+                    'Department Head',
+                    'Division Leader',
+                ]);
+            })
             ->when($request->sort_column, function ($query) use ($request) {
                 $query->orderBy(
                     $request->sort_column,

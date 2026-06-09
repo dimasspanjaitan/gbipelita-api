@@ -24,6 +24,18 @@ class StoreRequest extends FormRequest
         return UserPosition::MESSAGES;
     }
 
+    public function withValidator($validator): void
+    {
+        $validator->after(function ($validator) {
+            if (UserPosition::positionExists($this->validated())) {
+                $validator->errors()->add(
+                    'role_id',
+                    'This position is already occupied.'
+                );
+            }
+        });
+    }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([

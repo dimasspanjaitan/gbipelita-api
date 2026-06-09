@@ -19,7 +19,7 @@ Route::middleware('auth:sanctum')->prefix('schedule-periods')->group(function ()
     Route::post('/', StoreController::class)->middleware('can:create-schedule-period');
     Route::put('/{period}', UpdateController::class)->middleware('can:update-schedule-period');
     Route::patch('/{period}', UpdateController::class)->middleware('can:update-schedule-period');
-    Route::patch('/{period}/open', OpenController::class)->middleware('can:update-schedule-period');
+    Route::patch('/{period}/open', OpenController::class)->middleware('can:open-schedule-period');
     Route::patch('/{period}/publish', PublishController::class)->middleware('can:update-schedule-period');
     Route::delete('/{period}', DestroyController::class)->middleware('can:delete-schedule-period');
     Route::post('/{period}/restore', RestoreController::class)->middleware('can:restore-schedule-period');

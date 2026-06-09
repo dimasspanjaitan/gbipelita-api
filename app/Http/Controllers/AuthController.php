@@ -73,11 +73,10 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
-        $permissions = $user->getAllPermissions()->pluck('name');
+        $isAdmin = $user->hasPermissionTo('read-dashboard');
 
         // Hapus semua token lama
         $user->tokens()->delete();
-
         // Buat token baru
         $token = $user->createToken('api_token')->plainTextToken;
 
@@ -85,8 +84,15 @@ class AuthController extends Controller
             'success' => true,
             'message' => 'Login successful',
             'token' => $token,
-            'user' => $user->load('positions'),
-            'permissions' => $permissions,
+            'user' => [
+                'id' => $user->id,
+                'username' => $user->username,
+                'nickname' => $user->nickname,
+                'full_name' => $user->full_name,
+                'email' => $user->email,
+                'photo' => $user->photo,
+                'is_admin' => $isAdmin,
+            ],
         ]);
     }
 
@@ -100,12 +106,21 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $user = User::query()
-            ->with('roles', 'departments', 'divisions', 'skills')
-            ->where('id', $request->user()->id)
-            ->first();
+        $currentUser = $request->user();
+        $permissions = $currentUser->getAllPermissions()->pluck('name');
 
-        return response()->json($user);
+        $user = User::query()
+            ->with(['roles', 'positions', 'departments', 'divisions', 'skills'])
+            ->findOrFail($currentUser->id);
+
+        $user->roles->each(function ($role) {
+            $role->unsetRelation('permissions');
+        });
+
+        return response()->json([
+            'user' => $user,
+            'permissions' => $permissions
+        ]);
     }
 
     // Logout (revoke current token)

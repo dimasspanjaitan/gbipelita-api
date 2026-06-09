@@ -12,9 +12,11 @@ class StoreController extends Controller
 {
     public function __invoke(StoreRequest $request): JsonResponse
     {
+        $data = $request->validated();
+        
         DB::beginTransaction();
         try {
-            $userPosition = UserPosition::create($request->validated());
+            $userPosition = UserPosition::create($data);
             DB::commit();
 
             return response()->json($userPosition->load(['user', 'role', 'department', 'division']));
