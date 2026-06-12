@@ -4,8 +4,8 @@
  * @returns {string} Nomor terformat
  */
 export function formatPhone(number) {
-  if (!number) return ''
-  return number.replace(/(\d{4})(\d{4})(\d+)/, '$1-$2-$3')
+    if (!number) return "";
+    return number.replace(/(\d{4})(\d{4})(\d+)/, "$1-$2-$3");
 }
 
 /**
@@ -14,11 +14,13 @@ export function formatPhone(number) {
  * @param {string} message Pesan default
  * @returns {string} Link WhatsApp
  */
-export function createWhatsAppLink(number, name, subject = "", message = '') {
-  if (!number) return ''
-  const phone = number.replace(/^0/, '62')
-  const encodedMessage = encodeURIComponent(`[Pesan dari website] Syalom pak Pdt. Jayanta Bangun, saya ${name} ingin menghubungi Anda.\n\Perihal: ${subject}\n\nPesan: ${message}`);
-  return `https://wa.me/${phone}?text=${encodedMessage}`
+export function createWhatsAppLink(number, name, subject = "", message = "") {
+    if (!number) return "";
+    const phone = number.replace(/^0/, "62");
+    const encodedMessage = encodeURIComponent(
+        `[Pesan dari website] Syalom pak Pdt. Jayanta Bangun, saya ${name} ingin menghubungi Anda.\n\Perihal: ${subject}\n\nPesan: ${message}`,
+    );
+    return `https://wa.me/${phone}?text=${encodedMessage}`;
 }
 
 /**
@@ -28,9 +30,11 @@ export function createWhatsAppLink(number, name, subject = "", message = '') {
  * @param {string} body Isi pesan default
  * @returns {string} Link MailTo
  */
-export function createMailLink(email = '', subject = '', body = '') {
-  if (!email) return ''
-  const encodedSubject = encodeURIComponent(subject)
-  const encodedBody = encodeURIComponent(body)
-  return `mailto:${email}?subject=Pesan dari Website: ${encodedSubject}&body=${encodedBody}`
+export function createMailLink(email = "", subject = null, body = "") {
+    if (!email) return "";
+    const encodedSubject = subject
+        ? `Pesan dari Website: ${encodeURIComponent(subject)}`
+        : "Pesan dari Website";
+    const encodedBody = encodeURIComponent(body);
+    return `mailto:${email}?subject=${encodedSubject}&body=${encodedBody}`;
 }

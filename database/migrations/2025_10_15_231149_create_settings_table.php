@@ -22,14 +22,6 @@ return new class extends Migration
             $table->string('address', 255);
             $table->string('phone', 100);
             $table->string('email', 100)->nullable();
-            $table->string('youtube', 100)->nullable();
-            $table->string('instagram', 100)->nullable();
-            $table->string('facebook', 100)->nullable();
-            $table->string('whatsapp', 100)->nullable();
-            $table->text('visi')->nullable();
-            $table->text('misi')->nullable();
-            $table->text('motto')->nullable();
-            $table->text('history')->nullable();
             $table->json('data')->nullable();
             $table->timestamps();
         });

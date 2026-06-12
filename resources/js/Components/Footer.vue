@@ -1,11 +1,14 @@
 <template>
     <footer class="bg-gray-900 text-white py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div class="col-span-1 md:col-span-2">
+            <div class="grid grid-cols-1 md:grid-cols-[50%_10%_auto] gap-8">
+                <div>
                     <div class="flex items-center space-x-3 mb-4">
                         <div class="w-10 h-10 flex items-center justify-center">
-                            <img :src="settings.app_logo || '/logo.png'" alt="public/logo.png" />
+                            <img
+                                :src="settings.app_logo || '/logo.png'"
+                                alt="public/logo.png"
+                            />
                         </div>
                         <div>
                             <h3 class="text-xl font-bold">
@@ -19,44 +22,7 @@
                     <p class="text-gray-400 mb-4 max-w-md">
                         {{ settings.history }}
                     </p>
-                    <div class="flex space-x-4">
-                        <a
-                            :href="settings.facebook"
-                            target="_blank"
-                            class="text-gray-400 hover:text-white transition-colors"
-                        >
-                            <span class="sr-only">Facebook</span>
-                            <div
-                                class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors"
-                            >
-                                <span class="text-xs font-bold">f</span>
-                            </div>
-                        </a>
-                        <a
-                            :href="settings.instagram"
-                            target="_blank"
-                            class="text-gray-400 hover:text-white transition-colors"
-                        >
-                            <span class="sr-only">Instagram</span>
-                            <div
-                                class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center hover:bg-pink-600 transition-colors"
-                            >
-                                <span class="text-xs font-bold">IG</span>
-                            </div>
-                        </a>
-                        <a
-                            :href="settings.youtube"
-                            target="_blank"
-                            class="text-gray-400 hover:text-white transition-colors"
-                        >
-                            <span class="sr-only">YouTube</span>
-                            <div
-                                class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
-                            >
-                                <span class="text-xs font-bold">YT</span>
-                            </div>
-                        </a>
-                    </div>
+                    <SocialLinks :settings="settings" size="sm"/>
                 </div>
 
                 <div>
@@ -130,7 +96,7 @@
                                 rel="noopener noreferrer"
                                 class="text-gray-400 hover:text-white transition-colors"
                             >
-                                {{ `${whatsapp} (Pdt. Jaya)` }}
+                                {{ `${whatsapp} (${settings.whatsapp_name})` }}
                             </Link>
                         </li>
                         <li>
@@ -168,6 +134,7 @@ import {
     createMailLink,
 } from "../utils/socialUtils";
 import { Link } from "@inertiajs/vue3";
+import SocialLinks from "./SocialLinks.vue";
 
 const { settings } = defineProps({
     settings: {
@@ -177,17 +144,11 @@ const { settings } = defineProps({
 });
 
 const currentYear = moment().format("YYYY");
-
 const whatsapp = computed(() => formatPhone(settings.whatsapp));
-
 const whatsappLink = computed(() =>
-    createWhatsAppLink(settings.whatsapp, "Syalom pak Pdt. Jayanta Bangun."),
+    createWhatsAppLink(settings.whatsapp, `Syalom ${settings.whatsapp_name}.`),
 );
 const mailLink = computed(() =>
-    createMailLink(
-        settings.email,
-        "Pesan dari Website",
-        "Syalom, bapak Pdt. Suheri Gultom/Pdt. Jayanta Bangun.",
-    ),
+    createMailLink(settings.email, null, "Syalom, GBI PELITA MEDAN."),
 );
 </script>

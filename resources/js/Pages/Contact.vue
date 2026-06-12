@@ -14,103 +14,61 @@
                     </h3>
 
                     <div class="space-y-6">
-                        <div class="flex items-start space-x-4">
-                            <div
-                                class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0"
-                            >
-                                <MapPin class="w-6 h-6 text-blue-600" />
-                            </div>
-                            <div>
-                                <h4 class="text-lg font-semibold mb-1">
-                                    Alamat
-                                </h4>
-                                <p class="text-gray-600">
-                                    {{ settings.address }}
-                                </p>
-                            </div>
-                        </div>
+                        <ContactItem
+                            title="Alamat"
+                            :icon="MapPin"
+                            bgColor="bg-blue-50"
+                            iconColor="text-blue-600"
+                            :href="settings.address_link"
+                        >
+                            {{ settings.address }}
+                        </ContactItem>
 
-                        <div class="flex items-start space-x-4">
-                            <div
-                                class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0"
-                            >
-                                <Phone class="w-6 h-6 text-emerald-600" />
-                            </div>
-                            <div>
-                                <h4 class="text-lg font-semibold mb-1">
-                                    Telepon
-                                </h4>
-                                <p class="text-gray-600 hover:text-emerald-600">
-                                    <a :href="whatsappLink" target="_blank">{{
-                                        whatsapp
-                                    }}</a>
-                                </p>
-                            </div>
-                        </div>
+                        <ContactItem
+                            title="Telepon"
+                            :icon="Phone"
+                            bgColor="bg-emerald-100"
+                            iconColor="text-emerald-600"
+                            :href="whatsappLink"
+                        >
+                            {{ whatsapp }} ({{ settings.whatsapp_name }})
+                        </ContactItem>
 
-                        <div class="flex items-start space-x-4">
-                            <div
-                                class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0"
-                            >
-                                <MailIcon class="w-6 h-6 text-purple-600" />
-                            </div>
-                            <div>
-                                <h4 class="text-lg font-semibold mb-1">
-                                    Email
-                                </h4>
-                                <p class="text-gray-600 hover:text-emerald-600">
-                                    <a :href="mailLink" target="_blank">{{
-                                        settings.email
-                                    }}</a>
-                                </p>
-                            </div>
-                        </div>
+                        <ContactItem
+                            title="Email"
+                            :icon="MailIcon"
+                            bgColor="bg-purple-100"
+                            iconColor="text-purple-600"
+                            :href="mailLink"
+                        >
+                            {{ settings.email }}
+                        </ContactItem>
 
-                        <div class="flex items-start space-x-4">
+                        <ContactItem
+                            title="Jam Operasional"
+                            :icon="Clock"
+                            bgColor="bg-red-100"
+                            iconColor="text-red-600"
+                        >
                             <div
-                                class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0"
+                                v-for="operational in settings.operationals"
+                                :key="operational.name"
+                                class="grid grid-cols-[30%_auto]"
                             >
-                                <Clock class="w-6 h-6 text-red-600" />
+                                <p>{{ operational.name }}</p>
+                                <p>: {{ operational.time }}</p>
                             </div>
-                            <div>
-                                <h4 class="text-lg font-semibold mb-1">
-                                    Jam Operasional
-                                </h4>
-                                <p class="text-gray-600">
-                                    Senin - Jumat: 09.00 - 17.00 WIB<br />Sabtu:
-                                    09.00 - 12.00 WIB<br />Minggu: 07.00 - 22.00
-                                    WIB
-                                </p>
-                            </div>
-                        </div>
+                        </ContactItem>
                     </div>
 
                     <!-- Social Media -->
                     <div class="mt-8">
                         <h4 class="text-lg font-semibold mb-4">Ikuti Kami</h4>
-                        <div class="flex space-x-4">
-                            <a
-                                :href="settings.facebook"
-                                target="_blank"
-                                class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors"
-                            >
-                                <span class="text-sm font-bold">f</span>
-                            </a>
-                            <a
-                                :href="settings.instagram"
-                                target="_blank"
-                                class="w-10 h-10 bg-pink-600 text-white rounded-full flex items-center justify-center hover:bg-pink-700 transition-colors"
-                            >
-                                <span class="text-sm font-bold">IG</span>
-                            </a>
-                            <a
-                                :href="settings.youtube"
-                                target="_blank"
-                                class="w-10 h-10 bg-red-600 text-white rounded-full flex items-center justify-center hover:bg-red-700 transition-colors"
-                            >
-                                <span class="text-sm font-bold">YT</span>
-                            </a>
-                        </div>
+                        <SocialLinks
+                            :settings="settings"
+                            variant="color"
+                            size="lg"
+                        />
                     </div>
                 </div>
 
@@ -189,7 +147,7 @@
             </div>
 
             <!-- Map -->
-            <div class="mt-16">
+            <div v-if="settings.address_embed_link" class="mt-16">
                 <h3 class="text-2xl font-semibold mb-6 text-center">
                     Lokasi {{ settings.app_name }}
                 </h3>
@@ -197,7 +155,7 @@
                     class="bg-gray-200 h-96 rounded-xl flex items-center justify-center"
                 >
                     <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3981.9115191584083!2d98.6846479759476!3d3.607723350160575!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30313193d47f59c7%3A0xd5fd05c18e4d0f63!2sGereja%20Bethel%20Indonesia%20Pelita%20Medan!5e0!3m2!1sid!2sid!4v1755097182857!5m2!1sid!2sid"
+                        :src="settings.address_embed_link"
                         class="w-full h-full rounded-xl"
                         style="border: 0"
                         allowfullscreen=""
@@ -222,6 +180,8 @@ import Button from "../Components/ui/Button.vue";
 import { MapPin, Phone, MailIcon, Clock } from "lucide-vue-next";
 import Select from "../Components/ui/Select.vue";
 import PageTitle from "../Components/PageTitle.vue";
+import SocialLinks from "../Components/SocialLinks.vue";
+import ContactItem from "../Components/ContactItem.vue";
 
 const data = ref({
     name: "",
@@ -243,15 +203,11 @@ const whatsapp = computed(() => formatPhone(settings.value.whatsapp));
 const whatsappLink = computed(() =>
     createWhatsAppLink(
         settings.value.whatsapp,
-        "Syalom, bapak Pdt. Jayanta Bangun.",
+        `Syalom, ${settings.value.whatsapp_name}.`,
     ),
 );
 const mailLink = computed(() =>
-    createMailLink(
-        settings.value.email,
-        "Pesan dari Website",
-        "Syalom, bapak Pdt. Suheri Gultom/Pdt. Jayanta Bangun.",
-    ),
+    createMailLink(settings.value.email, null, "Syalom, GBI PELITA MEDAN."),
 );
 
 const sendViaWhatsapp = () => {
@@ -273,7 +229,7 @@ const sendViaMail = () => {
     const viaMail = createMailLink(
         settings.value.email,
         data.value.subject,
-        `Syalom, bapak Pdt. Suheri Gultom/Pdt. Jayanta Bangun, saya ${data.value.name}.\n${data.value.message}`,
+        `Syalom, GBI PELITA MEDAN, saya ${data.value.name}.\n${data.value.message}`,
     );
 
     if (data.value.subject && data.value.message) {

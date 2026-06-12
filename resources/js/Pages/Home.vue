@@ -39,7 +39,7 @@
                         <h3 class="text-xl font-semibold mb-2">Kontak</h3>
                         <p class="text-gray-600">
                             <a :href="whatsappLink" target="_blank">{{
-                                whatsapp
+                                `${whatsapp} (${settings.whatsapp_name})`
                             }}</a>
                         </p>
                         <p class="text-gray-600">
@@ -74,14 +74,10 @@ const whatsapp = computed(() => formatPhone(settings.value.whatsapp));
 const whatsappLink = computed(() =>
     createWhatsAppLink(
         settings.value.whatsapp,
-        "Syalom, bapak Pdt. Jayanta Bangun.",
+        `Syalom, ${settings.value.whatsapp_name}`,
     ),
 );
 const mailLink = computed(() =>
-    createMailLink(
-        settings.value.email,
-        "Pesan dari Website",
-        "Syalom, bapak Pdt. Suheri Gultom/Pdt. Jayanta Bangun.",
-    ),
+    createMailLink(settings.value.email, null, "Syalom, GBI PELITA MEDAN"),
 );
 </script>
