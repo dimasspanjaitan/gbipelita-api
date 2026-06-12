@@ -13,8 +13,7 @@ class SettingSeeder extends Seeder
     public function run(): void
     {
         Setting::create([
-            // 'app_name' => 'GBI Pelita Medan',
-            'app_name' => 'GBI Pelita',
+            'app_name' => 'GBI Pelita Medan',
             'app_title' => 'GBI Pelita Medan',
             'app_description' => '2026: Hidup Berdampak Melalui Kebiasaan Baik',
             'app_logo' => '/logo.png',

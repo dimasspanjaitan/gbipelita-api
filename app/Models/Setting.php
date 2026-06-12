@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 class Setting extends Model
 {
+    use HasUuids;
     /**
      * The attributes that are mass assignable.
      *
@@ -32,6 +34,18 @@ class Setting extends Model
     {
         return [
             'data' => 'array',
+        ];
+    }
+
+    public function toArray()
+    {
+        $data = parent::toArray();
+        $extra = $data['data'] ?? [];
+        unset($data['data']);
+
+        return [
+            ...$data,
+            ...$extra,
         ];
     }
 }
