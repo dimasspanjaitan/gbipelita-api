@@ -14,10 +14,10 @@ export function formatPhone(number) {
  * @param {string} message Pesan default
  * @returns {string} Link WhatsApp
  */
-export function createWhatsAppLink(number, subject = "", message = '') {
+export function createWhatsAppLink(number, name, subject = "", message = '') {
   if (!number) return ''
   const phone = number.replace(/^0/, '62')
-  const encodedMessage = encodeURIComponent(`Syalom pak Pdt. Jayanta Bangun, saya ingin menghubungi Anda.\n\Perihal: ${subject}\n\nPesan: ${message}`);
+  const encodedMessage = encodeURIComponent(`[Pesan dari website] Syalom pak Pdt. Jayanta Bangun, saya ${name} ingin menghubungi Anda.\n\Perihal: ${subject}\n\nPesan: ${message}`);
   return `https://wa.me/${phone}?text=${encodedMessage}`
 }
 
@@ -32,5 +32,5 @@ export function createMailLink(email = '', subject = '', body = '') {
   if (!email) return ''
   const encodedSubject = encodeURIComponent(subject)
   const encodedBody = encodeURIComponent(body)
-  return `mailto:${email}?subject=${encodedSubject}&body=${encodedBody}`
+  return `mailto:${email}?subject=Pesan dari Website: ${encodedSubject}&body=${encodedBody}`
 }

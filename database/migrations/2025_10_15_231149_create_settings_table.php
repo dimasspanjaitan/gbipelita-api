@@ -30,6 +30,7 @@ return new class extends Migration
             $table->text('misi')->nullable();
             $table->text('motto')->nullable();
             $table->text('history')->nullable();
+            $table->json('data')->nullable();
             $table->timestamps();
         });
     }

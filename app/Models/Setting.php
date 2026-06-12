@@ -29,5 +29,13 @@ class Setting extends Model
         'misi',
         'motto',
         'history',
+        'data'
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'data' => 'array',
+        ];
+    }
 }

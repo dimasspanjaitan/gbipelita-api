@@ -7,23 +7,25 @@ use Illuminate\Support\Facades\Cache;
 
 class SettingsService
 {
+    private function transform(Setting $setting): array
+    {
+        $data = $setting->toArray();
+        $extra = $data['data'] ?? [];
+        unset($data['data']);
+        return array_merge($data, $extra);
+    }
+
     /**
      * Get all landing profiles for landing page.
      */
     public function getSettings(): ?array
     {
-        $cacheEnabled = config('app.settings_cache_enabled', false);
-
-        logger()->info('Settings cache enabled: ' . ($cacheEnabled ? 'true' : 'false'));
-
-        if (!$cacheEnabled) {
+        $callback = function () {
             $setting = Setting::latest()->first();
-            return $setting ? $setting->toArray() : null;
-        }
 
-        return Cache::remember('settings', now()->addHour(), function () {
-            $setting = Setting::latest()->first();
-            return $setting ? $setting->toArray() : null;
-        });
+            return $setting ? $this->transform($setting) : null;
+        };
+
+        return config('app.settings_cache_enabled') ? Cache::remember('settings', now()->addHour(), $callback) : $callback();
     }
 }
