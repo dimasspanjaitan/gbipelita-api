@@ -39,6 +39,9 @@ class User extends Authenticatable
         'password',
         'status',
         'photo',
+        'address',
+        'phone',
+        'birth_date',
     ];
 
     /**
@@ -160,7 +163,7 @@ class User extends Authenticatable
     {
         return [
             'username' => [
-                'required',
+                $ignoreId ? 'sometimes' : 'required',
                 'string',
                 'max:50',
                 "unique:users,username,{$ignoreId},id",
@@ -168,7 +171,7 @@ class User extends Authenticatable
             'first_name' => ['nullable', 'string', 'max:100'],
             'last_name' => ['nullable', 'string', 'max:100'],
             'nickname' => [
-                'required',
+                $ignoreId ? 'sometimes' : 'required',
                 'string',
                 'max:50',
                 "unique:users,nickname,{$ignoreId},id",
@@ -179,8 +182,8 @@ class User extends Authenticatable
                 "unique:users,email,{$ignoreId},id",
             ],
             'password' => [$ignoreId ? 'sometimes' : 'required', 'string', 'min:8', 'confirmed'],
-            'status' => ['required', 'in:active,inactive'],
-            'roles' => 'required|array',
+            'status' => [$ignoreId ? 'sometimes' : 'required', 'in:active,inactive'],
+            'roles' => [$ignoreId ? 'sometimes' : 'required', 'array'],
             'roles.*' => 'uuid|exists:roles,id',
             'departments' => ['sometimes', 'array'],
             'departments.*' => ['required', 'string', 'uuid', 'exists:departments,id'],
@@ -190,6 +193,10 @@ class User extends Authenticatable
             'skills.*.skill_id' => ['required', 'uuid', 'exists:skills,id'],
             'skills.*.is_primary' => ['boolean'],
             'skills.*.order' => ['integer'],
+            'photo' => ['nullable'],
+            'address' => ['nullable', 'string'],
+            'phone' => ['nullable', 'string'],
+            'birth_date' => ['nullable', 'string'],
         ];
     }
 
