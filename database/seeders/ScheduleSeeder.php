@@ -77,9 +77,7 @@ class ScheduleSeeder extends Seeder
         // 3. CREATE AVAILABILITY
         // ======================
         $volunteers = User::query()
-            ->whereHas('roles', function ($q) {
-                $q->where('name', 'volunteer');
-            })
+            ->role('volunteer')
             ->where('status', 'active')
             ->get();
 
@@ -106,6 +104,8 @@ class ScheduleSeeder extends Seeder
             | 5 = submit tapi tidak available sama sekali
             |--------------------------------------------------------------------------
             */
+            $submittedCount = $period->submitted_count;
+            $notSubmittedCount = $period->not_submitted_count;
             $mode = rand(1, 5);
 
             $hasSubmitted = $mode !== 4;
@@ -118,6 +118,7 @@ class ScheduleSeeder extends Seeder
 
             // mode = 4 = tidak submit
             if (!$hasSubmitted) {
+                $period->increment('not_submitted_count');
                 continue;
             }
 
@@ -157,6 +158,8 @@ class ScheduleSeeder extends Seeder
                     'is_available' => true,
                 ]);
             }
+
+            $period->increment('submitted_count');
         }
     }
 }
