@@ -104,8 +104,6 @@ class ScheduleSeeder extends Seeder
             | 5 = submit tapi tidak available sama sekali
             |--------------------------------------------------------------------------
             */
-            $submittedCount = $period->submitted_count;
-            $notSubmittedCount = $period->not_submitted_count;
             $mode = rand(1, 5);
 
             $hasSubmitted = $mode !== 4;
@@ -118,7 +116,6 @@ class ScheduleSeeder extends Seeder
 
             // mode = 4 = tidak submit
             if (!$hasSubmitted) {
-                $period->increment('not_submitted_count');
                 continue;
             }
 
@@ -158,8 +155,18 @@ class ScheduleSeeder extends Seeder
                     'is_available' => true,
                 ]);
             }
-
-            $period->increment('submitted_count');
         }
+
+        $submittedCount = ScheduleUserPeriodStatus::query()
+            ->where('has_submitted', true)
+            ->count();
+        $notSubmittedCount = ScheduleUserPeriodStatus::query()
+            ->where('has_submitted', false)
+            ->count();
+
+        $period->update([
+            'submitted_count' => $submittedCount,
+            'not_submitted_count' => $notSubmittedCount
+        ]);
     }
 }

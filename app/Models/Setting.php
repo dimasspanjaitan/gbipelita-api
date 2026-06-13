@@ -33,16 +33,16 @@ class Setting extends Model
         ];
     }
 
-    public function toArray()
+    public function toArray(): array
     {
-        $data = parent::toArray();
-        $extra = $data['data'] ?? [];
-        unset($data['data']);
+        $attributes = parent::toArray();
 
-        return [
-            ...$data,
-            ...$extra,
-        ];
+        unset($attributes['data']);
+
+        return array_merge(
+            $attributes,
+            $this->data ?? []
+        );
     }
 
     public function fill(array $attributes)
