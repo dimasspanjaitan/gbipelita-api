@@ -13,7 +13,8 @@ use App\Http\Controllers\Skill\{
 
 Route::middleware('auth:sanctum')->prefix('skills')->group(function () {
     Route::get('/', IndexController::class)->middleware('can:read-user');
-    Route::get('/{skill}', ShowController::class)->middleware('can:show-skill');
+    Route::get('/{skill}', ShowController::class)->middleware('can:update-skill');
+    Route::get('/{skill}/detail', ShowController::class)->middleware('can:show-skill');
     Route::post('/', StoreController::class)->middleware('can:create-skill');
     Route::put('/{skill}', UpdateController::class)->middleware('can:update-skill');
     Route::patch('/{skill}', UpdateController::class)->middleware('can:update-skill');

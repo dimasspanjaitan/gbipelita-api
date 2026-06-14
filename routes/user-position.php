@@ -13,7 +13,8 @@ use App\Http\Controllers\UserPosition\{
 
 Route::middleware('auth:sanctum')->prefix('user-positions')->group(function () {
     Route::get('/', IndexController::class)->middleware('can:read-user-position');
-    Route::get('/{userPosition}', ShowController::class)->middleware('can:show-user-position');
+    Route::get('/{userPosition}', ShowController::class)->middleware('can:update-user-position');
+    Route::get('/{userPosition}/detail', ShowController::class)->middleware('can:show-user-position');
     Route::post('/', StoreController::class)->middleware('can:create-user-position');
     Route::put('/{userPosition}', UpdateController::class)->middleware('can:update-user-position');
     Route::patch('/{userPosition}', UpdateController::class)->middleware('can:update-user-position');

@@ -16,7 +16,8 @@ Route::middleware(['auth:sanctum'])
     ->prefix('roles')
     ->group(function () {
         Route::get('/', IndexController::class)->middleware('can:read-role');
-        Route::get('/{role}', ShowController::class)->middleware('can:show-role');
+        Route::get('/{role}', ShowController::class)->middleware('can:update-role');
+        Route::get('/{role}/detail', ShowController::class)->middleware('can:show-role');
         Route::post('/', StoreController::class)->middleware('can:create-role');
         Route::put('/{role}', UpdateController::class)->middleware('can:update-role');
         Route::delete('/{role}', DestroyController::class)->middleware('can:delete-role');

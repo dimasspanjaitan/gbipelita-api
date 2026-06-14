@@ -15,7 +15,8 @@ Route::middleware(['auth:sanctum'])
     ->prefix('actions')
     ->group(function () {
         Route::get('/', IndexController::class)->middleware('can:read-action');
-        Route::get('/{action}', ShowController::class)->middleware('can:show-action');
+        Route::get('/{action}', ShowController::class)->middleware('can:update-action');
+        Route::get('/{action}/detail', ShowController::class)->middleware('can:show-action');
         Route::post('/', StoreController::class)->middleware('can:create-action');
         Route::put('/{action}', UpdateController::class)->middleware('can:update-action');
         Route::patch('/{action}', UpdateController::class)->middleware('can:update-action');

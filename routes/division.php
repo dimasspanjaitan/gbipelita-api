@@ -13,7 +13,8 @@ use App\Http\Controllers\Division\{
 
 Route::middleware('auth:sanctum')->prefix('divisions')->group(function () {
     Route::get('/', IndexController::class)->middleware('can:read-division');
-    Route::get('/{division}', ShowController::class)->middleware('can:show-division');
+    Route::get('/{division}', ShowController::class)->middleware('can:update-division');
+    Route::get('/{division}/detail', ShowController::class)->middleware('can:show-division');
     Route::post('/', StoreController::class)->middleware('can:create-division');
     Route::put('/{division}', UpdateController::class)->middleware('can:update-division');
     Route::patch('/{division}', UpdateController::class)->middleware('can:update-division');

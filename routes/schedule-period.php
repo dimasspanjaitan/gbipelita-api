@@ -7,8 +7,8 @@ use App\Http\Controllers\SchedulePeriod\{
     OpenController,
     PublishController,
     RestoreController,
+    ShowAssignmentController,
     ShowController,
-    ShowDetailController,
     StoreController,
     UpdateController
 };
@@ -16,8 +16,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->prefix('schedule-periods')->group(function () {
     Route::get('/', IndexController::class)->middleware('can:read-schedule-period');
-    Route::get('/{period}', ShowController::class)->middleware('can:show-schedule-period');
-    Route::get('/{period}/detail', ShowDetailController::class)->middleware('can:show-schedule-period');
+    Route::get('/{period}', ShowController::class)->middleware('can:update-schedule-period');
+    Route::get('/{period}/detail', ShowController::class)->middleware('can:show-schedule-period');
+    Route::get('/{period}/assignments', ShowAssignmentController::class)->middleware('can:update-schedule-period');
     Route::post('/', StoreController::class)->middleware('can:create-schedule-period');
     Route::put('/{period}', UpdateController::class)->middleware('can:update-schedule-period');
     Route::patch('/{period}', UpdateController::class)->middleware('can:update-schedule-period');

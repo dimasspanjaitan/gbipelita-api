@@ -60,10 +60,7 @@ class RolesAndPermissionsSeeder extends Seeder
             }
 
             if ($adminRole) {
-                $adminRole->givePermissionTo([
-                    ...$adminPermissions,
-                    "read-role"
-                ]);
+                $adminRole->givePermissionTo($adminPermissions);
             }
 
             // Assign specific permissions ke role lainnya
@@ -110,7 +107,6 @@ class RolesAndPermissionsSeeder extends Seeder
                 'delete-volunteer',
                 'restore-volunteer',
                 'force-delete-volunteer',
-                'read-role',
                 'menu-schedule-period',
                 'read-schedule-period',
                 'show-schedule-period',

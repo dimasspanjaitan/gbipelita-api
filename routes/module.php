@@ -15,7 +15,8 @@ Route::middleware(['auth:sanctum'])
     ->prefix('modules')
     ->group(function () {
         Route::get('/', IndexController::class)->middleware('can:read-module');
-        Route::get('/{module}', ShowController::class)->middleware('can:show-module');
+        Route::get('/{module}', ShowController::class)->middleware('can:update-module');
+        Route::get('/{module}/detail', ShowController::class)->middleware('can:show-module');
         Route::post('/', StoreController::class)->middleware('can:create-module');
         Route::put('/{module}', UpdateController::class)->middleware('can:update-module');
         Route::patch('/{module}', UpdateController::class)->middleware('can:update-module');

@@ -7,7 +7,7 @@ use App\Models\SchedulePeriod;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 
-class ShowDetailController extends Controller
+class ShowAssignmentController extends Controller
 {
     public function __invoke(SchedulePeriod $period): JsonResponse
     {
