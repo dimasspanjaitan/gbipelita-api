@@ -2,11 +2,8 @@
 
 namespace App\Providers;
 
-use App\Models\Action;
-use App\Models\Module;
+use App\Gates\LookupGate;
 use App\Models\Setting;
-use App\Observers\ActionObserver;
-use App\Observers\ModuleObserver;
 use App\Observers\SettingObserver;
 use Illuminate\Support\ServiceProvider;
 
@@ -25,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Setting::observe(SettingObserver::class);
+        // Setting::observe(SettingObserver::class);
+        LookupGate::register();
     }
 }

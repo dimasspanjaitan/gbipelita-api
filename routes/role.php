@@ -9,6 +9,7 @@ use App\Http\Controllers\Role\{
     ShowController,
     RestoreController,
     ForceDeleteController,
+    LookupController,
 };
 
 Route::middleware(['auth:sanctum'])

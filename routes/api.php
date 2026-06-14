@@ -15,3 +15,4 @@ require __DIR__ . '/schedule.php';
 require __DIR__ . '/volunteer.php';
 require __DIR__ . '/skill.php';
 require __DIR__ . '/user-position.php';
+require __DIR__ . '/lookup.php';
