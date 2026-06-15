@@ -60,7 +60,7 @@ class UpdateController extends Controller
 
             DB::commit();
 
-            return response()->json($user->fresh()->load(['roles', 'departments', 'divisions']));
+            return response()->json($user->fresh()->load(['roles', 'departments', 'divisions', 'skills']));
         } catch (\Throwable $e) {
             DB::rollBack();
 
