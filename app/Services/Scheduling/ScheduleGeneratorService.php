@@ -16,10 +16,9 @@ class ScheduleGeneratorService
             $context = app(ScheduleContextBuilder::class)
                 ->build($period);
 
-            // $scheduler = app(DeterministicScheduler::class);
             $scheduler = app(GeneticScheduler::class);
-
             $assignments = $scheduler->run($context);
+            
             // clear existing system generated assignments
             ScheduleAssignment::query()
                 ->where('schedule_period_id', $period->id)
