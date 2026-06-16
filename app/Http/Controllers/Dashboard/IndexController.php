@@ -51,8 +51,8 @@ class IndexController extends Controller
         $availabilityPercentage = round(($submittedAvailability / $totalVolunteers) * 100, 2);
 
         $availabilityChartData = [
-            ['name' => 'Sudah Mengisi', 'value' => $submittedAvailability],
-            ['name' => $activePeriod->status === "open" ? 'Belum Mengisi' : "Tidak Mengisi", 'value' => $notSubmittedAvailability]
+            ['name' => 'submitted', 'value' => $submittedAvailability],
+            ['name' => $activePeriod->status === "open" ? 'not_submitted' : "did_not_submit", 'value' => $notSubmittedAvailability]
         ];
 
         $startDate = now()
