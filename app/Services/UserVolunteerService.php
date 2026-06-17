@@ -12,7 +12,7 @@ class UserVolunteerService
     ): Collection {
 
         return User::query()
-            ->role('volunteer')
+            ->role('Volunteer')
             ->where('status', 'active')
             ->whereRelation(
                 'departments',

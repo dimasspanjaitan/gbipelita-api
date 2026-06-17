@@ -20,7 +20,7 @@ class ScheduleContextBuilder
             'availabilities' => fn($q) =>
             $q->where('schedule_period_id', $period->id),
         ])
-            ->role('volunteer')
+            ->role('Volunteer')
             ->where('status', 'active')
             ->get();
 

@@ -77,7 +77,7 @@ class ScheduleSeeder extends Seeder
         // 3. CREATE AVAILABILITY
         // ======================
         $volunteers = User::query()
-            ->role('volunteer')
+            ->role('Volunteer')
             ->where('status', 'active')
             ->get();
 
