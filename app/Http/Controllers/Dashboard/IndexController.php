@@ -15,7 +15,7 @@ class IndexController extends Controller
         $volunteers = DB::table("users")
             ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
             ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
-            ->where('roles.name', 'volunteer')
+            ->where('roles.name', 'Volunteer')
             ->where('model_has_roles.model_type', \App\Models\User::class)
             ->where('status', 'active')
             ->count();
@@ -67,7 +67,7 @@ class IndexController extends Controller
             ->join('users', 'users.id', '=', 'schedule_assignments.user_id')
             ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
             ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
-            ->where('roles.name', 'volunteer')
+            ->where('roles.name', 'Volunteer')
             ->where('model_has_roles.model_type', \App\Models\User::class)
             ->whereBetween('schedule_assignments.created_at', [
                 $startDate,
@@ -92,7 +92,7 @@ class IndexController extends Controller
             ->join('users', 'users.id', '=', 'schedule_assignments.user_id')
             ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
             ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
-            ->where('roles.name', 'volunteer')
+            ->where('roles.name', 'Volunteer')
             ->where('model_has_roles.model_type', \App\Models\User::class)
             ->whereYear('schedule_assignments.created_at', now()->year)
             ->select(

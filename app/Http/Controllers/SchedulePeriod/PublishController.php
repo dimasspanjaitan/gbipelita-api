@@ -20,7 +20,7 @@ class PublishController extends Controller
         $totalVolunteers = DB::table("users")
             ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
             ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
-            ->where('roles.name', 'volunteer')
+            ->where('roles.name', 'Volunteer')
             ->where('model_has_roles.model_type', \App\Models\User::class)
             ->where('status', 'active')
             ->count();

@@ -27,7 +27,7 @@ class StoreController extends Controller
 
 
             // Sync roles
-            $volunteerRoleId = Role::where('name', 'volunteer')->value('id');
+            $volunteerRoleId = Role::where('name', 'Volunteer')->value('id');
             if ($volunteerRoleId) {
                 $user->assignRole($volunteerRoleId);
             }
