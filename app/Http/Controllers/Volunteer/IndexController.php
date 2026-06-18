@@ -23,7 +23,7 @@ class IndexController extends Controller
                 });
             })
             ->whereHas('roles', function ($q) {
-                $q->where('name', 'volunteer');
+                $q->where('name', 'Volunteer');
             })
             ->when($request->skill, function ($query) use ($request) {
                 $query->whereHas('skills', function ($q) use ($request) {
