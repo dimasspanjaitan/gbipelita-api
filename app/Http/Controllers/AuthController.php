@@ -68,12 +68,11 @@ class AuthController extends Controller
         if (!Auth::attempt($credentials)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Invalid credentials.',
+                'message' => 'Username atau password salah.',
             ], 401);
         }
 
         $user = Auth::user();
-        $isAdmin = $user->hasPermissionTo('read-dashboard');
 
         // Hapus semua token lama
         $user->tokens()->delete();
@@ -91,7 +90,7 @@ class AuthController extends Controller
                 'full_name' => $user->full_name,
                 'email' => $user->email,
                 'photo' => $user->photo,
-                'is_admin' => $isAdmin,
+                'is_admin' => $user->hasPermissionTo('read-dashboard'),
             ],
         ]);
     }
