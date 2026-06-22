@@ -21,6 +21,7 @@ class SettingController extends Controller
         Setting $setting
     ): array {
         $data = $request->all();
+        $heroSlides = $data['hero_slides'] ?? [];
 
         foreach (self::FILE_FIELDS as $field) {
             if (!$request->hasFile($field)) {
@@ -46,6 +47,33 @@ class SettingController extends Controller
 
             $data[$field] = Storage::disk('public')->url($path);
         }
+
+        foreach ($heroSlides as $index => &$slide) {
+            if (!$request->hasFile("hero_slides.$index.image")) {
+                continue;
+            }
+
+            $oldSlides = $setting->hero_slides ?? [];
+            if (!empty($oldSlides[$index]['image'])) {
+                $oldPath = str_replace(
+                    Storage::disk('public')->url(''),
+                    '',
+                    $oldSlides[$index]['image']
+                );
+
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+            }
+
+            $path = $request
+                ->file("hero_slides.$index.image")
+                ->store('settings', 'public');
+
+            $slide['image'] = Storage::disk('public')->url($path);
+        }
+
+        $data['hero_slides'] = $heroSlides;
 
         return $data;
     }
@@ -75,6 +103,19 @@ class SettingController extends Controller
                         : 'Ukuran file maksimal 2 MB.',
                 ]);
             }
+        }
+
+        foreach (($request->input('hero_slides') ?? []) as $index => $_) {
+            if (!$request->hasFile("hero_slides.$index.image")) {
+                continue;
+            }
+
+            $request->validate([
+                "hero_slides.$index.image" => [
+                    'image',
+                    'max:10240',
+                ],
+            ]);
         }
 
         $setting = Setting::query()->sole();

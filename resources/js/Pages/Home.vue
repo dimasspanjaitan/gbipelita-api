@@ -1,6 +1,6 @@
 <template v-slot="{ settings }">
     <section class="pt-16">
-        <Hero />
+        <Hero :slides="settings?.hero_slides ?? []" />
 
         <!-- Quick Info Cards -->
         <div class="py-16 bg-gray-50">
