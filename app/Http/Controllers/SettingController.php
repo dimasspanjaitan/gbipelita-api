@@ -13,6 +13,7 @@ class SettingController extends Controller
         'app_logo',
         'app_logo_alternative',
         'app_favicon',
+        'login_background',
     ];
 
     private function processFiles(
@@ -58,6 +59,24 @@ class SettingController extends Controller
 
     public function update(Request $request): JsonResponse
     {
+        foreach (self::FILE_FIELDS as $field) {
+            if ($request->hasFile($field)) {
+                $request->validate([
+                    $field => [
+                        'image',
+                        $field === 'login_background'
+                            ? 'max:10240'
+                            : 'max:2048',
+                    ],
+                ], [
+                    "$field.image" => 'File harus berupa gambar.',
+                    "$field.max" => $field === 'login_background'
+                        ? 'Ukuran file maksimal 10 MB.'
+                        : 'Ukuran file maksimal 2 MB.',
+                ]);
+            }
+        }
+
         $setting = Setting::query()->sole();
 
         $setting->update(
