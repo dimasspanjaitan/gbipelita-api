@@ -16,9 +16,10 @@ class SettingSeeder extends Seeder
             'app_name' => 'GBI Pelita Medan',
             'app_title' => 'GBI Pelita Medan',
             'app_description' => '2026: Hidup Berdampak Melalui Kebiasaan Baik',
-            'app_logo' => '',
-            'app_logo_alternative' => '',
-            'app_favicon' => '',
+            'app_logo' => null,
+            'app_logo_alternative' => null,
+            'app_favicon' => null,
+            'login_background' => null,
             'phone' => '081375722746',
             'phone_name' => 'Pdt. Jayanta Bangun',
             'email' => 'gbipelita4medan@gmail.com',
@@ -35,6 +36,28 @@ class SettingSeeder extends Seeder
             'misi' => 'Intimacy with God, i Care, Discipleship',
             'motto' => 'SMILE (Simplicity, Move Forward, Integrity, Love, Excellence)',
             'history' => 'GBI Pelita Medan adalah sebuah organisasi Gereja di bawah Sinode GBI sedunia. GBI Pelita Medan digembalakan oleh Pdt. dr. Suheri P. Gultom, M.A., M.Kes.',
+            'hero_slides' => [
+                [
+                    'image' => null,
+                    'title' => "Selamat Datang di GBI Pelita Medan",
+                    'subtitle' => "Rumah bagi setiap jiwa yang mencari Tuhan",
+                ],
+                [
+                    'image' => null,
+                    'title' => "Bersama Memuji dan Menyembah",
+                    'subtitle' => "Bergabunglah dalam ibadah yang penuh sukacita",
+                ],
+                [
+                    'image' => null,
+                    'title' => "Komunitas yang Mengasihi",
+                    'subtitle' => "Membangun persekutuan yang kuat dalam kasih Kristus",
+                ],
+                [
+                    'image' => null,
+                    'title' => "Generasi Penerus Iman",
+                    'subtitle' => "Membentuk pemimpin masa depan yang berkarakter",
+                ],
+            ],
             'main' => [
                 'location' => 'Main Hall',
                 'services' => [

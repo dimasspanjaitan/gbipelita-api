@@ -1,12 +1,12 @@
 <template>
     <!-- Hero Slider -->
-    <div class="relative h-screen overflow-hidden">
+    <div v-if="props.slides.length" class="relative h-screen overflow-hidden">
         <div class="absolute inset-0 bg-black/30 z-10"></div>
 
         <!-- Slides -->
         <div class="relative h-full">
             <div
-                v-for="(slide, index) in slides"
+                v-for="(slide, index) in props.slides"
                 :key="index"
                 :class="currentSlide === index ? 'opacity-100' : 'opacity-0'"
                 class="absolute inset-0 transition-opacity duration-1000 ease-in-out"
@@ -25,12 +25,12 @@
                 <h1
                     class="text-4xl md:text-6xl font-bold mb-6 animate-fade-in-up"
                 >
-                    {{ slides[currentSlide].title }}
+                    {{ props.slides[currentSlide].title }}
                 </h1>
                 <p
                     class="text-xl md:text-2xl mb-8 animate-fade-in-up animation-delay-300"
                 >
-                    {{ slides[currentSlide].subtitle }}
+                    {{ props.slides[currentSlide].subtitle }}
                 </p>
                 <div
                     class="flex flex-col sm:flex-row justify-center gap-6 animate-fade-in-up animation-delay-600"
@@ -58,7 +58,7 @@
             class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-30 flex space-x-2"
         >
             <button
-                v-for="(slide, index) in slides"
+                v-for="(slide, index) in props.slides"
                 :key="index"
                 @click="currentSlide = index"
                 :class="currentSlide === index ? 'bg-white' : 'bg-white/50'"
@@ -110,46 +110,27 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { Link } from "@inertiajs/vue3";
 
-const currentSlide = ref(0);
-// Slides data
-const slides = ref([
-    {
-        // Gambar acak untuk slide sambutan
-        image: "https://picsum.photos/id/24/1200/800",
-        title: "Selamat Datang di GBI Pelita Medan",
-        subtitle: "Rumah bagi setiap jiwa yang mencari Tuhan",
+const props = defineProps({
+    slides: {
+        type: Array,
+        default: () => [],
     },
-    {
-        // Gambar acak lain untuk slide pujian dan penyembahan
-        image: "https://picsum.photos/id/104/1200/800",
-        title: "Bersama Memuji dan Menyembah",
-        subtitle: "Bergabunglah dalam ibadah yang penuh sukacita",
-    },
-    {
-        // Gambar acak lain untuk slide komunitas
-        image: "https://picsum.photos/id/108/1200/800",
-        title: "Komunitas yang Mengasihi",
-        subtitle: "Membangun persekutuan yang kuat dalam kasih Kristus",
-    },
-    {
-        // Gambar acak lain untuk slide generasi penerus
-        image: "https://picsum.photos/id/115/1200/800",
-        title: "Generasi Penerus Iman",
-        subtitle: "Membentuk pemimpin masa depan yang berkarakter",
-    },
-]);
+});
 
+const currentSlide = ref(0);
 // Auto slide functionality
 let slideInterval = null;
 
 const nextSlide = () => {
-    currentSlide.value = (currentSlide.value + 1) % slides.value.length;
+    if (!props.slides.length) return;
+    currentSlide.value = (currentSlide.value + 1) % props.slides.length;
 };
 
 const previousSlide = () => {
+    if (!props.slides.length) return;
     currentSlide.value =
         currentSlide.value === 0
-            ? slides.value.length - 1
+            ? props.slides.length - 1
             : currentSlide.value - 1;
 };
 
