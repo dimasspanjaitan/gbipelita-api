@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Action;
 
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Action;
 use Illuminate\Http\Request;
@@ -12,7 +13,9 @@ class IndexController extends Controller
     public function __invoke(Request $request): JsonResponse
     {
         $actions = Action::query()
-            ->when($request->search, fn($q, $search) =>
+            ->when(
+                $request->search,
+                fn($q, $search) =>
                 $q->where(function ($sub) use ($search) {
                     $sub->where('name', 'like', "%{$search}%");
                 })
@@ -23,6 +26,6 @@ class IndexController extends Controller
             ->when($request->trashed, fn($query) => $query->onlyTrashed())
             ->paginate($request->limit ?? 10);
 
-        return response()->json($actions);
+        return response()->json(ApiResponse::paginate($actions));
     }
 }
