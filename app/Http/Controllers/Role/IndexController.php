@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Role;
 
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Role;
@@ -25,6 +26,6 @@ class IndexController extends Controller
             ->when($request->trashed, fn($query) => $query->onlyTrashed())
             ->paginate($request->limit ?? 10);
 
-        return response()->json($roles);
+        return response()->json(ApiResponse::paginate($roles));
     }
 }

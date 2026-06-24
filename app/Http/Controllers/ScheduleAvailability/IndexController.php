@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ScheduleAvailability;
 
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ScheduleAvailability\IndexRequest;
 use App\Models\SchedulePeriod;
@@ -26,6 +27,6 @@ class IndexController extends Controller
             ->when($request->trashed, fn($query) => $query->onlyTrashed())
             ->paginate($request->limit ?? 10);
 
-        return response()->json($schedulePeriodOpen);
+        return response()->json(ApiResponse::paginate($schedulePeriodOpen));
     }
 }
