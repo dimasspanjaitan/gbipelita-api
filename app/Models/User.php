@@ -13,6 +13,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 /**
  * @mixin IdeHelperUser
@@ -161,12 +162,14 @@ class User extends Authenticatable
      *  ──────────────────────────────── */
     public static function rules(?string $ignoreId = null): array
     {
+        $ignoreId = $ignoreId ?: null;
         return [
             'username' => [
                 $ignoreId ? 'sometimes' : 'required',
                 'string',
                 'max:50',
-                "unique:users,username,{$ignoreId},id",
+                // Menggunakan Rule::unique agar otomatis mengabaikan klausa ID jika nilainya null
+                Rule::unique('users', 'username')->ignore($ignoreId),
             ],
             'first_name' => ['nullable', 'string', 'max:100'],
             'last_name' => ['nullable', 'string', 'max:100'],
@@ -174,12 +177,12 @@ class User extends Authenticatable
                 $ignoreId ? 'sometimes' : 'required',
                 'string',
                 'max:50',
-                "unique:users,nickname,{$ignoreId},id",
+                Rule::unique('users', 'nickname')->ignore($ignoreId),
             ],
             'email' => [
                 'nullable',
                 'email',
-                "unique:users,email,{$ignoreId},id",
+                Rule::unique('users', 'email')->ignore($ignoreId),
             ],
             'password' => [$ignoreId ? 'sometimes' : 'required', 'string', 'min:8', 'confirmed'],
             'status' => [$ignoreId ? 'sometimes' : 'required', 'in:active,inactive'],
