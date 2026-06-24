@@ -40,7 +40,7 @@ class SchedulePeriod extends Model
         return $this->hasMany(ScheduleUserPeriodStatus::class);
     }
 
-    public static function rules(?string $ignoreId = null): array
+    public static function rules(): array
     {
         return [
             'department_id' => ['required', 'uuid', 'exists:departments,id'],

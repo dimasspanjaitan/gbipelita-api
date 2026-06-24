@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Validation\Rule;
 
 class Department extends Model
 {
@@ -37,12 +38,13 @@ class Department extends Model
 
     public static function rules(?string $ignoreId = null): array
     {
+        $ignoreId = $ignoreId ?: null;
         return [
             'name' => [
                 'required',
                 'string',
                 'max:255',
-                "unique:departments,name,{$ignoreId},id",
+                Rule::unique('departments', 'name')->ignore($ignoreId)
             ],
             'alias' => ['nullable', 'string', 'max:50'],
             'content' => ['nullable', 'string'],
