@@ -27,6 +27,7 @@ class Role extends SpatieRole
 
     public static function rules(?string $ignoreId = null): array
     {
+        $ignoreId = $ignoreId ?: null;
         return [
             'name' => [
                 'required',

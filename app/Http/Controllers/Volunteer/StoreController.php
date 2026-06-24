@@ -25,7 +25,6 @@ class StoreController extends Controller
             $data['password'] = Hash::make($data['password']);
             $user = User::create($data);
 
-
             // Sync roles
             $volunteerRoleId = Role::where('name', 'Volunteer')->value('id');
             if ($volunteerRoleId) {

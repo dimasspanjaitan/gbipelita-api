@@ -168,7 +168,6 @@ class User extends Authenticatable
                 $ignoreId ? 'sometimes' : 'required',
                 'string',
                 'max:50',
-                // Menggunakan Rule::unique agar otomatis mengabaikan klausa ID jika nilainya null
                 Rule::unique('users', 'username')->ignore($ignoreId),
             ],
             'first_name' => ['nullable', 'string', 'max:100'],

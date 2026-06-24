@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Validation\Rule;
 
 class Skill extends Model
 {
@@ -33,12 +34,13 @@ class Skill extends Model
      *  ──────────────────────────────── */
     public static function rules(?string $ignoreId = null): array
     {
+        $ignoreId = $ignoreId ?: null;
         return [
             'name' => [
                 'required',
                 'string',
                 'max:50',
-                "unique:skills,name,{$ignoreId},id",
+                Rule::unique('skills', 'name')->ignore($ignoreId)
             ],
             'division_id' => ['required', 'uuid', 'exists:divisions,id'],
         ];
