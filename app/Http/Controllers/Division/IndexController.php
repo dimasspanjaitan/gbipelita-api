@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Division;
 
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Division;
 use Illuminate\Http\JsonResponse;
@@ -36,6 +37,6 @@ class IndexController extends Controller
 
         $divisions->getCollection()->load("department");
 
-        return response()->json($divisions);
+        return response()->json(ApiResponse::paginate($divisions));
     }
 }

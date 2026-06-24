@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\UserPosition;
 
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserPosition\IndexRequest;
 use App\Models\UserPosition;
@@ -20,6 +21,6 @@ class IndexController extends Controller
 
         $userPositions->getCollection()->load("user", "role", "department", "division");
 
-        return response()->json($userPositions);
+        return response()->json(ApiResponse::paginate($userPositions));
     }
 }

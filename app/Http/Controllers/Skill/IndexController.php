@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Skill;
 
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Skill;
 use Illuminate\Http\JsonResponse;
@@ -32,6 +33,6 @@ class IndexController extends Controller
 
         $skills->getCollection()->load("division");
 
-        return response()->json($skills);
+        return response()->json(ApiResponse::paginate($skills));
     }
 }

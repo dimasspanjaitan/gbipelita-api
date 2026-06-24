@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Volunteer;
 
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -43,6 +44,6 @@ class IndexController extends Controller
             ->when($request->trashed, fn($query) => $query->onlyTrashed())
             ->paginate($request->limit ?? 10);
 
-        return response()->json($volunteers);
+        return response()->json(ApiResponse::paginate($volunteers));
     }
 }

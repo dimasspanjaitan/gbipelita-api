@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Module;
 
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Module;
 use Illuminate\Http\Request;
@@ -28,6 +29,6 @@ class IndexController extends Controller
 
         $modules->getCollection()->load('actions');
 
-        return response()->json($modules);
+        return response()->json(ApiResponse::paginate($modules));
     }
 }

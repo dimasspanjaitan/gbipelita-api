@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\SchedulePeriod;
 
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\SchedulePeriod;
 use Illuminate\Http\JsonResponse;
@@ -26,6 +27,6 @@ class IndexController extends Controller
             ->paginate($request->limit ?? 10);
 
 
-        return response()->json($schedulePeriods);
+        return response()->json(ApiResponse::paginate($schedulePeriods));
     }
 }

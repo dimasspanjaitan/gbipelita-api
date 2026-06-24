@@ -37,12 +37,13 @@ class StoreController extends Controller
                 }
                 
                 $user->syncRoles($validRoles);
-            } else {
-                $congregationRole = Role::where('name', 'congregation')->first();
-                if ($congregationRole) {
-                    $user->assignRole($congregationRole->id);
-                }
-            }
+            } 
+            // else {
+            //     $congregationRole = Role::where('name', 'congregation')->first();
+            //     if ($congregationRole) {
+            //         $user->assignRole($congregationRole->id);
+            //     }
+            // }
 
             // Sync departments
             if (!empty($data['departments'])) {

@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('photo')->nullable();
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
-            $table->date('birth_date')->nullable();
+            $table->string('birth_date')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

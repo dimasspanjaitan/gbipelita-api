@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Schedule;
 
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\ScheduleAssignment;
 use App\Models\SchedulePeriod;
@@ -15,29 +16,64 @@ class MyIndexController extends Controller
 
         $periods = SchedulePeriod::query()
             ->where('status', 'published')
-            ->get();
+            ->paginate(
+                request('limit', 10)
+            );
 
-        $periods->each(function ($period) use ($user) {
-            $mySessionIds = ScheduleAssignment::query()
-                ->where('schedule_period_id', $period->id)
-                ->where('user_id', $user->id)
+        // Ambil semua assignment user
+        $myAssignments = ScheduleAssignment::query()
+            ->where('user_id', $user->id)
+            ->get([
+                'schedule_period_id',
+                'service_session_id',
+            ]);
+
+        // Group session per period
+        $sessionIdsByPeriod = $myAssignments
+            ->groupBy('schedule_period_id')
+            ->map(fn($items) => $items
                 ->pluck('service_session_id')
-                ->unique();
+                ->unique()
+                ->values());
 
-            $assignments = ScheduleAssignment::query()
-                ->where('schedule_period_id', $period->id)
-                ->whereIn('service_session_id', $mySessionIds)
-                ->with([
-                    'session',
-                    'user',
-                    'requirement.skill.division'
-                ])
-                ->get();
+        // Ambil semua period yang sedang tampil
+        $periodIds = $periods
+            ->getCollection()
+            ->pluck('id');
 
-            $period->assignments = $assignments;
-        });
+        // Ambil semua assignment yang mungkin dibutuhkan
+        $allAssignments = ScheduleAssignment::query()
+            ->whereIn('schedule_period_id', $periodIds)
+            ->with([
+                'session',
+                'user',
+                'requirement.skill.division',
+            ])
+            ->get()
+            ->groupBy('schedule_period_id');
 
+        $periods->getCollection()->transform(
+            function ($period) use (
+                $allAssignments,
+                $sessionIdsByPeriod
+            ) {
+                $sessionIds = $sessionIdsByPeriod
+                    ->get($period->id, collect());
 
-        return response()->json($periods);
+                $assignments = $allAssignments
+                    ->get($period->id, collect())
+                    ->whereIn('service_session_id', $sessionIds)
+                    ->values();
+
+                $period->setAttribute(
+                    'assignments',
+                    $assignments
+                );
+
+                return $period;
+            }
+        );
+
+        return response()->json(ApiResponse::paginate($periods));
     }
 }
