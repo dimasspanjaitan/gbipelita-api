@@ -22,3 +22,7 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+composer.lock
+pnpm-lock.yaml
+structure.md
