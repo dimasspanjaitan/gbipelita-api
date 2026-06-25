@@ -16,6 +16,13 @@ class StoreController extends Controller
             'notes' => 'nullable'
         ]);
 
+        if (empty($request->session_ids) && blank($request->notes)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Notes cannot be empty if all sessions are empty.',
+            ], 422);
+        }
+
         app(AvailabilityService::class)->submit(
             $period->id,
             auth()->id(),
@@ -24,6 +31,7 @@ class StoreController extends Controller
         );
 
         return response()->json([
+            'success' => true,
             'message' => 'Availability saved'
         ]);
     }
