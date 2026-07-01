@@ -23,6 +23,9 @@ class IndexController extends Controller
             ->when($request->sort_column, function ($query) use ($request) {
                 $query->orderBy($request->sort_column, $request->sort_direction ?? 'asc');
             })
+            ->unless($request->sort_column, function ($query) {
+                $query->orderByDesc('created_at');
+            })
             ->when($request->trashed, fn($query) => $query->onlyTrashed())
             ->paginate($request->limit ?? 10);
 

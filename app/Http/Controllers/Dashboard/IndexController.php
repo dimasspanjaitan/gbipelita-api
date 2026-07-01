@@ -36,8 +36,9 @@ class IndexController extends Controller
         $notSubmittedAvailability = 0;
 
         if ($activePeriod->not_submitted_count == 0) {
-            $submittedAvailability = DB::table('schedule_availabilities')
+            $submittedAvailability = DB::table('schedule_user_period_statuses')
                 ->where('schedule_period_id', $activePeriod->id)
+                ->where('has_submitted', true)
                 ->distinct('user_id')
                 ->count('user_id');
 

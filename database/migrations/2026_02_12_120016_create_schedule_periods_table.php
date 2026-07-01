@@ -16,7 +16,8 @@ return new class extends Migration
             $table->uuid('department_id')->index();
             $table->unsignedTinyInteger('month');
             $table->unsignedSmallInteger('year');
-            $table->unsignedTinyInteger('max_service_per_week')->nullable()->default(2);
+            $table->unsignedTinyInteger('max_service_per_week')->nullable();
+            $table->unsignedTinyInteger('max_overflow_per_week')->nullable();
             $table->enum('status', [
                 'draft',
                 'open',
@@ -28,6 +29,7 @@ return new class extends Migration
             ])->default('draft');
             $table->integer('submitted_count')->nullable()->default(0);
             $table->integer('not_submitted_count')->nullable()->default(0);
+            $table->json('data')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
