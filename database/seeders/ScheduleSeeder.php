@@ -21,12 +21,41 @@ class ScheduleSeeder extends Seeder
         // ======================
         // 1. CREATE PERIOD
         // ======================
+        $sessionTemplates = [
+            [
+                'name' => 'IBRA 1&2 (PAGI)',
+                'start' => '09:00',
+                'end' => '10:30',
+                'start2' => '11:00',
+                'end2' => '12:30',
+                'is_split_session' => true,
+            ],
+            [
+                'name' => 'IBRA 3&4 (SORE)',
+                'start' => '14:00',
+                'end' => '15:30',
+                'start2' => '16:00',
+                'end2' => '17:30',
+                'is_split_session' => true,
+            ],
+            [
+                'name' => 'IBRA 5&6 (MALAM)',
+                'start' => '18:00',
+                'end' => '19:30',
+                'start2' => '20:00',
+                'end2' => '21:30',
+                'is_split_session' => true,
+            ],
+        ];
         $period = SchedulePeriod::create([
             'id' => Str::uuid(),
             'department_id' => $departmentId,
             'month' => 5,
             'year' => 2026,
             'status' => 'open',
+            'max_service_per_week' => 2,
+            'max_overflow_per_week' => 3,
+            'session_templates' => $sessionTemplates
         ]);
 
         // ======================
@@ -39,29 +68,22 @@ class ScheduleSeeder extends Seeder
 
         $week = 1;
 
-        // cari semua minggu di bulan
-        $sessionTimes = [
-            1 => ['IBRA 1&2 (PAGI)', '09:00', '10:30', '11:00', '12:30'],
-            2 => ['IBRA 3&4 (SORE)', '14:00', '15:30', '16:00', '17:30'],
-            3 => ['IBRA 5&6 (MALAM)', '18:00', '19:30', '20:00', '21:30'],
-        ];
-
         while ($startDate->month == 5) {
 
             if ($startDate->dayOfWeek == Carbon::SUNDAY) {
 
-                foreach ($sessionTimes as $sessionNumber => [$name, $start, $end, $start2, $end2]) {
+                foreach ($sessionTemplates as $index => $template) {
 
                     $session = ServiceSession::create([
                         'id' => Str::uuid(),
-                        'name' => $name,
-                        'time' => '(' . $start . '-' . $end . ') & (' . $start2 . '-' . $end2 . ')',
+                        'name' => $template['name'],
+                        'time' => '(' . $template['start'] . '-' . $template['end'] . ') & (' . $template['start2'] . '-' . $template['end2'] . ')',
                         'schedule_period_id' => $period->id,
                         'service_date' => $startDate->toDateString(),
                         'week_number' => $week,
-                        'session_number' => $sessionNumber,
-                        'start_time' => $start,
-                        'end_time' => $end2,
+                        'session_number' => $index + 1,
+                        'start_time' => $template['start'],
+                        'end_time' => $template['end2'],
                     ]);
 
                     $sessions[] = $session;

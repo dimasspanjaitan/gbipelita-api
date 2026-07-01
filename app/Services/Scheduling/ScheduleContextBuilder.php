@@ -27,8 +27,8 @@ class ScheduleContextBuilder
         $context = [
             'period' => [
                 'id' => $period->id,
-                'max_per_week' => 2,
-                'max_overflow_per_week' => 3,
+                'max_per_week' => $period->max_service_per_week,
+                'max_overflow_per_week' => $period->max_overflow_per_week,
             ],
             'sessions' => [],
             'requirements' => [],

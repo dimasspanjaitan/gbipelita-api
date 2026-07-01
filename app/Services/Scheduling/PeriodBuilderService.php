@@ -49,43 +49,25 @@ class PeriodBuilderService
         $sessions = [];
         $week = 1;
 
-        $sessionTemplates = [
-            [
-                'name' => 'IBRA 1&2 (PAGI)',
-                'time' => '(09:00-10:30) & (11:00-12:30)',
-                'start' => '09:00',
-                'end' => '12:30',
-            ],
-            [
-                'name' => 'IBRA 3&4 (SORE)',
-                'time' => '(14:00-15:30) & (16:00-17:30)',
-                'start' => '14:00',
-                'end' => '17:30',
-            ],
-            [
-                'name' => 'IBRA 5&6 (MALAM)',
-                'time' => '(18:00-19:30) & (20:00-21:30)',
-                'start' => '18:00',
-                'end' => '21:30',
-            ],
-        ];
-
         foreach (CarbonPeriod::create($start, $end) as $date) {
 
             if ($date->dayOfWeek !== Carbon::SUNDAY) continue;
 
-            foreach ($sessionTemplates as $index => $template) {
+            foreach ($period->session_templates as $index => $template) {
+                $timeFormat = $template['is_split_session']
+                    ? '(' . $template['start'] . '-' . $template['end'] . ') & (' . $template['start2'] . '-' . $template['end2'] . ')'
+                    : $template['start'] . '-' . $template['end'];
 
                 $sessions[] = ServiceSession::create([
                     'id' => Str::uuid(),
                     'name' => $template['name'],
-                    'time' => $template['time'],
+                    'time' => $timeFormat,
                     'schedule_period_id' => $period->id,
                     'service_date' => $date->toDateString(),
                     'week_number' => $week,
                     'session_number' => $index + 1, // 1,2,3
                     'start_time' => $template['start'],
-                    'end_time' => $template['end'],
+                    'end_time' => $template['is_split_session'] ? $template['end2'] : $template['end'],
                 ]);
             }
 
